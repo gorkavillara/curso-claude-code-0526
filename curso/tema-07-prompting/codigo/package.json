@@ -1,0 +1,23 @@
+{
+  "name": "notebox",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API de notas de ejemplo para el Tema 7 — Prompting profesional",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
