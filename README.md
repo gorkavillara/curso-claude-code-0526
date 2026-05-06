@@ -5,28 +5,31 @@ Material del curso "Claude Code para Desarrolladores: Ingeniería de SW Asistida
 ## Estructura
 
 ```
-curso/
-  tema-01-fundamentos/
-    guion.md         # Lo que dice/promptea el formador
-    ejercicios.md    # Enunciados para los alumnos + soluciones
-  tema-07-prompting/
-    guion.md
-    ejercicios.md
-    codigo/          # Repo de prácticas (solo en ramas tema-07/*)
+.                              ← raíz del repo
+  curso/                       ← material del formador (igual en TODAS las ramas)
+    tema-01-fundamentos/
+      guion.md                 # Lo que dice/promptea el formador
+      ejercicios.md            # Enunciados + soluciones de referencia
+    tema-07-prompting/
+      guion.md
+      ejercicios.md
+      SOLUCION.md              # Notas internas del formador
+  src/, test/, package.json…   ← código del tema actual (cambia con la rama)
 ```
 
-## Ramas
+## Modelo de ramas
 
-- `main` — material del formador (guiones, ejercicios, soluciones).
-- `tema-XX/inicio` — código de partida que clona el alumno.
-- `tema-XX/solucion` — referencia con la versión refactorizada / corregida.
+- `main` — solo `curso/`. Sin código en raíz. Es la fuente de la documentación del curso.
+- `tema-XX/inicio` — `curso/` + código de partida del tema XX en la raíz.
+- `tema-XX/solucion` — `curso/` + código del tema XX con los ejercicios resueltos.
 
-## Convenciones del guion
+Para cambiar de tema en la sesión: `git checkout tema-XX/inicio`. La carpeta `curso/` no se modifica al cambiar de rama (todas las ramas comparten el mismo árbol de `curso/`).
 
-Los guiones siguen tres bloques:
+## Convenciones
 
-1. **Encuadre (lo que digo)** — narrativa para abrir el tema.
-2. **Demos en vivo (lo que prompteo)** — prompts literales que copio/pego en Claude Code delante de los alumnos.
-3. **Cierre y puente al siguiente tema** — qué retiene el alumno.
+**Guiones** — tres bloques:
+1. Encuadre (lo que digo).
+2. Demos en vivo (lo que prompteo, literal).
+3. Cierre y puente al siguiente tema.
 
-Los ejercicios siguen el patrón **Enunciado → Pista → Solución de referencia**.
+**Ejercicios** — patrón **Enunciado → Pista → Solución de referencia**.

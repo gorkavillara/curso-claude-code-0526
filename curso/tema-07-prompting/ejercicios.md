@@ -1,7 +1,7 @@
 # Tema 7 — Ejercicios
 
-> Material de partida: rama `tema-07/inicio`. Carpeta de trabajo: `curso/tema-07-prompting/codigo/`.
-> Antes de empezar: `npm install` y `npm test` (todos los tests deben estar verdes).
+> Material de partida: rama `tema-07/inicio`. El código vive en la **raíz** del repo (`src/`, `test/`, `package.json`). La carpeta `curso/` se mantiene igual al cambiar de rama; ahí están estos enunciados.
+> Antes de empezar: `git checkout tema-07/inicio`, `npm install` y `npm test` (todos los tests deben estar verdes).
 >
 > **Cómo se trabaja:** cada ejercicio se hace **prompteando con Claude Code**, no escribiendo el código a mano. Si os bloqueáis, intentad mejorar el prompt antes de teclear vosotros.
 

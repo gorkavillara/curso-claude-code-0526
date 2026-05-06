@@ -1,7 +1,7 @@
 # Tema 7 — Prompting profesional para desarrollo de software
 
 > Duración estimada: 75-90 min · Tipo: práctico (alumnos delante del teclado).
-> Repositorio de prácticas: rama `tema-07/inicio` (Node 24 + Express + TypeScript, ver `codigo/`).
+> Repositorio de prácticas: rama `tema-07/inicio` (Node 24 + Express + TypeScript). El código vive en la **raíz** del repo (`src/`, `test/`). La carpeta `curso/` se mantiene igual al cambiar de rama.
 
 ## 0. Objetivo del tema
 
@@ -53,7 +53,7 @@ No siempre necesitas los 5 bloques. Pero si la tarea es no trivial y te falta al
 
 ## 2. Demos en vivo — lo que prompteo (≈ 35 min)
 
-> Antes de empezar las demos: asegúrate de tener clonada la rama `tema-07/inicio` y `npm install` hecho. La sesión de Claude Code apunta a `curso/tema-07-prompting/codigo/`.
+> Antes de empezar las demos: `git checkout tema-07/inicio` desde la raíz del repo, `npm install` y `npm test` para confirmar que parte verde. Claude Code se abre apuntando a la raíz del repo.
 
 ### Demo 1 — Mismo objetivo, dos prompts (≈ 8 min)
 

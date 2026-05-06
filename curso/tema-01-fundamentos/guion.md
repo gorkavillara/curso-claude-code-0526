@@ -1,6 +1,7 @@
 # Tema 1 — Fundamentos de Claude Code como sistema agentic
 
-> Duración estimada: 45-60 min · Tipo: conceptual + 1 demo · Sin código que entregar.
+> Duración estimada: 45-60 min · Tipo: conceptual + 1 demo.
+> Repositorio de prácticas para la demo y los ejercicios: rama `tema-01/inicio` (Node 24 + Express + TypeScript, API mínima de libros).
 
 ## 0. Objetivo del tema
 
@@ -57,7 +58,9 @@ No es un tema de herramientas todavía: es de encuadre. Si el alumno se va con l
 
 ### Setup
 
-Abre Claude Code en una terminal apuntando a **cualquier repo público** que conozcas bien (sirve uno propio mediano: 20-100 archivos). Si no tienes uno a mano, clona algo como `tiangolo/fastapi` o un proyecto interno pequeño.
+Haz `git checkout tema-01/inicio` en la raíz del repo del curso. Eso te deja el código de la demo (una pequeña API de inventario de libros con Node + Express + TypeScript) en `src/`, `test/`, `package.json`. La carpeta `curso/` con tus guiones no se modifica al cambiar de rama.
+
+Abre Claude Code apuntando a la raíz del repo. Si quieres ilustrarlo más, también puedes hacer la demo sobre un repo propio que conozcas bien, pero el material de los ejercicios se basa en éste.
 
 ### Demo 1 — La pregunta tonta que demuestra la diferencia
 
