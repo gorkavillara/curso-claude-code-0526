@@ -6,18 +6,18 @@
 
 | # | Archivo | Síntoma observable | Ejercicio que lo cubre |
 |---|---|---|---|
-| 1 | `src/services/notes.js` | `archive`/`unarchive` con `if` anidados y duplicación íntegra | Ejercicio 1 |
-| 2 | `src/search/index.js` | Búsqueda sensible a mayúsculas y a acentos | Ejercicio 2 |
-| 3 | `src/routes/notes.js` | `POST /notes` no valida entrada | Ejercicio 3 |
+| 1 | `src/services/notes.ts` | `archive`/`unarchive` con `if` anidados y duplicación íntegra | Ejercicio 1 |
+| 2 | `src/search/index.ts` | Búsqueda sensible a mayúsculas y a acentos | Ejercicio 2 |
+| 3 | `src/routes/notes.ts` | `POST /notes` no valida entrada | Ejercicio 3 |
 | 4 | `test/` | No hay tests para `search/` ni para validación HTTP | Se cierra haciendo 2 y 3 |
 
 ## Prompts modelo (lo que tú prompteas en las demos)
 
-### Demo 1 — Refactor acotado de `services/notes.js`
+### Demo 1 — Refactor acotado de `services/notes.ts`
 
 ```
 [CONTEXTO]
-Estoy en el archivo src/services/notes.js. Las funciones archive(id) y
+Estoy en el archivo src/services/notes.ts. Las funciones archive(id) y
 unarchive(id) tienen anidación profunda y duplican la misma estructura.
 
 [OBJETIVO]
@@ -26,7 +26,7 @@ Reducir la duplicación entre ambas y aplanar los if anidados.
 [RESTRICCIONES]
 - Mantén exactamente las firmas: archive(id), unarchive(id).
 - No toques ningún otro archivo.
-- Los tests de test/notes.service.test.js deben seguir pasando sin cambios.
+- Los tests de test/notes.service.test.ts deben seguir pasando sin cambios.
 - No introduzcas dependencias nuevas.
 
 [FORMATO]
@@ -45,7 +45,7 @@ Prompt 1 (alternativas):
 
 ```
 [CONTEXTO]
-src/search/index.js implementa una búsqueda lineal sobre title+body. Un
+src/search/index.ts implementa una búsqueda lineal sobre title+body. Un
 usuario reporta que buscar "MAÑANA" no devuelve la nota cuyo título es
 "mañana", y que buscar "manana" tampoco la encuentra.
 
@@ -69,19 +69,19 @@ Prompt 2 (implementación, tras elegir opción b):
 Aplica la opción de normalizar con toLowerCase + NFD + replace de diacríticos.
 
 [RESTRICCIONES]
-- Cambio sólo en src/search/index.js.
+- Cambio sólo en src/search/index.ts.
 - No introduzcas dependencias.
-- Añade test/search.test.js con 3 casos: mayúsculas, acentos, query vacía.
+- Añade test/search.test.ts con 3 casos: mayúsculas, acentos, query vacía.
 
 [FORMATO]
-Diff de search/index.js + archivo nuevo de tests entero.
+Diff de search/index.ts + archivo nuevo de tests entero.
 ```
 
 ### Demo 3 — Validación en la frontera
 
 ```
 [CONTEXTO]
-src/routes/notes.js maneja POST /notes. Hoy no valida la entrada: title
+src/routes/notes.ts maneja POST /notes. Hoy no valida la entrada: title
 puede venir vacío o ausente, y body no tiene límite de tamaño.
 
 [OBJETIVO]
@@ -97,20 +97,20 @@ Añadir validación mínima en la capa de ruta:
 
 [FORMATO]
 Muéstrame el diff (solo las líneas cambiadas) y propón 3 tests para
-test/notes.service.test.js o un archivo nuevo, sin escribirlos todavía.
+test/notes.service.test.ts o un archivo nuevo, sin escribirlos todavía.
 ```
 
 ## Resultado final esperado
 
 Después de los 3 ejercicios, el repo debería tener:
 
-- `src/services/notes.js` con `archive`/`unarchive` factorizados.
-- `src/search/index.js` con normalización Unicode.
-- `src/routes/notes.js` con validación de entrada.
-- `test/storage.test.js` (sin cambios).
-- `test/notes.service.test.js` (sin cambios).
-- `test/search.test.js` **nuevo**.
-- `test/routes.notes.test.js` **nuevo** (validación HTTP).
+- `src/services/notes.ts` con `archive`/`unarchive` factorizados.
+- `src/search/index.ts` con normalización Unicode.
+- `src/routes/notes.ts` con validación de entrada.
+- `test/storage.test.ts` (sin cambios).
+- `test/notes.service.test.ts` (sin cambios).
+- `test/search.test.ts` **nuevo**.
+- `test/routes.notes.test.ts` **nuevo** (validación HTTP).
 
 `npm test` verde con 12-14 tests.
 

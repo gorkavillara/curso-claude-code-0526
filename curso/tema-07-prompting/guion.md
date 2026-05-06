@@ -1,7 +1,7 @@
 # Tema 7 — Prompting profesional para desarrollo de software
 
 > Duración estimada: 75-90 min · Tipo: práctico (alumnos delante del teclado).
-> Repositorio de prácticas: rama `tema-07/inicio` (Node + Express, ver `codigo/`).
+> Repositorio de prácticas: rama `tema-07/inicio` (Node 24 + Express + TypeScript, ver `codigo/`).
 
 ## 0. Objetivo del tema
 
@@ -57,12 +57,12 @@ No siempre necesitas los 5 bloques. Pero si la tarea es no trivial y te falta al
 
 ### Demo 1 — Mismo objetivo, dos prompts (≈ 8 min)
 
-**Tarea**: refactorizar `archive()` y `unarchive()` en `src/services/notes.js`. Tienen anidación profunda y duplicación.
+**Tarea**: refactorizar `archive()` y `unarchive()` en `src/services/notes.ts`. Tienen anidación profunda y duplicación.
 
 **Prompt malo** (lo lanzo primero, deliberadamente):
 
 ```
-Refactoriza notes.js, está feo.
+Refactoriza notes.ts, está feo.
 ```
 
 Lo que el alumno ve:
@@ -74,7 +74,7 @@ Lo que el alumno ve:
 
 ```
 [CONTEXTO]
-Estoy en el archivo src/services/notes.js. Las funciones archive(id) y
+Estoy en el archivo src/services/notes.ts. Las funciones archive(id) y
 unarchive(id) tienen anidación profunda y duplican la misma estructura.
 
 [OBJETIVO]
@@ -83,7 +83,7 @@ Reducir la duplicación entre ambas y aplanar los if anidados.
 [RESTRICCIONES]
 - Mantén exactamente las firmas: archive(id), unarchive(id).
 - No toques ningún otro archivo.
-- Los tests de test/notes.service.test.js deben seguir pasando sin cambios.
+- Los tests de test/notes.service.test.ts deben seguir pasando sin cambios.
 - No introduzcas dependencias nuevas.
 
 [FORMATO]
@@ -103,13 +103,13 @@ Lo que el alumno ve:
 
 ### Demo 2 — Pedir alternativas con trade-offs (≈ 8 min)
 
-**Tarea**: hay un bug en `src/search/index.js`: la búsqueda no encuentra "MAÑANA" cuando la nota dice "mañana", y tampoco "manana" sin tilde.
+**Tarea**: hay un bug en `src/search/index.ts`: la búsqueda no encuentra "MAÑANA" cuando la nota dice "mañana", y tampoco "manana" sin tilde.
 
 Antes de pedir el arreglo, **pido alternativas**. Esto cambia la conversación.
 
 ```
 [CONTEXTO]
-src/search/index.js implementa una búsqueda lineal sobre title+body. Un
+src/search/index.ts implementa una búsqueda lineal sobre title+body. Un
 usuario reporta que buscar "MAÑANA" no devuelve la nota cuyo título es
 "mañana", y que buscar "manana" tampoco la encuentra.
 
@@ -137,11 +137,11 @@ Lo que el alumno ve:
 
 ### Demo 3 — Cambio mínimo con verificación (≈ 8 min)
 
-**Tarea**: `routes/notes.js` no valida la entrada de `POST /notes`. Acepta título vacío y body sin límite.
+**Tarea**: `routes/notes.ts` no valida la entrada de `POST /notes`. Acepta título vacío y body sin límite.
 
 ```
 [CONTEXTO]
-src/routes/notes.js maneja POST /notes. Hoy no valida la entrada: title
+src/routes/notes.ts maneja POST /notes. Hoy no valida la entrada: title
 puede venir vacío o ausente, y body no tiene límite de tamaño.
 
 [OBJETIVO]
@@ -157,11 +157,11 @@ Añadir validación mínima en la capa de ruta:
 
 [FORMATO]
 Muéstrame el diff (solo las líneas cambiadas) y propón 3 tests para
-test/notes.service.test.js o un archivo nuevo, sin escribirlos todavía.
+test/notes.service.test.ts o un archivo nuevo, sin escribirlos todavía.
 ```
 
 Lo que el alumno ve:
-- Cambio acotado a `routes/notes.js`.
+- Cambio acotado a `routes/notes.ts`.
 - Propuesta de tests (no implementación todavía).
 - Discusión sobre **dónde validar**: route vs service. Yo defiendo "en la frontera". Lo dejo claro.
 

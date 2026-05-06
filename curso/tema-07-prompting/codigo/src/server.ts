@@ -1,7 +1,7 @@
-import express from 'express';
-import { notesRouter } from './routes/notes.js';
+import express, { type Express } from 'express';
+import { notesRouter } from './routes/notes.ts';
 
-export function buildApp() {
+export function buildApp(): Express {
   const app = express();
   app.use(express.json());
   app.use('/notes', notesRouter);

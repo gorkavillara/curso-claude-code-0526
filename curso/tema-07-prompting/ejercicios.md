@@ -11,7 +11,7 @@
 
 ### Contexto
 
-`src/services/notes.js` tiene dos funciones casi idénticas: `archive(id)` y `unarchive(id)`. Están llenas de `if` anidados y duplican estructura.
+`src/services/notes.ts` tiene dos funciones casi idénticas: `archive(id)` y `unarchive(id)`. Están llenas de `if` anidados y duplican estructura.
 
 ### Enunciado
 
@@ -33,7 +33,7 @@ Esqueleto sugerido:
 ```
 [CONTEXTO]  …
 [OBJETIVO]  reducir duplicación entre archive() y unarchive() en
-            src/services/notes.js
+            src/services/notes.ts
 [RESTRICCIONES]
 - mantener firmas …
 - no tocar otros archivos
@@ -46,8 +46,10 @@ Esqueleto sugerido:
 
 Una versión razonable de `archive`/`unarchive` extrae el patrón común:
 
-```js
-function setArchived(id, value) {
+```ts
+import type { Note } from '../models/note.ts';
+
+function setArchived(id: string, value: boolean): Note | null {
   const note = storage.findById(id);
   if (!note) return null;
   if (note.archived === value) return note;
@@ -57,14 +59,14 @@ function setArchived(id, value) {
 
 export const notesService = {
   // ...
-  archive(id) { return setArchived(id, true); },
-  unarchive(id) { return setArchived(id, false); },
+  archive(id: string) { return setArchived(id, true); },
+  unarchive(id: string) { return setArchived(id, false); },
 };
 ```
 
 Lo que el formador valida en clase:
 - ¿Mantuvo las firmas? ✅
-- ¿Tocó solo `services/notes.js`? ✅
+- ¿Tocó solo `services/notes.ts`? ✅
 - ¿Pasan los tests? ✅
 - ¿La explicación final es honesta o se inventa cambios?
 
@@ -79,7 +81,7 @@ Un usuario reporta dos bugs de búsqueda:
 1. Crea una nota con título `"Mañana es lunes"`. Busca con `q=MAÑANA`. No devuelve nada.
 2. Busca con `q=manana` (sin ñ). Tampoco devuelve nada.
 
-El código sospechoso vive en `src/search/index.js`.
+El código sospechoso vive en `src/search/index.ts`.
 
 ### Enunciado
 
@@ -94,7 +96,7 @@ Para cerrar:
 ### Pista
 
 - El prompt 1 (alternativas) **no debe pedir código**. Si Claude empieza a escribir código, repíteselo.
-- El prompt 2 (implementación) sí pide código, pero solo de `search/index.js` y de los tests. Nada más.
+- El prompt 2 (implementación) sí pide código, pero solo de `search/index.ts` y de los tests. Nada más.
 - Si os tienta saltaros el paso 1, recordad: **decisiones de diseño no se delegan**.
 
 ### Solución de referencia
@@ -110,29 +112,32 @@ Las 3 alternativas típicas:
 Implementación esperada del paso 2:
 
 ```js
-// src/search/index.js
-function normalize(s) {
+// src/search/index.ts
+import type { Note } from '../models/note.ts';
+
+function normalize(s: string): string {
   return s
     .toLowerCase()
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '');
 }
 
-export function search(notes, query) {
+export function search(notes: Note[], query: string | undefined | null): Note[] {
   if (!query) return [];
   const q = normalize(query.trim());
+  if (!q) return [];
   return notes.filter((note) =>
     normalize(`${note.title} ${note.body}`).includes(q),
   );
 }
 ```
 
-Tests nuevos (en un archivo `test/search.test.js`):
+Tests nuevos (en un archivo `test/search.test.ts`):
 
 ```js
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { search } from '../src/search/index.js';
+import { search } from '../src/search/index.ts';
 
 describe('search', () => {
   const notes = [{ title: 'Mañana es lunes', body: '' }];
@@ -162,7 +167,7 @@ Lo que el formador valida:
 
 ### Contexto
 
-`POST /notes` en `src/routes/notes.js` acepta cualquier cosa: título vacío, body de 1 MB, peticiones sin body. La aplicación no se rompe pero guarda basura.
+`POST /notes` en `src/routes/notes.ts` acepta cualquier cosa: título vacío, body de 1 MB, peticiones sin body. La aplicación no se rompe pero guarda basura.
 
 ### Enunciado
 
@@ -174,7 +179,7 @@ Prompted a Claude Code para añadir **validación mínima** en la capa de ruta:
 
 Restricciones:
 - Sin librerías nuevas (no `zod`, no `joi`, no `express-validator`).
-- Cambio acotado a `src/routes/notes.js`.
+- Cambio acotado a `src/routes/notes.ts`.
 - Tests existentes deben seguir pasando.
 
 Añadid 3 tests nuevos: título ausente, título demasiado largo, body demasiado largo.
@@ -185,30 +190,33 @@ La pregunta interesante de este ejercicio no es "¿cómo valido?", es **"¿dónd
 
 ### Solución de referencia
 
-```js
-// src/routes/notes.js
-function validateCreatePayload(payload) {
+```ts
+// src/routes/notes.ts
+import type { Request, Response } from 'express';
+
+const TITLE_MAX = 200;
+const BODY_MAX = 5000;
+
+function validateCreatePayload(payload: unknown): string | null {
   if (!payload || typeof payload !== 'object') return 'body requerido';
-  const { title, body } = payload;
+  const { title, body } = payload as { title?: unknown; body?: unknown };
   if (typeof title !== 'string' || title.trim().length === 0) {
     return 'title requerido';
   }
-  if (title.length > 200) return 'title demasiado largo (max 200)';
-  if (body !== undefined && typeof body !== 'string') {
-    return 'body debe ser string';
-  }
-  if (body !== undefined && body.length > 5000) {
-    return 'body demasiado largo (max 5000)';
+  if (title.length > TITLE_MAX) return `title demasiado largo (max ${TITLE_MAX})`;
+  if (body !== undefined && typeof body !== 'string') return 'body debe ser string';
+  if (body !== undefined && body.length > BODY_MAX) {
+    return `body demasiado largo (max ${BODY_MAX})`;
   }
   return null;
 }
 
-notesRouter.post('/', (req, res) => {
+notesRouter.post('/', (req: Request, res: Response) => {
   const error = validateCreatePayload(req.body);
   if (error) return res.status(400).json({ error });
   const note = notesService.create({
-    title: req.body.title.trim(),
-    body: req.body.body,
+    title: (req.body.title as string).trim(),
+    body: req.body.body as string | undefined,
   });
   res.status(201).json(note);
 });
@@ -220,8 +228,8 @@ Tests nuevos (con `supertest`):
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import request from 'supertest';
-import { buildApp } from '../src/server.js';
-import { storage } from '../src/storage/memory.js';
+import { buildApp } from '../src/server.ts';
+import { storage } from '../src/storage/memory.ts';
 
 describe('POST /notes validación', () => {
   beforeEach(() => storage._reset());
@@ -271,7 +279,7 @@ Tres preguntas para asentar:
 
 Por si los alumnos no los detectan todos:
 
-1. **`services/notes.js`**: anidación profunda y duplicación entre `archive`/`unarchive` → Ejercicio 1.
-2. **`search/index.js`**: no normaliza case ni acentos → Ejercicio 2.
-3. **`routes/notes.js`**: sin validación de entrada → Ejercicio 3.
+1. **`services/notes.ts`**: anidación profunda y duplicación entre `archive`/`unarchive` → Ejercicio 1.
+2. **`search/index.ts`**: no normaliza case ni acentos → Ejercicio 2.
+3. **`routes/notes.ts`**: sin validación de entrada → Ejercicio 3.
 4. **Cobertura de tests**: no hay tests para `search/` ni para validación HTTP → se completa al hacer los ejercicios 2 y 3.

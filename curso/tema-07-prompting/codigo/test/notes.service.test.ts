@@ -1,7 +1,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { notesService } from '../src/services/notes.js';
-import { storage } from '../src/storage/memory.js';
+import { notesService } from '../src/services/notes.ts';
+import { storage } from '../src/storage/memory.ts';
 
 describe('notesService', () => {
   beforeEach(() => storage._reset());
@@ -15,14 +15,14 @@ describe('notesService', () => {
   it('archiva una nota existente', () => {
     const n = notesService.create({ title: 'hola' });
     const archived = notesService.archive(n.id);
-    assert.equal(archived.archived, true);
+    assert.equal(archived?.archived, true);
   });
 
   it('desarchiva una nota archivada', () => {
     const n = notesService.create({ title: 'hola' });
     notesService.archive(n.id);
     const back = notesService.unarchive(n.id);
-    assert.equal(back.archived, false);
+    assert.equal(back?.archived, false);
   });
 
   it('devuelve null al archivar una nota inexistente', () => {
