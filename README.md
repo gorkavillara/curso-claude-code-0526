@@ -1,35 +1,42 @@
-# Claude Code para Desarrolladores
+# Bookshelf — pequeña API de inventario de libros (Node + Express + TypeScript)
 
-Material del curso "Claude Code para Desarrolladores: Ingeniería de SW Asistida por IA" (27 temas, 2 semanas).
+> Rama `tema-01/inicio` del repo del curso. El material del formador (`curso/`) está intacto. El código del proyecto vive en la raíz: `src/`, `test/`.
+
+API REST minimalista para gestionar un inventario de libros. Almacenamiento en memoria. Sirve como **repo de prácticas** para el Tema 1: explorar un repositorio desconocido con Claude Code y comparar formas de trabajar.
+
+Los enunciados de los ejercicios están en `curso/tema-01-fundamentos/ejercicios.md`.
 
 ## Estructura
 
 ```
-.                              ← raíz del repo
-  curso/                       ← material del formador (igual en TODAS las ramas)
-    tema-01-fundamentos/
-      guion.md                 # Lo que dice/promptea el formador
-      ejercicios.md            # Enunciados + soluciones de referencia
-    tema-07-prompting/
-      guion.md
-      ejercicios.md
-      SOLUCION.md              # Notas internas del formador
-  src/, test/, package.json…   ← código del tema actual (cambia con la rama)
+src/
+  server.ts            # Entry point Express
+  routes/books.ts      # Endpoints HTTP
+  storage/memory.ts    # Repositorio en memoria
+  models/book.ts       # Tipos + factory
+test/
+  books.test.ts        # Tests con node --test + supertest
+package.json
+tsconfig.json
 ```
 
-## Modelo de ramas
+## Requisitos
 
-- `main` — solo `curso/`. Sin código en raíz. Es la fuente de la documentación del curso.
-- `tema-XX/inicio` — `curso/` + código de partida del tema XX en la raíz.
-- `tema-XX/solucion` — `curso/` + código del tema XX con los ejercicios resueltos.
+- **Node 24+** (usamos type-stripping nativo).
 
-Para cambiar de tema en la sesión: `git checkout tema-XX/inicio`. La carpeta `curso/` no se modifica al cambiar de rama (todas las ramas comparten el mismo árbol de `curso/`).
+## Cómo arrancar
 
-## Convenciones
+```bash
+npm install
+npm run dev          # arranca en :3000 con --watch
+npm test             # ejecuta los tests con node --test
+npm run typecheck    # tsc --noEmit
+```
 
-**Guiones** — tres bloques:
-1. Encuadre (lo que digo).
-2. Demos en vivo (lo que prompteo, literal).
-3. Cierre y puente al siguiente tema.
+## Endpoints
 
-**Ejercicios** — patrón **Enunciado → Pista → Solución de referencia**.
+- `POST   /books`        — `{ title, author }` → 201 con el libro creado
+- `GET    /books`        — listar todos los libros
+- `GET    /books/:id`    — recuperar un libro por id
+- `DELETE /books/:id`    — eliminar un libro
+- `GET    /health`       — `{ ok: true }`
