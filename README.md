@@ -1,6 +1,6 @@
 # Bookshelf — pequeña API de inventario de libros (Node + Express + TypeScript)
 
-> Rama `tema-01/inicio` del repo del curso. El material del formador (`curso/`) está intacto. El código del proyecto vive en la raíz: `src/`, `test/`.
+> Rama `tema-01/inicio` del repo del curso. El código del proyecto vive en la raíz: `src/`, `test/`.
 
 API REST minimalista para gestionar un inventario de libros. Almacenamiento en memoria. Sirve como **repo de prácticas** para el Tema 1: explorar un repositorio desconocido con Claude Code y comparar formas de trabajar.
 
