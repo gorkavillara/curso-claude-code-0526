@@ -1,4 +1,4 @@
-# Tema 7 — Solución de referencia (uso interno del formador)
+# Tema 7 — Solución de referencia
 
 > Este archivo **no debe estar** en la rama `tema-07/inicio`. Vive en `main` y, opcionalmente, en `tema-07/solucion`.
 
