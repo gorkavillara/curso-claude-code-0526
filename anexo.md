@@ -88,9 +88,7 @@ Verificación de configuración activa y resolución de conflictos entre scopes.
 ## 5
 
 ##### MODOS DE TRABAJO, PERMISOS, SANDBOXING Y
-
 ##### CONTROL DE RIESGO PARA EJECUTAR IA SOBRE CÓDIGO
-
 ##### CON SEGURIDAD
 
 ```
@@ -108,10 +106,27 @@ Buenas prácticas para operar Claude Code en repositorios sensibles.
 ```
 ## 6
 
+##### INTEGRACIÓN REAL CON IDES, FLUJO DE EDICIÓN,
+##### NAVEGACIÓN Y REVISIÓN DENTRO DE VISUAL STUDIO
+##### CODE Y JETBRAINS
+
+```
+Instalación y uso de la extensión nativa de VS Code
+Auto-instalación de integración cuando se lanza desde terminal compatible
+Flujo de trabajo entre chat, diff, edición y ejecución de pruebas
+Uso de drag and drop de archivos y carpetas en chats de IDE cuando aplica
+Revisión de cambios grandes desde el editor con apoyo de Claude Code
+Navegación contextual entre símbolos, archivos y zonas candidatas de
+cambio
+Integración con debugging y feedback visual del IDE
+Particularidades del trabajo desde JetBrains frente a VS Code
+Decisiones de productividad según tamaño y tipo de repositorio
+Buenas prácticas para que la integración IDE no sustituya el criterio técnico.
+```
+## 7
+
 ##### CONTEXTO PERSISTENTE CON CLAUDE.MD, REGLAS DE
-
 ##### PROYECTO Y AUTO MEMORY PARA QUE LA IA APRENDA
-
 ##### SIN IMPROVISAR
 
 ```
@@ -129,12 +144,10 @@ Mantenimiento del contexto como activo vivo del repositorio
 Estrategias para convertir CLAUDE.md en estándar interno de ingeniería.
 ```
 
-## 7
+## 8
 
 ##### PROMPTING PROFESIONAL PARA DESARROLLO DE
-
 ##### SOFTWARE Y DISEÑO DE CONVERSACIONES DE ALTA
-
 ##### PRECISIÓN TÉCNICA
 
 ```
@@ -149,12 +162,10 @@ Diseño de prompts que obligan a razonar con evidencia del repositorio
 Estrategias para iterar sobre una respuesta hasta volverla desplegable
 Antipatrones de prompting que producen ruido, sobreedición o falsas certezas
 ```
-## 8
+## 9
 
 ##### EXPLORACIÓN DE REPOSITORIOS DESCONOCIDOS,
-
 ##### COMPRENSIÓN DE ARQUITECTURA Y ONBOARDING
-
 ##### ACELERADO CON CLAUDE CODE
 
 ```
@@ -171,12 +182,10 @@ Generación de guías de lectura del repositorio para el equipo
 Preparación de sesiones de trabajo profundas sobre sistemas heredados
 ```
 
-## 9
+## 10
 
 ##### GENERACIÓN DE NUEVAS FUNCIONALIDADES CON
-
 ##### CONTROL DE IMPACTO, ALINEACIÓN ARQUITECTÓNICA Y
-
 ##### CALIDAD DE IMPLEMENTACIÓN
 
 ```
@@ -191,12 +200,10 @@ Verificación de compatibilidad con patrones ya usados por el equipo
 Generación de checklist técnico para cerrar una nueva funcionalidad
 Estrategias para usar IA sin perder diseño intencional ni coherencia
 ```
-## 10
+## 11
 
 ##### REFACTORIZACIÓN PROFUNDA Y MODERNIZACIÓN
-
 ##### PROGRESIVA DE CÓDIGO HEREDADO SIN ROMPER EL
-
 ##### PRODUCTO
 
 ```
@@ -213,12 +220,10 @@ Uso de Claude Code para modernizar sin reescribir ciegamente todo el
 sistema
 ```
 
-## 11
+## 12
 
 ##### TESTING ASISTIDO POR IA PARA UNIT TESTS,
-
 ##### INTEGRACIÓN, REGRESIÓN Y ESCENARIOS BORDE
-
 ##### CON COBERTURA ÚTIL
 
 ```
@@ -235,12 +240,10 @@ Detección de pruebas frágiles, redundantes o poco informativas
 Estrategias para convertir Claude Code en copiloto de calidad y no solo de
 velocidad
 ```
-## 12
+## 13
 
 ##### DOCUMENTACIÓN TÉCNICA, README, ADR Y
-
 ##### EXPLICACIONES DE ARQUITECTURA QUE SÍ SIRVEN AL
-
 ##### EQUIPO
 
 ```
@@ -257,12 +260,10 @@ Conversión de Claude Code en apoyo sistemático a la memoria técnica del
 equipo
 ```
 
-## 13
+## 14
 
 ##### REVISIÓN DE CÓDIGO, PULL REQUESTS Y ANÁLISIS DE
-
 ##### CAMBIOS CON FOCO EN CALIDAD, MANTENIBILIDAD Y
-
 ##### RIESGO
 
 ```
@@ -280,12 +281,10 @@ Integración de revisión asistida en procesos colaborativos de Git
 Límites de la IA en revisión y momentos donde conviene revisión humana
 profunda
 ```
-## 14
+## 15
 
 ##### SEGURIDAD DEL SOFTWARE, ANÁLISIS DE
-
 ##### VULNERABILIDADES Y HARDENING DEL CÓDIGO
-
 ##### GENERADO O MODIFICADO
 
 ```
@@ -301,12 +300,10 @@ Integración de chequeos de seguridad en hotfixes y nuevas funcionalidades
 Uso de Claude Code como apoyo a la seguridad sin delegar la decisión final
 ```
 
-## 15
+## 16
 
 ##### DEPENDENCIAS, PAQUETES Y MIGRACIONES DE
-
 ##### LIBRERÍAS O FRAMEWORKS CON CRITERIO TÉCNICO Y
-
 ##### PLAN DE TRANSICIÓN
 
 ```
@@ -322,12 +319,10 @@ Revisión de changelogs, patrones de compatibilidad y costes de cambio
 Uso de Claude Code para reducir fricción en evoluciones tecnológicas
 inevitables
 ```
-## 16
+## 17
 
 ##### GIT, BRANCHING, COMMITS, HOTFIXES Y RESOLUCIÓN
-
 ##### DE CONFLICTOS DE CÓDIGO CON AYUDA DE CLAUDE
-
 ##### CODE
 
 ```
@@ -344,12 +339,10 @@ Buenas prácticas para no convertir la IA en un generador de commits sin
 juicio.
 ```
 
-## 17
+## 18
 
 ##### SKILLS REUTILIZABLES PARA ESTANDARIZAR TAREAS
-
 ##### TÉCNICAS DEL EQUIPO Y REDUCIR PROMPTING
-
 ##### REPETITIVO
 
 ```
@@ -365,10 +358,9 @@ Versionado de skills compartidas sin romper hábitos del equipo
 Ejemplos de skills corporativas de alto valor recurrente
 Gobierno de skills para evitar dispersión y duplicidad.
 ```
-## 18
+## 19
 
 ##### SUBAGENTES, ESPECIALIZACIÓN DE ROLES Y
-
 ##### TRABAJO DISTRIBUIDO DENTRO DE CLAUDE CODE
 
 ```
@@ -385,12 +377,10 @@ Riesgos de sobreorquestación dentro del flujo del desarrollador
 Criterios para mantener subagentes útiles, legibles y gobernables.
 ```
 
-## 19
+## 20
 
 ##### MCP OFICIAL, CONECTORES REMOTOS Y SERVIDORES
-
 ##### PROPIOS PARA ABRIR CLAUDE CODE A
-
 ##### HERRAMIENTAS REALES DE EMPRESA
 
 ```
@@ -406,12 +396,10 @@ Gobierno de MCP mediante allowlists y denylists administradas
 Casos de alto valor: Git, documentación, ticketing, CI, datos internos y
 observabilidad.
 ```
-## 20
+## 21
 
 ##### SISTEMA DE PLUGINS, MARKETPLACES, HOOKS Y
-
 ##### EXTENSIBILIDAD AVANZADA PARA EQUIPOS DE
-
 ##### DESARROLLO Y TI
 
 ```
@@ -429,12 +417,10 @@ Buenas prácticas para no convertir la extensibilidad en una fuente de caos
 técnico.
 ```
 
-## 21
+## 22
 
 ##### OPCIONES AVANZADAS DE CLI, SESIONES,
-
 ##### HISTORIALES Y PRODUCTIVIDAD INTENSIVA EN
-
 ##### TERMINAL
 
 ```
@@ -451,34 +437,11 @@ Atajos y keybindings para productividad diaria en sesiones intensivas
 Organización del trabajo en tmux, screen u otros multiplexores
 Estrategias para convertir la CLI en centro operativo del desarrollador.
 ```
-## 22
-
-##### INTEGRACIÓN REAL CON IDES, FLUJO DE EDICIÓN,
-
-##### NAVEGACIÓN Y REVISIÓN DENTRO DE VISUAL STUDIO
-
-##### CODE Y JETBRAINS
-
-```
-Instalación y uso de la extensión nativa de VS Code
-Auto-instalación de integración cuando se lanza desde terminal compatible
-Flujo de trabajo entre chat, diff, edición y ejecución de pruebas
-Uso de drag and drop de archivos y carpetas en chats de IDE cuando aplica
-Revisión de cambios grandes desde el editor con apoyo de Claude Code
-Navegación contextual entre símbolos, archivos y zonas candidatas de
-cambio
-Integración con debugging y feedback visual del IDE
-Particularidades del trabajo desde JetBrains frente a VS Code
-Decisiones de productividad según tamaño y tipo de repositorio
-Buenas prácticas para que la integración IDE no sustituya el criterio técnico.
-```
 
 ## 23
 
 ##### DOCKER, ENTORNOS REPRODUCIBLES Y AYUDA DE
-
 ##### CLAUDE CODE EN EMPAQUETADO, LOCAL DEV Y
-
 ##### TROUBLESHOOTING
 
 ```
@@ -497,9 +460,7 @@ reproducibles
 ## 24
 
 ##### DEVOPS, CI/CD, PIPELINES Y AUTOMATIZACIÓN DEL
-
 ##### CICLO DE ENTREGA CON CLAUDE CODE EN ENTORNOS
-
 ##### CORPORATIVOS
 
 ```
@@ -519,9 +480,7 @@ DevOps.
 ## 25
 
 ##### ARQUITECTURA, DISEÑO DE SOFTWARE, PATRONES Y
-
 ##### DECISIONES TÉCNICAS ASISTIDAS POR IA SIN PERDER
-
 ##### CRITERIO HUMANO
 
 ```
@@ -539,9 +498,7 @@ Límites de la IA en arquitectura y necesidad de juicio técnico senior
 ## 26
 
 ##### TRABAJO EN EQUIPO, ESTÁNDARES COMPARTIDOS Y
-
 ##### GOBIERNO DE USO DE CLAUDE CODE EN
-
 ##### ORGANIZACIONES DE DESARROLLO
 
 ```
@@ -561,9 +518,7 @@ personas
 ## 27
 
 ##### PROYECTO FINAL: FLUJO COMPLETO DE INGENIERÍA
-
 ##### DE SOFTWARE ASISTIDA CON CLAUDE CODE SOBRE
-
 ##### UN REPOSITORIO REAL
 
 ```
