@@ -26,14 +26,14 @@ Claude Code = **agente de programación**. Recibe un objetivo → decide qué ar
 ### 🧪 Demo 1 — GitHub Copilot vs Claude Code en la misma tarea
 
 - **Objetivo:** ver la diferencia entre *sugerencia por línea* y *tarea por sesión*.
-- **Setup:** repo Notebox abierto en VS Code, Copilot activo, Claude Code disponible.
-- **Tarea:** añadir `archivedAt: Date | null` al modelo de notas y propagarlo a service, storage y tests.
+- **Setup:** repo Bookshelf (rama `tema-01/inicio`, API mínima de libros en Node + TypeScript) abierto en VS Code, Copilot activo, Claude Code disponible.
+- **Tarea:** añadir `outOfPrint: boolean` al modelo `Book` y propagarlo a routes, storage y tests.
 
 | Paso | Copilot | Claude Code |
 |---|---|---|
-| 1 | Escribes en `models/note.ts`; sugiere tipo | Una sola petición |
-| 2 | Cambias de archivo; pierde contexto | `Glob` + `Grep` localiza usos de `Note` |
-| 3 | Repites en cada archivo (5×) | Edita los 5 archivos en una pasada |
+| 1 | Escribes en `models/book.ts`; sugiere tipo | Una sola petición |
+| 2 | Cambias de archivo; pierde contexto | `Glob` + `Grep` localiza usos de `Book` |
+| 3 | Repites en cada archivo (4×) | Edita los archivos en una pasada |
 | 4 | Si olvidas un sitio, lo descubre un test | Ejecuta `npm test` y arregla si falla |
 | 5 | Coherencia entre archivos = tu trabajo | Coherencia ya hecha; **revisión sigue siendo tuya** |
 
@@ -91,7 +91,7 @@ Capacidades:
 ### 🧪 Demo 3 — Edición multiarchivo con validación automática
 
 - **Objetivo:** ver el bucle *leer → editar → ejecutar tests → reaccionar* sin salir de la conversación.
-- **Setup:** Notebox limpio, `npm test` funcionando.
+- **Setup:** Bookshelf limpio (rama `tema-01/inicio`), `npm test` funcionando.
 
 **Prompt literal:**
 
@@ -104,7 +104,7 @@ todo pasa antes de devolverme el resultado.
 
 **Pasos esperados:**
 
-1. **Lee:** `models/note.ts`, `services/notes.ts`, `routes/notes.ts`, tests.
+1. **Lee:** `models/book.ts`, `routes/books.ts`, `storage/memory.ts`, tests.
 2. **Plan:** anuncia qué va a tocar.
 3. **Edita:** validación + propagación + test nuevo.
 4. **Ejecuta:** `npm test`. Si falla, lo arregla; no para.
