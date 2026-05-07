@@ -14,5 +14,4 @@ node_modules/
 Thumbs.db
 *.sqlite
 *.db
-
-curso/
+.claude/settings.local.json
