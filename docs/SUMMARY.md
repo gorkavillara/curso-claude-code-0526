@@ -1,4 +1,4 @@
-# Summary
+# Table of contents
 
 * [Introducción](README.md)
 * [Requisitos previos](requisitos.md)
@@ -12,7 +12,3 @@
 * [Tema 5 — Modos de trabajo, permisos y sandboxing](tema-05-permisos-sandboxing.md)
 * [Tema 6 — Integración con VS Code y JetBrains](tema-06-ides.md)
 * [Tema 7 — Contexto persistente con CLAUDE.md y memoria](tema-07-claude-md-memoria.md)
-
----
-
-> **Próximamente** (en preparación): Temas 8–27 (Prompting profesional, exploración de repos, generación de funcionalidades, refactor, testing, documentación, code review, seguridad, dependencias, Git, skills, subagentes, MCP, plugins, CLI avanzada, Docker, DevOps, arquitectura, gobierno y proyecto final).
