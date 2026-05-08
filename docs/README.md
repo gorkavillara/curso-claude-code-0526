@@ -31,10 +31,29 @@ Este curso te prepara para usar Claude Code como una herramienta profesional den
 | **V. Plataforma y operaciones**               | 23–24 | Docker, CI/CD                                                                         |
 | **VI. Arquitectura, equipo y proyecto final** | 25–27 | Patrones, gobierno corporativo y proyecto final                                       |
 
-Cada tema dura **aproximadamente una hora** y combina:
+Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, y combina:
 
 * **Contenidos teóricos** alineados con los puntos del temario.
 * **2–3 demos prácticas** intercaladas con los conceptos para asentar lo que vas viendo.
+
+## Calendario y distribución por sesión
+
+**Fechas:** 22, 25, 27 y 29 de mayo · 1, 3, 5 y 8 de junio (8 sesiones)
+**Horario:** 09:30 – 13:30 · Sesión final del 8 de junio: 09:30 – 11:30
+**Duración total:** 30 horas
+
+| # | Fecha | Día | Horario | Bloque | Temas (duración orientativa) |
+|---|---|---|---|---|---|
+| 1 | 22 mayo | Vie | 09:30 – 13:30 | Fundamentos y entorno (I) | T1 (60′) · T2 (45′) · T3 (45′) · T4 (75′) |
+| 2 | 25 mayo | Lun | 09:30 – 13:30 | Fundamentos (I) → Flujos (II) | T5 (60′) · T6 (45′) · T7 (60′) · T8 (60′) |
+| 3 | 27 mayo | Mié | 09:30 – 13:30 | Flujos de desarrollo (II) | T9 (60′) · T10 (75′) · T11 (90′) |
+| 4 | 29 mayo | Vie | 09:30 – 13:30 | Flujos de desarrollo (II) | T12 (75′) · T13 (60′) · T14 (90′) |
+| 5 | 1 junio | Lun | 09:30 – 13:30 | Calidad y Git (III) → Skills (IV) | T15 (75′) · T16 (45′) · T17 (45′) · T18 (60′) |
+| 6 | 3 junio | Mié | 09:30 – 13:30 | Extensibilidad (IV) | T19 (60′) · T20 (90′) · T21 (75′) |
+| 7 | 5 junio | Vie | 09:30 – 13:30 | CLI, plataforma y arquitectura (IV → VI) | T22 (60′) · T23 (60′) · T24 (60′) · T25 (45′) |
+| 8 | 8 junio | Lun | 09:30 – 11:30 | Equipo y cierre (VI) | T26 (45′) · T27 (75′) |
+
+> Las duraciones son **orientativas**. Se ha asignado más tiempo a los temas con más demos o mayor complejidad técnica (T11 refactor, T14 PRs, T20 MCP, T27 proyecto final) y menos a los temas más conceptuales (T2, T3, T6, T26). Cada sesión deja ~15 min de holgura para pausa y dudas.
 
 ## Antes de empezar
 
