@@ -38,20 +38,18 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 
 ## Calendario y distribución por sesión
 
-**Fechas:** 22, 25, 27 y 29 de mayo · 1, 3, 5 y 8 de junio (8 sesiones)
-**Horario:** 09:30 – 13:30 · Sesión final del 8 de junio: 09:30 – 11:30
-**Duración total:** 30 horas
+**Fechas:** 22, 25, 27 y 29 de mayo · 1, 3, 5 y 8 de junio (8 sesiones) **Horario:** 09:30 – 13:30 · Sesión final del 8 de junio: 09:30 – 11:30 **Duración total:** 30 horas
 
-| # | Fecha | Día | Horario | Bloque | Temas |
-|---|---|---|---|---|---|
-| 1 | 22 mayo | Vie | 09:30 – 13:30 | Fundamentos y entorno (I) | Temas 1, 2, 3 y 4 |
-| 2 | 25 mayo | Lun | 09:30 – 13:30 | Fundamentos (I) → Flujos (II) | Temas 5, 6, 7 y 8 |
-| 3 | 27 mayo | Mié | 09:30 – 13:30 | Flujos de desarrollo (II) | Temas 9, 10 y 11 |
-| 4 | 29 mayo | Vie | 09:30 – 13:30 | Flujos de desarrollo (II) | Temas 12, 13 y 14 |
-| 5 | 1 junio | Lun | 09:30 – 13:30 | Calidad y Git (III) → Skills (IV) | Temas 15, 16, 17 y 18 |
-| 6 | 3 junio | Mié | 09:30 – 13:30 | Extensibilidad (IV) | Temas 19, 20 y 21 |
+| # | Fecha   | Día | Horario       | Bloque                                   | Temas                 |
+| - | ------- | --- | ------------- | ---------------------------------------- | --------------------- |
+| 1 | 22 mayo | Vie | 09:30 – 13:30 | Fundamentos y entorno (I)                | Temas 1, 2, 3 y 4     |
+| 2 | 25 mayo | Lun | 09:30 – 13:30 | Fundamentos (I) → Flujos (II)            | Temas 5, 6, 7 y 8     |
+| 3 | 27 mayo | Mié | 09:30 – 13:30 | Flujos de desarrollo (II)                | Temas 9, 10 y 11      |
+| 4 | 29 mayo | Vie | 09:30 – 13:30 | Flujos de desarrollo (II)                | Temas 12, 13 y 14     |
+| 5 | 1 junio | Lun | 09:30 – 13:30 | Calidad y Git (III) → Skills (IV)        | Temas 15, 16, 17 y 18 |
+| 6 | 3 junio | Mié | 09:30 – 13:30 | Extensibilidad (IV)                      | Temas 19, 20 y 21     |
 | 7 | 5 junio | Vie | 09:30 – 13:30 | CLI, plataforma y arquitectura (IV → VI) | Temas 22, 23, 24 y 25 |
-| 8 | 8 junio | Lun | 09:30 – 11:30 | Equipo y cierre (VI) | Temas 26 y 27 |
+| 8 | 8 junio | Lun | 09:30 – 11:30 | Equipo y cierre (VI)                     | Temas 26 y 27         |
 
 > Las duraciones son **orientativas**. Se ha asignado más tiempo a los temas con más demos o mayor complejidad técnica y menos a los temas más conceptuales.
 
@@ -64,7 +62,3 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 ## A quién va dirigido
 
 Desarrolladores con experiencia profesional. **No es un curso de introducción a la programación.** Se asume que ya manejas Git, terminal, testing básico y arquitectura de aplicaciones.
-
-***
-
-> _"El autocompletado te ayuda a escribir más rápido el código que ya tenías en la cabeza. Claude Code te ayuda a no tener que tenerlo todo en la cabeza."_
