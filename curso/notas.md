@@ -38,7 +38,17 @@ Requisitos - Claude que lo haga, una especie de checklist
 
 ¿Cómo haría la documentación con Gitbook?
 
+Para preguntar
 - Estilos propios de código, lenguajes versiones, frameworks
+
+Tema 1 más ágil
+- Omnis no les deja usar la ia
+- Mirar de forma tangencial gestión de proyectos - mostrar algo
 
 - Para cada sesión objetivos y takeaways
 Mandar por email también tema de temas por sesión
+
+Cambios:
+- Tema 19 ahora lo he puesto como tema 9 (tema 9 -> tema 10, tema 10 -> tema 11...)
+- El proyecto final no lo haremos todo de una el último día sino que a partir del día 4 se irá desarrollando sesión a sesión
+- En el tema de la migración - plan de transición pasar de un tipo de código a PHP (ponemos algún framework?)

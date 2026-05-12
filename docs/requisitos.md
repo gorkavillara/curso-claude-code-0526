@@ -16,9 +16,9 @@
 ## 2. Cuenta y plan de acceso a Claude ⚠️
 
 - [ ] Tienes **acceso confirmado** a Claude Code en uno de estos planes:
+  - Claude Max (plan individual con Claude Code incluido)
   - Claude Team (asiento Standard o Premium asignado por tu organización)
   - Claude Enterprise (acceso a Claude Code se factura aparte por consumo a tarifas API)
-  - Plan individual aprobado por tu organización
 - [ ] Sabes **a qué workspace** vas a iniciar sesión (puede haber varios; pregunta a IT si dudas).
 - [ ] Has hecho login al menos una vez desde tu equipo y no te lo bloquea ningún SSO/MFA corporativo.
 - [ ] Conoces los **límites de uso** y consumo aplicables a tu plan (importante en Enterprise: cada token cuenta).

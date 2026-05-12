@@ -1,5 +1,15 @@
 ##### Claude Code para Desarrolladores: Ingeniería de SW Asistida por IA
 
+##### REQUISITOS PREVIOS
+
+```
+Equipo con Windows 11, macOS 13+ o Linux reciente, con 16 GB de RAM y 20 GB libres, con Git, Docker Desktop (o motor equivalente) y un IDE moderno como Visual Studio Code o cualquier IDE de JetBrains.
+Acceso autorizado a Claude Code mediante un plan vigente (Max, Team o Enterprise), según lo que apruebe la organización.
+Acceso a repositorios corporativos con permisos de lectura, escritura, gestión de ramas y pull requests, incluyendo permiso para crear y modificar ficheros de configuración del proyecto (CLAUDE.md, .claude/, .mcp.json…), y acceso a GitHub Actions o GitLab CI si se realizarán prácticas de automatización.
+Conocimientos previos de desarrollo de software, Git, terminal y testing; el curso no está orientado a principiantes absolutos en programación.
+Para los bloques avanzados de SDK y agentes programables, Python o TypeScript instalados y permisos para ejecutar dependencias del Claude Agent SDK.
+```
+
 ## 1
 
 ##### FUNDAMENTOS DE CLAUDE CODE COMO SISTEMA
@@ -164,6 +174,25 @@ Antipatrones de prompting que producen ruido, sobreedición o falsas certezas
 ```
 ## 9
 
+##### SKILLS REUTILIZABLES PARA ESTANDARIZAR TAREAS
+##### TÉCNICAS DEL EQUIPO Y REDUCIR PROMPTING
+##### REPETITIVO
+
+```
+Qué son las Skills y cómo amplían la capacidad de Claude Code
+Estructura de un `SKILL.md` útil para tareas repetibles y bien delimitadas
+Diferencia entre skill automática e invocación explícita mediante `/skill-
+name`
+Diseño de skills para code review, testing, docs o despliegue
+Reutilización de skills por proyecto, por usuario o por organización
+Migración conceptual desde comandos personalizados a skills unificadas
+Estrategias de nombrado, documentación y mantenimiento de skills
+Versionado de skills compartidas sin romper hábitos del equipo
+Ejemplos de skills corporativas de alto valor recurrente
+Gobierno de skills para evitar dispersión y duplicidad.
+```
+## 10
+
 ##### EXPLORACIÓN DE REPOSITORIOS DESCONOCIDOS,
 ##### COMPRENSIÓN DE ARQUITECTURA Y ONBOARDING
 ##### ACELERADO CON CLAUDE CODE
@@ -182,7 +211,7 @@ Generación de guías de lectura del repositorio para el equipo
 Preparación de sesiones de trabajo profundas sobre sistemas heredados
 ```
 
-## 10
+## 11
 
 ##### GENERACIÓN DE NUEVAS FUNCIONALIDADES CON
 ##### CONTROL DE IMPACTO, ALINEACIÓN ARQUITECTÓNICA Y
@@ -200,7 +229,7 @@ Verificación de compatibilidad con patrones ya usados por el equipo
 Generación de checklist técnico para cerrar una nueva funcionalidad
 Estrategias para usar IA sin perder diseño intencional ni coherencia
 ```
-## 11
+## 12
 
 ##### REFACTORIZACIÓN PROFUNDA Y MODERNIZACIÓN
 ##### PROGRESIVA DE CÓDIGO HEREDADO SIN ROMPER EL
@@ -220,7 +249,7 @@ Uso de Claude Code para modernizar sin reescribir ciegamente todo el
 sistema
 ```
 
-## 12
+## 13
 
 ##### TESTING ASISTIDO POR IA PARA UNIT TESTS,
 ##### INTEGRACIÓN, REGRESIÓN Y ESCENARIOS BORDE
@@ -240,7 +269,7 @@ Detección de pruebas frágiles, redundantes o poco informativas
 Estrategias para convertir Claude Code en copiloto de calidad y no solo de
 velocidad
 ```
-## 13
+## 14
 
 ##### DOCUMENTACIÓN TÉCNICA, README, ADR Y
 ##### EXPLICACIONES DE ARQUITECTURA QUE SÍ SIRVEN AL
@@ -260,7 +289,7 @@ Conversión de Claude Code en apoyo sistemático a la memoria técnica del
 equipo
 ```
 
-## 14
+## 15
 
 ##### REVISIÓN DE CÓDIGO, PULL REQUESTS Y ANÁLISIS DE
 ##### CAMBIOS CON FOCO EN CALIDAD, MANTENIBILIDAD Y
@@ -281,7 +310,7 @@ Integración de revisión asistida en procesos colaborativos de Git
 Límites de la IA en revisión y momentos donde conviene revisión humana
 profunda
 ```
-## 15
+## 16
 
 ##### SEGURIDAD DEL SOFTWARE, ANÁLISIS DE
 ##### VULNERABILIDADES Y HARDENING DEL CÓDIGO
@@ -300,7 +329,7 @@ Integración de chequeos de seguridad en hotfixes y nuevas funcionalidades
 Uso de Claude Code como apoyo a la seguridad sin delegar la decisión final
 ```
 
-## 16
+## 17
 
 ##### DEPENDENCIAS, PAQUETES Y MIGRACIONES DE
 ##### LIBRERÍAS O FRAMEWORKS CON CRITERIO TÉCNICO Y
@@ -319,7 +348,7 @@ Revisión de changelogs, patrones de compatibilidad y costes de cambio
 Uso de Claude Code para reducir fricción en evoluciones tecnológicas
 inevitables
 ```
-## 17
+## 18
 
 ##### GIT, BRANCHING, COMMITS, HOTFIXES Y RESOLUCIÓN
 ##### DE CONFLICTOS DE CÓDIGO CON AYUDA DE CLAUDE
@@ -338,26 +367,6 @@ Integración con workflows de revisión y ramas protegidas
 Buenas prácticas para no convertir la IA en un generador de commits sin
 juicio.
 ```
-
-## 18
-
-##### SKILLS REUTILIZABLES PARA ESTANDARIZAR TAREAS
-##### TÉCNICAS DEL EQUIPO Y REDUCIR PROMPTING
-##### REPETITIVO
-
-```
-Qué son las Skills y cómo amplían la capacidad de Claude Code
-Estructura de un `SKILL.md` útil para tareas repetibles y bien delimitadas
-Diferencia entre skill automática e invocación explícita mediante `/skill-
-name`
-Diseño de skills para code review, testing, docs o despliegue
-Reutilización de skills por proyecto, por usuario o por organización
-Migración conceptual desde comandos personalizados a skills unificadas
-Estrategias de nombrado, documentación y mantenimiento de skills
-Versionado de skills compartidas sin romper hábitos del equipo
-Ejemplos de skills corporativas de alto valor recurrente
-Gobierno de skills para evitar dispersión y duplicidad.
-```
 ## 19
 
 ##### SUBAGENTES, ESPECIALIZACIÓN DE ROLES Y
@@ -375,6 +384,7 @@ Diseño de equipos de agentes para tareas largas y segmentadas
 Casos de uso de subagentes en debugging, documentación o seguridad
 Riesgos de sobreorquestación dentro del flujo del desarrollador
 Criterios para mantener subagentes útiles, legibles y gobernables.
+Creando agentes para tareas diarias y 
 ```
 
 ## 20
