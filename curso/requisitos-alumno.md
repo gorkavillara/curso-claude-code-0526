@@ -54,7 +54,7 @@
 - [ ] Tienes una terminal moderna disponible:
   - Windows: Windows Terminal + PowerShell 7 (o WSL2 con Ubuntu)
   - macOS / Linux: terminal del sistema o iTerm2
-- [ ] **Docker Desktop** (o Podman, Rancher Desktop, motor de contenedores equivalente) instalado y arrancando sin errores. Lo usamos para **prácticas de entornos, scripts y dockerización** en los temas de Docker y CI/CD; no es el plato fuerte del curso, pero lo miraremos.
+- [ ] **Docker Desktop** (o Podman, Rancher Desktop, etc.) instalado y arrancando sin errores.
   - [ ] `docker run hello-world` funciona.
 - [ ] **Node.js 24+** instalado (`node --version`) — el código de prácticas usa type-stripping nativo de Node 24.
 - [ ] `npm --version` funciona.
