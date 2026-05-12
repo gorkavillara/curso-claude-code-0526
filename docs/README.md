@@ -29,7 +29,7 @@ Este curso te prepara para usar Claude Code como una herramienta profesional den
 | **III. Calidad, seguridad y Git** | 16–18 | Hardening, migraciones de stack y resolución de conflictos |
 | **IV. Extensibilidad avanzada** | 19–22 | Subagentes, MCP, plugins/hooks, CLI avanzada |
 | **V. Plataforma y operaciones** | 23–24 | Docker y CI/CD |
-| **VI. Arquitectura, equipo y cierre** | 25–27 | Patrones, gobierno corporativo y proyecto final |
+| **VI. Arquitectura, equipo y cierre** | 25–27 | Patrones, gobierno corporativo y cierre del curso |
 
 Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, y combina:
 
@@ -40,18 +40,16 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 
 **Fechas:** 22, 25, 27 y 29 de mayo · 1, 3, 5 y 8 de junio (8 sesiones) **Horario:** 09:30 – 13:30 · Sesión final del 8 de junio: 09:30 – 11:30 **Duración total:** 30 horas
 
-| # | Fecha | Día | Horario | Temas | Proyecto final |
-|---|---|---|---|---|---|
-| 1 | 22 mayo | Vie | 09:30 – 13:30 | Temas 1, 2, 3 y 4 | — |
-| 2 | 25 mayo | Lun | 09:30 – 13:30 | Temas 5, 6, 7 y 8 | — |
-| 3 | 27 mayo | Mié | 09:30 – 13:30 | Temas 9, 10 y 11 | — |
-| 4 | 29 mayo | Vie | 09:30 – 13:30 | Temas 12, 13 y 14 | Arranque |
-| 5 | 1 junio | Lun | 09:30 – 13:30 | Temas 15, 16 y 17 | Iteración 1 |
-| 6 | 3 junio | Mié | 09:30 – 13:30 | Temas 18, 19, 20 y 21 | Iteración 2 |
-| 7 | 5 junio | Vie | 09:30 – 13:30 | Temas 22, 23, 24 y 25 | Iteración 3 |
-| 8 | 8 junio | Lun | 09:30 – 11:30 | Tema 26 | Cierre y presentación |
-
-> El **proyecto final (Tema 27)** no se imparte en un único día: se construye sesión a sesión a partir de la **Sesión 4**. Cada sesión añade una iteración aplicando los temas vistos hasta ese momento.
+| # | Fecha | Día | Horario | Temas |
+|---|---|---|---|---|
+| 1 | 22 mayo | Vie | 09:30 – 13:30 | Temas 1, 2, 3 y 4 |
+| 2 | 25 mayo | Lun | 09:30 – 13:30 | Temas 5, 6, 7 y 8 |
+| 3 | 27 mayo | Mié | 09:30 – 13:30 | Temas 9, 10 y 11 |
+| 4 | 29 mayo | Vie | 09:30 – 13:30 | Temas 12, 13 y 14 |
+| 5 | 1 junio | Lun | 09:30 – 13:30 | Temas 15, 16, 17 y 18 |
+| 6 | 3 junio | Mié | 09:30 – 13:30 | Temas 19, 20 y 21 |
+| 7 | 5 junio | Vie | 09:30 – 13:30 | Temas 22, 23, 24 y 25 |
+| 8 | 8 junio | Lun | 09:30 – 11:30 | Temas 26 y 27 |
 
 ## Detalle por sesión
 
@@ -107,60 +105,52 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 * Patrón base de exploración: **preguntar → leer → responder citando**.
 * Cambios mínimos y acotados; alinear con los patrones del repo.
 
-### Sesión 4 — Vie 29 mayo · Refactor, testing, docs + arranque del proyecto final
+### Sesión 4 — Vie 29 mayo · Refactor, testing y documentación
 
 **Temas:** 12 (Refactor profundo) · 13 (Testing asistido) · 14 (Documentación técnica)
-
-**Proyecto final — Arranque:** diagnóstico del repo, definición de `CLAUDE.md`, skills y subagentes mínimos.
 
 *Objetivos:*
 
 * Refactorizar código heredado sin romper el producto.
 * Generar tests con cobertura **útil**, no solo coverage.
 * Producir documentación viva (README, ADRs, guías de onboarding).
-* **Arrancar el proyecto final**: dejar el repo del proyecto preparado.
 
 *Takeaways:*
 
 * Tests cubren **lógica crítica**, no caminos felices.
 * Docs como **activo vivo**, no decoración.
 * Refactor en lotes pequeños con tests como red de seguridad.
-* El proyecto final se construye sesión a sesión.
 
-### Sesión 5 — Lun 1 junio · Code review, seguridad y migración de stack
+### Sesión 5 — Lun 1 junio · Code review, seguridad, dependencias y Git
 
-**Temas:** 15 (Code review y PRs) · 16 (Seguridad y hardening) · 17 (Dependencias y plan de transición)
-
-**Proyecto final — Iteración 1:** aplicar revisión, hardening de seguridad y plan de migración al proyecto.
+**Temas:** 15 (Code review y PRs) · 16 (Seguridad y hardening) · 17 (Dependencias y plan de transición) · 18 (Git, branching, hotfixes)
 
 *Objetivos:*
 
 * Revisar pull requests con criterio asistido por IA.
 * Hardening del código generado: OWASP, secretos, validación, autenticación.
-* Diseñar la migración de stack con plan en fases y tests de regresión.
+* Planificar migraciones de librerías o frameworks en fases con tests de regresión.
+* Resolver conflictos, hotfixes y branching con asistencia.
 
 *Takeaways:*
 
 * Revisar diffs con foco en **riesgo real**, no en estética.
 * OWASP siempre en mente cuando la IA genera código sensible.
-* Migración de stack en **fases pequeñas y reversibles** con tests.
+* Migraciones en **fases pequeñas y reversibles** con tests.
+* Commits útiles, sin auto-firmar a ciegas.
 
-### Sesión 6 — Mié 3 junio · Git, subagentes, MCP y plugins
+### Sesión 6 — Mié 3 junio · Subagentes, MCP y plugins
 
-**Temas:** 18 (Git, branching, hotfixes) · 19 (Subagentes) · 20 (MCP) · 21 (Plugins, marketplaces y hooks)
-
-**Proyecto final — Iteración 2:** integrar subagentes, conectar MCP a una herramienta interna y empaquetar un plugin del equipo.
+**Temas:** 19 (Subagentes) · 20 (MCP) · 21 (Plugins, marketplaces y hooks)
 
 *Objetivos:*
 
-* Resolver conflictos, hotfixes y branching con asistencia.
 * Especializar agentes con subagentes y roles acotados.
 * Conectar Claude Code a sistemas internos vía MCP.
 * Distribuir capacidades con plugins gobernados.
 
 *Takeaways:*
 
-* Commits útiles, sin auto-firmar a ciegas.
 * Subagente = **rol acotado** con herramientas y memoria propias.
 * MCP = **contrato claro** con tu infra; gobernarlo con allowlists.
 * Plugin = distribución gobernada de skills, agentes, hooks y MCPs.
@@ -168,8 +158,6 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 ### Sesión 7 — Vie 5 junio · CLI, Docker, CI/CD y arquitectura
 
 **Temas:** 22 (CLI avanzada) · 23 (Docker) · 24 (DevOps y CI/CD) · 25 (Arquitectura y diseño)
-
-**Proyecto final — Iteración 3:** dockerizar el proyecto, montar pipeline de CI/CD y revisar la arquitectura final.
 
 *Objetivos:*
 
@@ -185,22 +173,19 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 * CI/CD asiste; **nunca decide release**.
 * La IA propone alternativas; **el humano decide arquitectura**.
 
-### Sesión 8 — Lun 8 junio · Gobierno y cierre del proyecto final
+### Sesión 8 — Lun 8 junio · Equipo, gobierno y cierre
 
-**Temas:** 26 (Trabajo en equipo y gobierno corporativo)
-
-**Proyecto final — Cierre:** presentación final, decisiones tomadas, roadmap de adopción en equipo.
+**Temas:** 26 (Trabajo en equipo y gobierno corporativo) · 27 (Cierre del curso)
 
 *Objetivos:*
 
 * Diseñar una política interna de uso aceptable y gobierno corporativo.
-* Presentar el proyecto final con criterios de calidad y adopción.
+* Cerrar el curso con un repaso ejecutivo de adopción y siguientes pasos.
 
 *Takeaways:*
 
 * Gobierno = **política + auditoría + formación cruzada**.
 * La adopción depende del **equipo**, no de la herramienta.
-* El proyecto final es la síntesis ejecutable de todo lo aprendido.
 
 ## Antes de empezar
 
