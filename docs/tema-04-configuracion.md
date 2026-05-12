@@ -4,7 +4,8 @@ hidden: true
 
 # Tema 4 — Configuración: settings, scopes y políticas
 
-> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
+> **Duración estimada:** ~60 min
+> **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 
@@ -194,7 +195,7 @@ Patrón base para proteger secretos:
 * El agente puede pedirte permiso, pero no saltarse la regla.
 * Para repos con secretos en código, esto es la diferencia entre dormir tranquilo o no.
 
-> Profundizamos en seguridad y permisos en el [Tema 5 — Modos y sandboxing](tema-05-permisos-sandboxing.md) y en el [Tema 15 — Seguridad](tema-15-seguridad.md).
+> Profundizamos en seguridad y permisos en el [Tema 5 — Modos y sandboxing](tema-05-permisos-sandboxing.md) y en el [Tema 16 — Seguridad](tema-16-seguridad.md).
 
 ## 9. Uso de variables de entorno y helpers de autenticación cuando aplican
 

@@ -4,7 +4,8 @@ hidden: true
 
 # Tema 6 — Integración con VS Code y JetBrains
 
-> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
+> **Duración estimada:** ~60 min
+> **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 

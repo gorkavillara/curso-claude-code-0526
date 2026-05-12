@@ -73,7 +73,7 @@ importantes. No inventes nada: si no estás seguro de algo, dilo.
 
 **Compara:** un chat web te lo inventa entero. Aquí está leyendo el código real.
 
-> Patrón base de exploración: **preguntar → leer → responder citando**. Profundizamos en el [Tema 9](tema-09-exploracion-repos.md).
+> Patrón base de exploración: **preguntar → leer → responder citando**. Profundizamos en el [Tema 10](tema-10-exploracion-repos.md).
 
 ---
 

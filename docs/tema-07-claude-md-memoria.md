@@ -4,7 +4,8 @@ hidden: true
 
 # Tema 7 — Contexto persistente con CLAUDE.md y memoria
 
-> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
+> **Duración estimada:** ~60 min
+> **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 
@@ -229,7 +230,7 @@ Cuando el agente meta la pata:
 * **Revisión periódica** — entra en el ciclo de mantenimiento técnico.
 * **Pull request gating** — si tu cambio rompe una convención del `CLAUDE.md`, justifícalo en la descripción del PR.
 * **Cross-link con ADRs** — decisiones grandes en ADRs, su síntesis en `CLAUDE.md`.
-* **Auditar contra la realidad** — periódicamente, pedir al propio agente que revise si el `CLAUDE.md` describe lo que hay en el repo (Tema 13).
+* **Auditar contra la realidad** — periódicamente, pedir al propio agente que revise si el `CLAUDE.md` describe lo que hay en el repo (Tema 14).
 
 > El `CLAUDE.md` bien mantenido **es** el manual de estilo del equipo. Y, de paso, configura a la IA.
 
