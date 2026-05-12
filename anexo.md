@@ -5,7 +5,8 @@
 ```
 Equipo con Windows 11, macOS 13+ o Linux reciente, con 16 GB de RAM y 20 GB libres, con Git, Docker Desktop (o motor equivalente) y un IDE moderno como Visual Studio Code o cualquier IDE de JetBrains.
 Acceso autorizado a Claude Code mediante un plan vigente (Max, Team o Enterprise), según lo que apruebe la organización.
-Acceso a repositorios corporativos con permisos de lectura, escritura, gestión de ramas y pull requests, incluyendo permiso para crear y modificar ficheros de configuración del proyecto (CLAUDE.md, .claude/, .mcp.json…), y acceso a GitHub Actions o GitLab CI si se realizarán prácticas de automatización.
+Acceso a terminal local, Docker Desktop o motor de contenedores equivalente para prácticas de entornos, scripts y dockerización.
+Acceso a repositorios corporativos con permisos de lectura, escritura, gestión de ramas y pull requests, incluyendo permiso para crear y modificar ficheros de configuración del proyecto (CLAUDE.md, .claude/, .mcp.json…), y acceso a GitHub Actions o GitLab CI.
 Conocimientos previos de desarrollo de software, Git, terminal y testing; el curso no está orientado a principiantes absolutos en programación.
 Para los bloques avanzados de SDK y agentes programables, Python o TypeScript instalados y permisos para ejecutar dependencias del Claude Agent SDK.
 ```
