@@ -3,15 +3,12 @@
 * [Introducción](README.md)
 * [Requisitos previos](requisitos.md)
 
-## Sesión 1 — Vie 22 mayo · Fundamentos y entorno
+## Contenido del curso
 
 * [Tema 1 — Fundamentos de Claude Code como sistema agentic](tema-01-fundamentos.md)
 * [Tema 2 — Interfaces oficiales de Claude Code](tema-02-interfaces.md)
 * [Tema 3 — Preparación del entorno técnico](tema-03-entorno.md)
 * [Tema 4 — Configuración: settings, scopes y políticas](tema-04-configuracion.md)
-
-## Sesión 2 — Lun 25 mayo · Permisos, IDE, memoria y prompting
-
 * [Tema 5 — Modos de trabajo, permisos y sandboxing](tema-05-permisos-sandboxing.md)
 * [Tema 6 — Integración con VS Code y JetBrains](tema-06-ides.md)
 * [Tema 7 — Contexto persistente con CLAUDE.md y memoria](tema-07-claude-md-memoria.md)
