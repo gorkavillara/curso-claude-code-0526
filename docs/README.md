@@ -127,9 +127,9 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 * Refactor en lotes pequeños con tests como red de seguridad.
 * El proyecto final se construye sesión a sesión.
 
-### Sesión 5 — Lun 1 junio · Code review, seguridad y migración a PHP
+### Sesión 5 — Lun 1 junio · Code review, seguridad y migración de stack
 
-**Temas:** 15 (Code review y PRs) · 16 (Seguridad y hardening) · 17 (Dependencias y migración a PHP)
+**Temas:** 15 (Code review y PRs) · 16 (Seguridad y hardening) · 17 (Dependencias y plan de transición)
 
 **Proyecto final — Iteración 1:** aplicar revisión, hardening de seguridad y plan de migración al proyecto.
 
@@ -137,14 +137,13 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 
 * Revisar pull requests con criterio asistido por IA.
 * Hardening del código generado: OWASP, secretos, validación, autenticación.
-* Diseñar la migración de stack a **PHP/Laravel** con plan en fases y tests de regresión.
+* Diseñar la migración de stack con plan en fases y tests de regresión.
 
 *Takeaways:*
 
 * Revisar diffs con foco en **riesgo real**, no en estética.
 * OWASP siempre en mente cuando la IA genera código sensible.
 * Migración de stack en **fases pequeñas y reversibles** con tests.
-* El framework objetivo es **Laravel** (Eloquent + Migrations propios) — ver nota al final.
 
 ### Sesión 6 — Mié 3 junio · Git, subagentes, MCP y plugins
 
@@ -214,7 +213,5 @@ Cada tema dura entre **45 y 90 minutos** según su peso conceptual y práctico, 
 Desarrolladores con experiencia profesional. **No es un curso de introducción a la programación.** Se asume que ya manejas Git, terminal, testing básico y arquitectura de aplicaciones.
 
 ---
-
-> **Nota sobre la migración a PHP (Tema 17 y proyecto final).** Para que el caso de migración sea pedagógicamente útil, se usa **Laravel** como framework destino: convenciones claras, Eloquent ORM, migrations integradas y documentación masiva facilitan que Claude Code razone sobre el cambio. Alternativa válida: **Symfony**, más enterprise y modular pero con curva más alta.
 
 > _"El autocompletado te ayuda a escribir más rápido el código que ya tenías en la cabeza. Claude Code te ayuda a no tener que tenerlo todo en la cabeza."_
