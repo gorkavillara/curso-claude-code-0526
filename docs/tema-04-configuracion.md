@@ -4,8 +4,7 @@ hidden: true
 
 # Tema 4 — Configuración: settings, scopes y políticas
 
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico + demos guiadas
+> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 
@@ -228,3 +227,4 @@ Patrón base para proteger secretos:
 * `~/.claude.json` lo gestiona la CLI: **no tocar**.
 * `defaultMode` cambia tu vida diaria — elige según el riesgo del repo.
 * Las reglas `deny` son tu mejor amiga en repos con secretos.
+* Documentación en: [https://code.claude.com/docs/en/settings](https://code.claude.com/docs/en/settings)
