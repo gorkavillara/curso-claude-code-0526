@@ -1,11 +1,6 @@
----
-hidden: true
----
-
 # Tema 3 — Preparación del entorno técnico
 
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico + demos guiadas
+> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 

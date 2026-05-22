@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Tema 4 — Configuración: settings, scopes y políticas
 
 > **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas

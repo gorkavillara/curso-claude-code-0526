@@ -1,11 +1,6 @@
----
-hidden: true
----
-
 # Tema 2 — Interfaces oficiales de Claude Code
 
-> **Duración estimada:** ~60 min
-> **Tipo:** conceptual + demos guiadas
+> **Duración estimada:** \~60 min **Tipo:** conceptual + demos guiadas
 
 ## Objetivo del tema
 
