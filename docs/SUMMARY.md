@@ -12,3 +12,8 @@
 * [Tema 5 — Modos de trabajo, permisos y sandboxing](tema-05-permisos-sandboxing.md)
 * [Tema 6 — Integración con VS Code y JetBrains](tema-06-ides.md)
 * [Tema 7 — Contexto persistente con CLAUDE.md y memoria](tema-07-claude-md-memoria.md)
+* [Tema 8 — Prompting profesional para desarrollo de software](tema-08-prompting.md)
+
+## Recursos
+
+* [Preguntas frecuentes de alumnos](faq-alumnos.md)

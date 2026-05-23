@@ -1,122 +1,116 @@
 # Tema 7 — Solución de referencia
 
-> Este archivo **no debe estar** en la rama `tema-07/inicio`. Vive en `main` y, opcionalmente, en `tema-07/solucion`.
+## Ejercicio 1 — Crear un CLAUDE.md desde cero
 
-## Mapa de los 4 problemas plantados
+### Comportamiento esperado SIN CLAUDE.md
 
-| # | Archivo | Síntoma observable | Ejercicio que lo cubre |
-|---|---|---|---|
-| 1 | `src/services/notes.ts` | `archive`/`unarchive` con `if` anidados y duplicación íntegra | Ejercicio 1 |
-| 2 | `src/search/index.ts` | Búsqueda sensible a mayúsculas y a acentos | Ejercicio 2 |
-| 3 | `src/routes/notes.ts` | `POST /notes` no valida entrada | Ejercicio 3 |
-| 4 | `test/` | No hay tests para `search/` ni para validación HTTP | Se cierra haciendo 2 y 3 |
+Cuando se pide "añade validación: el title no puede estar vacío", Claude típicamente:
+- Pone la validación en `routes/` (lógica de interfaz HTTP) — puede ser correcto.
+- O en `services/` (mezcla validación de forma con negocio) — error arquitectónico.
+- Lanza `throw new Error('title requerido')` — error genérico sin tipo.
 
-## Prompts modelo (lo que tú prompteas en las demos)
+### CLAUDE.md mínimo correcto
 
-### Demo 1 — Refactor acotado de `services/notes.ts`
+```markdown
+# Notebox
 
-```
-[CONTEXTO]
-Estoy en el archivo src/services/notes.ts. Las funciones archive(id) y
-unarchive(id) tienen anidación profunda y duplican la misma estructura.
+API mínima de notas en Node 24 + Express + TypeScript.
 
-[OBJETIVO]
-Reducir la duplicación entre ambas y aplanar los if anidados.
+## Arquitectura
+- `src/routes/` → endpoints HTTP (Express). Valida forma, llama al service, traduce errores.
+- `src/services/` → lógica de negocio. Valida reglas de dominio.
+- `src/storage/` → repositorio en memoria (Map).
+- `src/models/` → tipos y factories.
 
-[RESTRICCIONES]
-- Mantén exactamente las firmas: archive(id), unarchive(id).
-- No toques ningún otro archivo.
-- Los tests de test/notes.service.test.ts deben seguir pasando sin cambios.
-- No introduzcas dependencias nuevas.
+## Convenciones
+- Validación de **forma** (presencia, tipo, longitud) → `routes/`.
+- Validación de **negocio** (¿puede archivar si ya está archivado?) → `services/`.
+- Nunca `throw new Error(message)` directo. Usar `{ type: 'INVALID_INPUT', message: '...' }`.
+- Tests con `node --test`. Sin mocks del storage en tests de service.
 
-[FORMATO]
-Muéstrame el archivo completo final y, debajo, una lista corta de los
-cambios que has hecho.
+## Comandos
+- `npm test`, `npm run typecheck`, `npm run dev`.
 
-[EVIDENCIA]
-Antes de tocar nada, dime en una línea qué es lo que duplican ambas funciones.
-```
-
-Resultado esperado: factorización en `setArchived(id, value)`.
-
-### Demo 2 — Alternativas + implementación búsqueda
-
-Prompt 1 (alternativas):
-
-```
-[CONTEXTO]
-src/search/index.ts implementa una búsqueda lineal sobre title+body. Un
-usuario reporta que buscar "MAÑANA" no devuelve la nota cuyo título es
-"mañana", y que buscar "manana" tampoco la encuentra.
-
-[OBJETIVO]
-Quiero entender qué opciones hay para arreglarlo, no quiero el código todavía.
-
-[FORMATO]
-Dame 3 alternativas. Por cada una:
-- Qué cambia exactamente.
-- Coste aproximado de implementación (líneas de código y dependencias).
-- Riesgos o efectos secundarios sobre el resto del sistema.
-- En qué casos esta opción se queda corta.
-
-[EVIDENCIA]
-Cita la línea concreta del bug y por qué falla con esos inputs.
+## Reglas duras
+- No tocar `node_modules/`.
+- Cambios al modelo `Note` requieren actualizar tests existentes.
 ```
 
-Prompt 2 (implementación, tras elegir opción b):
+### Comportamiento esperado CON CLAUDE.md
 
+Con las reglas anteriores, Claude:
+- Pone la validación de `title` en `routes/notes.ts`.
+- Usa `{ type: 'INVALID_INPUT', message: 'title requerido' }` en lugar de `Error` genérico.
+- La ruta transforma ese objeto a `res.status(400).json({ error: ... })`.
+
+### Lo que el formador valida
+
+- ¿Cambió el lugar de la validación entre sesión 1 y sesión 2?
+- ¿Usó error semántico vs Error genérico?
+- ¿Son las reglas del CLAUDE.md concretas y verificables?
+
+---
+
+## Ejercicio 2 — Segmentar con .claude/rules/
+
+### Reglas ambiguas en el CLAUDE.md plantado
+
+| Regla | Por qué es ambigua |
+|---|---|
+| "El código debe ser limpio y mantenible" | Sin criterio concreto — cada agente lo interpreta diferente |
+| "Escribe código que un junior pueda entender" | Subjetivo, no afecta decisiones reales |
+| "Usa nombres de variable descriptivos" | No define qué es "descriptivo" — no cambia el output |
+| "Los tests deben ser rápidos" | Sin umbral concreto — no accionable |
+
+### CLAUDE.md final correcto (tras segmentar)
+
+```markdown
+# Notebox
+
+API mínima de notas en Node 24 + Express + TypeScript.
+
+## Arquitectura
+- `src/routes/` → endpoints HTTP.
+- `src/services/` → lógica de negocio.
+- `src/storage/` → repositorio en memoria.
+- `src/models/` → tipos y factories.
+
+## Convenciones
+- Validación de forma → `routes/`. Validación de negocio → `services/`.
+- Ver `.claude/rules/error-handling.md` para el patrón de errores.
+
+## Comandos
+- `npm test`, `npm run typecheck`, `npm run dev`.
+
+## Reglas duras
+- No tocar `node_modules/`.
+- Cambios al modelo `Note` requieren actualizar tests existentes.
 ```
-Aplica la opción de normalizar con toLowerCase + NFD + replace de diacríticos.
 
-[RESTRICCIONES]
-- Cambio sólo en src/search/index.ts.
-- No introduzcas dependencias.
-- Añade test/search.test.ts con 3 casos: mayúsculas, acentos, query vacía.
+### Archivos de rules
 
-[FORMATO]
-Diff de search/index.ts + archivo nuevo de tests entero.
+`.claude/rules/testing.md`:
+```markdown
+# Reglas de testing — Notebox
+
+- Tests con `node --test`, sin framework externo.
+- Un test cubre exactamente un comportamiento. Si el nombre tiene "y", divide.
+- Formato: `<función>: <comportamiento esperado>` (ej: `search: devuelve [] con query null`).
+- No mockear storage en tests de service — usar `storage._reset()` en `beforeEach`.
+- Tests de integración HTTP en `test/*.integration.test.ts` con supertest.
 ```
 
-### Demo 3 — Validación en la frontera
+`.claude/rules/error-handling.md`:
+```markdown
+# Manejo de errores — Notebox
 
-```
-[CONTEXTO]
-src/routes/notes.ts maneja POST /notes. Hoy no valida la entrada: title
-puede venir vacío o ausente, y body no tiene límite de tamaño.
-
-[OBJETIVO]
-Añadir validación mínima en la capa de ruta:
-- title: requerido, string no vacío, máximo 200 caracteres.
-- body: opcional, máximo 5000 caracteres.
-
-[RESTRICCIONES]
-- Cambio mínimo. No introduzcas librerías de validación (zod, joi, etc.).
-- No toques services/, storage/, ni los tests existentes.
-- Si la entrada es inválida, responde 400 con { error: <mensaje> }.
-- Mantén el comportamiento actual para entradas válidas.
-
-[FORMATO]
-Muéstrame el diff (solo las líneas cambiadas) y propón 3 tests para
-test/notes.service.test.ts o un archivo nuevo, sin escribirlos todavía.
+- Nunca `throw new Error(message)`. Crear `{ type: 'NOT_FOUND' | 'INVALID_INPUT', message: string }`.
+- `routes/` transforma errores del service a HTTP: NOT_FOUND → 404, INVALID_INPUT → 400.
+- No incluir stack traces en respuestas de error.
 ```
 
-## Resultado final esperado
+### Lo que el formador valida
 
-Después de los 3 ejercicios, el repo debería tener:
-
-- `src/services/notes.ts` con `archive`/`unarchive` factorizados.
-- `src/search/index.ts` con normalización Unicode.
-- `src/routes/notes.ts` con validación de entrada.
-- `test/storage.test.ts` (sin cambios).
-- `test/notes.service.test.ts` (sin cambios).
-- `test/search.test.ts` **nuevo**.
-- `test/routes.notes.test.ts` **nuevo** (validación HTTP).
-
-`npm test` verde con 12-14 tests.
-
-## Errores típicos del alumno (anticipa estos)
-
-- Pide "refactoriza" sin restricciones → Claude toca varios archivos. Úsalo como ejemplo en clase.
-- Pide a Claude que arregle search "porque tiene un bug" sin describir el síntoma → Claude inventa otro bug y "lo arregla".
-- Mueve la validación al service en lugar de a la ruta. Es un error conceptual que merece pararse y comentarlo.
-- Mete `zod` aunque la restricción lo prohíba. Pregunta "¿por qué crees que en la restricción ponía 'sin librerías nuevas'?" — abre conversación sobre presupuestos de cambio.
+- ¿Identificó las 3-4 reglas ambiguas? ¿Las justificó?
+- ¿El CLAUDE.md final tiene menos líneas y más precisión?
+- El test con `createNote: devuelve error si title está vacío` (formato correcto).
