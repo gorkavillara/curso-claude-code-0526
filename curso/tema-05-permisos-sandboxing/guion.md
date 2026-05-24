@@ -1,6 +1,6 @@
 # Tema 5 — Modos de trabajo, permisos y sandboxing
 
-> Duración estimada: 70 min · Tipo: conceptual + práctico.
+> Duración estimada: 90 min · Tipo: conceptual + práctico.
 > Repositorio de prácticas: rama `tema-05/inicio` (notebox, Node 24 + Express + TypeScript).
 
 ## 0. Objetivo del tema
@@ -11,7 +11,7 @@ Que el alumno desarrolle **criterio antes de ejecutar**: elegir el modo correcto
 
 ## 1. Flujo de sesión
 
-Estructura **batch**: primero todas las demos, después los ejercicios en clase. Los ejercicios 1 y 2 necesitan haber visto las tres demos para tener el cuadro completo. El ejercicio 3 es asíncrono.
+Estructura **batch**: primero todas las demos, después los tres ejercicios en clase. El ejercicio 3 es la pieza que integra todo lo visto.
 
 ```
 00:00 — Encuadre                        (10 min)
@@ -20,12 +20,11 @@ Estructura **batch**: primero todas las demos, después los ejercicios en clase.
 00:30 — Demo 3: sandbox en acción       (10 min)
 00:40 — Ejercicio 1: clasificar modos   (15 min, en clase)
 00:55 — Ejercicio 2: política fintech   (15 min, en clase)
-70:00 — Cierre y puente                 (5 min)
-——————
-Ejercicio 3: autopsia incidente          (asíncrono — lo hacen solos)
+70:00 — Ejercicio 3: autopsia incidente (20 min, en clase)
+90:00 — Cierre y puente                 (5 min)
 ```
 
-> **Si vas justo de tiempo:** recorta el encuadre a 5 min y deja el ejercicio 2 como inicio de asíncrono.
+> **Si vas justo de tiempo:** recorta el encuadre a 5 min y acorta el ejercicio 3 a 15 min (deja solo los pasos 1-3, omite el 4).
 
 ---
 
@@ -146,9 +145,9 @@ Lo que el alumno ve:
 
 ---
 
-## 4. Ejercicios en clase (≈ 30 min)
+## 4. Ejercicios en clase (≈ 50 min)
 
-> **Rama:** `git checkout tema-05/ejercicio-01` para el ejercicio 1, `tema-05/ejercicio-02` para el 2.
+> **Ramas:** `tema-05/ejercicio-01`, `tema-05/ejercicio-02`, `tema-05/ejercicio-03`.
 > Cada rama tiene un `EJERCICIO.md` con los pasos concretos.
 
 ### Ejercicio 1 — Clasificar tareas por modo (15 min)
@@ -168,21 +167,21 @@ Los alumnos reciben un `.claude/settings.ejercicio.json` intencionalmente malo (
 - ¿Diferenciaron "bloquear ejecución" de "bloquear escritura"?
 - ¿Lograron que el prompt 4 (editar `src/`) siguiera funcionando?
 
----
+### Ejercicio 3 — Autopsia de un incidente (20 min)
 
-## 5. Ejercicio asíncrono
-
-### Ejercicio 3 — Autopsia de un incidente (35 min, fuera de clase)
-
-> **Rama:** `tema-05/ejercicio-03`
+> **Rama:** `git checkout tema-05/ejercicio-03`
 
 Los alumnos leen el `INCIDENTE.md` (sesión de Claude que causó 4 daños reales), analizan qué falló, reescriben el prompt, prueban en modo plan y escriben la regla preventiva para el settings.
 
-**Revisión en la siguiente sesión:** pedir a 2-3 alumnos que lean su regla preventiva. Contrastarlas entre sí.
+**Lo que el formador observa:**
+- ¿Identificaron todos los daños o solo los obvios?
+- ¿La regla preventiva que escribieron es concreta y verificable?
+
+Al terminar, pedir a 2-3 alumnos que lean su regla preventiva y contrastarlas entre sí en clase.
 
 ---
 
-## 6. Cierre y puente (≈ 5 min)
+## 5. Cierre y puente (≈ 5 min)
 
 Resumen en pizarra:
 
@@ -197,10 +196,11 @@ Resumen en pizarra:
 
 ---
 
-## 7. Notas para el formador
+## 6. Notas para el formador
 
 - **Demo 1**: si los alumnos preguntan por `auto` y `acceptEdits`, explica brevemente la tabla de modos del doc (sección 1) pero no hagas demo — el ejercicio 1 los cubre.
 - Si alguien pregunta *"¿y si alguien hace rm -rf dentro de un .ts permitido?"* → ese es el límite de los permisos. Los permisos protegen acciones directas de Claude, no el código que Claude escribe que luego ejecutas tú.
 - La demo 3 puede tardar más si hay preguntas sobre la sintaxis del settings. Prepara el JSON de antemano para pegarlo rápido.
 - Pregunta típica: *"¿Esto funciona igual en JetBrains?"* → Sí, el `settings.json` es agnóstico del IDE.
 - Si el ejercicio 2 se atasca, el error más común es usar `Write(db/migrations/*)` en lugar de `Write(db/migrations/**)` (un asterisco vs dos). Señálalo antes de que empiecen.
+- El ejercicio 3 funciona mejor en voz alta: que alguien lea el INCIDENTE.md antes de que cada uno lo analice solo. Ahorra tiempo y da contexto compartido.

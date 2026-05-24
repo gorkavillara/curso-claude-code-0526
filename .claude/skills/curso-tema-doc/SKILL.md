@@ -151,9 +151,8 @@ Elige según el tipo de tema:
 00:XX — Demo 3                (X min)
 00:XX — Ejercicio 1 (clase)   (X min)
 00:XX — Ejercicio 2 (clase)   (X min)
+00:XX — Ejercicio 3 (clase)   (X min)
 XX:00 — Cierre y puente       (5 min)
-—————
-Ejercicio 3: asíncrono
 ```
 
 **Plantilla intercalada:**
@@ -163,10 +162,9 @@ Ejercicio 3: asíncrono
 00:XX — Ejercicio 1 (clase)        (X min)
 00:XX — Demo 2                     (X min)
 00:XX — Ejercicio 2 (clase)        (X min)
-00:XX — Demo 3 (solo demo)         (X min)
+00:XX — Demo 3                     (X min)
+00:XX — Ejercicio 3 (clase)        (X min)
 XX:00 — Cierre y puente            (5 min)
-—————
-Ejercicio 3: asíncrono
 ```
 
 ### Secciones del guion
@@ -231,7 +229,9 @@ Por cada tema se crean (como mínimo):
 | `tema-XX/inicio` | Base del repo para la sesión (si no existe ya de un tema anterior) |
 | `tema-XX/ejercicio-01` | Ejercicio 1 (en clase) |
 | `tema-XX/ejercicio-02` | Ejercicio 2 (en clase) |
-| `tema-XX/ejercicio-03` | Ejercicio 3 (asíncrono) |
+| `tema-XX/ejercicio-03` | Ejercicio 3 (en clase) |
+
+> **Los tres ejercicios siempre se hacen en clase.** No hay ejercicios asíncronos.
 
 Para crear una rama:
 ```bash

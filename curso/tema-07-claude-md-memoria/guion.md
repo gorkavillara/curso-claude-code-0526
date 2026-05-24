@@ -1,6 +1,6 @@
 # Tema 7 — Contexto persistente: CLAUDE.md y memoria
 
-> Duración estimada: 60 min · Tipo: práctico (alumnos delante del teclado).
+> Duración estimada: 80 min · Tipo: práctico (alumnos delante del teclado).
 > Repositorio de prácticas: rama `tema-07/inicio` (notebox, Node 24 + Express + TypeScript).
 
 ## 0. Objetivo del tema
@@ -11,7 +11,7 @@ Que el alumno deje de repetir instrucciones sesión a sesión y empiece a **escr
 
 ## 1. Flujo de sesión
 
-Estructura **intercalada**: cada demo va seguida del ejercicio correspondiente. Así el alumno escribe el `CLAUDE.md` inmediatamente después de ver cómo funciona, y segmenta las reglas justo después de ver los límites del archivo único.
+Estructura **intercalada**: cada demo va seguida del ejercicio correspondiente. Así el alumno escribe el `CLAUDE.md` inmediatamente después de ver cómo funciona.
 
 ```
 00:00 — Encuadre                              (5 min)
@@ -19,13 +19,12 @@ Estructura **intercalada**: cada demo va seguida del ejercicio correspondiente. 
 00:15 — Ejercicio 1: crear CLAUDE.md         (15 min, en clase)
 00:30 — Demo 2: segmentar con rules/         (10 min)
 00:40 — Ejercicio 2: segmentar y depurar     (15 min, en clase)
-00:55 — Demo 3: corregir y persistir         (5 min, solo demo)
-60:00 — Cierre y puente                      (5 min)
-——————
-Ejercicio 3 (auto memory, sin corrector)      (asíncrono — lo hacen solos)
+00:55 — Demo 3: corregir y persistir         (5 min)
+60:00 — Ejercicio 3: auto memory y personal  (15 min, en clase)
+75:00 — Cierre y puente                      (5 min)
 ```
 
-> **Si vas justo de tiempo:** la demo 3 puede comprimirse a 2-3 minutos (solo mostrar el concepto). El ejercicio 3 es completamente autónomo.
+> **Si vas justo de tiempo:** comprime la demo 3 a 2-3 minutos (solo mostrar el concepto) y reduce el ejercicio 3 a 10 minutos (solo la parte de `~/.claude/CLAUDE.md`, omite la reflexión escrita).
 
 ---
 
@@ -106,8 +105,6 @@ Los alumnos crean su propio `CLAUDE.md` para el repo notebox: lanzan un prompt s
 
 > Setup: mismo repo, con el `CLAUDE.md` de la Demo 1.
 
-Muestra un `CLAUDE.md` que empieza a crecer: añade reglas de testing, de errores, de seguridad. Observa que el archivo se vuelve difícil de mantener.
-
 Crea `.claude/rules/testing.md`:
 
 ```markdown
@@ -145,9 +142,9 @@ Los alumnos reciben un `CLAUDE.md` con 8 reglas mezcladas (testing, errores, arq
 
 ---
 
-## 5. Demo 3 — Corregir y persistir (≈ 5 min, solo demo)
+## 5. Demo 3 + Ejercicio 3 — Corregir y persistir (≈ 20 min)
 
-> Esta demo es demostración pura. Muestra el flujo sin necesitar que los alumnos lo hagan en clase.
+### Demo 3 (5 min)
 
 **Concepto**: una corrección en sesión solo vale para esa sesión. Para que valga mañana, escríbela.
 
@@ -167,21 +164,21 @@ Muestra el flujo:
 
 6. Sesión nueva → separa correctamente sin recordatorio.
 
-> "La corrección en sesión es temporal. `CLAUDE.md` es permanente. Si cometiste el error de corregir en sesión, lo next step es siempre escribirlo en el archivo."
+> "La corrección en sesión es temporal. `CLAUDE.md` es permanente."
+
+### Ejercicio 3 — Auto memory y contexto personal (15 min)
+
+> **Rama:** `git checkout tema-07/ejercicio-03`
+
+Los alumnos exploran `~/.claude/CLAUDE.md` para añadir preferencias personales que apliquen en todos sus repos (idioma de respuesta, estilo de código, formato preferido). Reflexionan sobre la diferencia entre contexto personal y contexto de proyecto y lo documentan en el EJERCICIO.md.
+
+**Lo que el formador observa:**
+- ¿Entienden la diferencia entre `~/.claude/CLAUDE.md` (personal, global) y `<repo>/CLAUDE.md` (equipo, versionado)?
+- Si alguien detecta que auto memory contradice una regla del repo, usarlo para hablar de precedencia.
 
 ---
 
-## 6. Ejercicio asíncrono
-
-### Ejercicio 3 — Auto memory y contexto personal (sin corrector, fuera de clase)
-
-Los alumnos exploran `~/.claude/CLAUDE.md` para añadir preferencias personales que apliquen en todos sus repos (idioma de respuesta, estilo de código, formato preferido). Reflexionan sobre la diferencia entre contexto personal y contexto de proyecto.
-
-**Revisión opcional:** en la siguiente sesión, preguntar si alguien detectó que auto memory contradecía una regla de `CLAUDE.md`. Usarlo para hablar de precedencia.
-
----
-
-## 7. Cierre y puente (≈ 5 min)
+## 6. Cierre y puente (≈ 5 min)
 
 Resumen en pizarra:
 
@@ -196,10 +193,10 @@ Resumen en pizarra:
 
 ---
 
-## 8. Notas para el formador
+## 7. Notas para el formador
 
 - **Diferencia clave para remarcar**: `CLAUDE.md` en el repo (versionado, para el equipo) vs `~/.claude/CLAUDE.md` (personal, para todos tus repos). Los alumnos los confunden.
 - Si alguien pregunta *"¿y si `CLAUDE.md` tiene instrucciones contradictorias?"*: más específico gana. Subpath > repo > home.
 - El error más común en el ejercicio 2: mover líneas pero no verificar que el agente aún las carga. Pedir que lancen el prompt de verificación siempre.
-- Pregunta típica: *"¿Cuánto debe medir el `CLAUDE.md`?"* → La regla práctica: si tardan más de 2 minutos en leerlo, está demasiado largo. `.claude/rules/` para el resto.
-- Si hay tiempo extra al final del ejercicio 2, mostrar la precedencia subpath: crear `src/payments/CLAUDE.md` con una regla de pago más restrictiva y ver cómo gana a la general.
+- Pregunta típica: *"¿Cuánto debe medir el `CLAUDE.md`?"* → Regla práctica: si tardan más de 2 minutos en leerlo, está demasiado largo.
+- Si hay tiempo extra al final del ejercicio 2, mostrar la precedencia subpath: crear `src/payments/CLAUDE.md` con una regla más restrictiva y ver cómo gana a la general.

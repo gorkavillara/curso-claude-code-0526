@@ -1,6 +1,6 @@
 # Tema 8 — Prompting profesional para desarrollo de software
 
-> Duración estimada: 75-90 min · Tipo: práctico (alumnos delante del teclado).
+> Duración estimada: 90 min · Tipo: práctico (alumnos delante del teclado).
 > Repositorio de prácticas: rama `tema-08/inicio` (notebox, Node 24 + Express + TypeScript).
 
 ## 0. Objetivo del tema
@@ -11,7 +11,7 @@ Que el alumno deje de **escribir prompts como si hablara con ChatGPT** y empiece
 
 ## 1. Flujo de sesión
 
-Estructura **batch**: primero todas las demos (el cuadro completo de las 5 técnicas), después los ejercicios. Los alumnos necesitan haber visto los 4 escenarios para entender qué técnica aplicar en cada ejercicio.
+Estructura **batch**: primero todas las demos (el cuadro completo de las técnicas), después los tres ejercicios. Los alumnos necesitan haber visto todos los escenarios para saber qué técnica aplicar en cada ejercicio.
 
 ```
 00:00 — Encuadre                              (10 min)
@@ -21,12 +21,11 @@ Estructura **batch**: primero todas las demos (el cuadro completo de las 5 técn
 00:34 — Demo 4: antipatrón en directo        (5 min)
 00:39 — Ejercicio 1: prompt malo → bueno     (15 min, en clase)
 00:54 — Ejercicio 2: alternativas primero    (15 min, en clase)
-70:00 — Cierre y puente                      (5 min)
-——————
-Ejercicio 3: cambio mínimo                   (asíncrono — lo hacen solos)
+70:00 — Ejercicio 3: cambio mínimo           (15 min, en clase)
+85:00 — Cierre y puente                      (5 min)
 ```
 
-> **Si vas justo de tiempo:** recorta la demo 4 (es decorativa, refuerza pero no enseña nuevo) y deja el ejercicio 2 como inicio de asíncrono.
+> **Si vas justo de tiempo:** recorta la demo 4 (es decorativa) y reduce el ejercicio 3 a 10 minutos (solo la implementación, sin el debate de capas).
 
 ---
 
@@ -52,151 +51,118 @@ Lo escribo en pizarra y lo dejo ahí toda la sesión:
 [EVIDENCIA]     "cita rutas y líneas, no inventes"
 ```
 
-No siempre necesitas los 5 bloques. Pero si la tarea es no trivial y te falta alguno, se nota.
-
-### Antipatrones que vamos a evitar
-
-- **"Mejora esto"** sin objetivo → sobreedición.
-- **"Hazlo limpio / pythonic / idiomático"** → criterio del modelo, no tuyo.
-- **"Arregla el bug"** sin describir el síntoma → busca a ciegas.
-- **"Haz que funcione"** → fuerza al modelo a inventar.
-- **Reabrir conversación 20 veces con micro-correcciones** → mejor un prompt con todas las restricciones desde el principio.
-
 ---
 
 ## 3. Demos en vivo — lo que prompteo (≈ 29 min)
 
-> Antes de empezar: `git checkout tema-08/inicio`, `npm install`, `npm test` verde. Claude Code abierto apuntando a la raíz del repo.
+> Antes de empezar: `git checkout tema-08/inicio`, `npm install`, `npm test` verde.
 
 ### Demo 1 — Mismo objetivo, dos prompts (≈ 8 min)
 
-**Tarea**: refactorizar `archive()` y `unarchive()` en `src/services/notes.ts`. Tienen anidación profunda y duplicación.
+**Tarea**: refactorizar `archive()` y `unarchive()` en `src/services/notes.ts`.
 
-**Prompt malo** (lo lanzo primero, deliberadamente):
+**Prompt malo** (lo lanzo primero):
 
 ```
 Refactoriza notes.ts, está feo.
 ```
 
-Lo que el alumno ve:
-- Toca cosas que no le hemos pedido.
-- A veces cambia firmas.
-- A veces "mejora" cosas que no son problema (renombra variables, cambia estilo).
+Lo que el alumno ve: toca archivos no pedidos, cambia firmas, "mejora" cosas no solicitadas.
 
 **Prompt bueno** (nuevo chat tras `/clear`):
 
 ```
 [CONTEXTO]
-Estoy en el archivo src/services/notes.ts. Las funciones archive(id) y
-unarchive(id) tienen anidación profunda y duplican la misma estructura.
+src/services/notes.ts. Las funciones archive(id) y unarchive(id)
+tienen anidación profunda y duplican la misma estructura.
 
 [OBJETIVO]
-Reducir la duplicación entre ambas y aplanar los if anidados.
+Reducir la duplicación y aplanar los if anidados.
 
 [RESTRICCIONES]
 - Mantén exactamente las firmas: archive(id), unarchive(id).
 - No toques ningún otro archivo.
-- Los tests de test/notes.service.test.ts deben seguir pasando sin cambios.
+- Los tests de test/notes.service.test.ts deben seguir pasando.
 - No introduzcas dependencias nuevas.
 
 [FORMATO]
-Muéstrame el archivo completo final y, debajo, una lista corta de los
-cambios que has hecho.
+Archivo final completo + lista corta de cambios.
 
 [EVIDENCIA]
-Antes de tocar nada, dime en una línea qué es lo que duplican ambas funciones.
+Antes de tocar nada, dime en una frase qué duplican las dos funciones.
 ```
 
-Lo que el alumno ve:
-- Diagnóstico breve antes del cambio.
-- Refactor acotado.
-- Tests siguen verdes (`npm test` en directo).
+Lo que el alumno ve: diagnóstico breve → refactor acotado → `npm test` verde.
 
-> "El prompt malo no es 'corto'. Es **vago**. Un prompt corto pero específico es mejor que uno largo y disperso."
+> "El prompt malo no es 'corto'. Es **vago**. Un prompt corto pero específico gana siempre."
 
 ### Demo 2 — Pedir alternativas con trade-offs (≈ 8 min)
 
-**Tarea**: hay un bug en `src/search/index.ts`: la búsqueda no encuentra "MAÑANA" cuando la nota dice "mañana", y tampoco "manana" sin tilde.
-
-Antes de pedir el arreglo, **pido alternativas**. Esto cambia la conversación.
+**Tarea**: bug en `src/search/index.ts` — "MAÑANA" no encuentra la nota con title "mañana".
 
 ```
 [CONTEXTO]
-src/search/index.ts implementa una búsqueda lineal sobre title+body. Un
-usuario reporta que buscar "MAÑANA" no devuelve la nota cuyo título es
-"mañana", y que buscar "manana" tampoco la encuentra.
+src/search/index.ts implementa búsqueda lineal sobre title+body.
+Un usuario reporta que "MAÑANA" no encuentra la nota con title "mañana",
+y "manana" tampoco.
 
 [OBJETIVO]
-Quiero entender qué opciones hay para arreglarlo, no quiero el código todavía.
+Entender las opciones de arreglo. No quiero código todavía.
 
 [FORMATO]
-Dame 3 alternativas. Por cada una:
-- Qué cambia exactamente.
-- Coste aproximado de implementación (líneas de código y dependencias).
-- Riesgos o efectos secundarios sobre el resto del sistema.
-- En qué casos esta opción se queda corta.
+3 alternativas con coste, riesgos y limitaciones de cada una.
 
 [EVIDENCIA]
-Cita la línea concreta del bug y por qué falla con esos inputs.
+Cita la línea del bug y explica por qué falla con esos dos inputs.
 ```
 
-Lo que el alumno ve:
-- Claude propone (a) `toLowerCase`, (b) `toLowerCase + normalize('NFD')`, (c) usar una lib tipo `fuse.js`.
-- Aparecen los trade-offs por escrito.
-- **Yo elijo** la opción (b). Explico por qué a los alumnos.
-- Después prompteo el cambio con un segundo prompt acotado.
+Lo que el alumno ve: Claude propone opciones con trade-offs. Yo elijo (ej: `toLowerCase + normalize('NFD')`) y explico por qué. Segundo prompt acotado para implementar.
 
-> "Lo que acabamos de hacer es lo que un buen ingeniero hace por defecto: pensar antes de codear. La IA no quita ese paso, lo hace más barato."
+> "Pensar antes de codear. La IA no quita ese paso, lo hace más barato."
 
 ### Demo 3 — Cambio mínimo con verificación (≈ 8 min)
 
-**Tarea**: `src/routes/notes.ts` no valida la entrada de `POST /notes`. Acepta título vacío y body sin límite.
+**Tarea**: `src/routes/notes.ts` no valida la entrada de `POST /notes`.
 
 ```
 [CONTEXTO]
-src/routes/notes.ts maneja POST /notes. Hoy no valida la entrada: title
-puede venir vacío o ausente, y body no tiene límite de tamaño.
+src/routes/notes.ts maneja POST /notes. No valida la entrada:
+title puede venir vacío, body no tiene límite.
 
 [OBJETIVO]
-Añadir validación mínima en la capa de ruta:
-- title: requerido, string no vacío, máximo 200 caracteres.
-- body: opcional, máximo 5000 caracteres.
+Añadir validación mínima: title requerido (max 200), body opcional (max 5000).
+400 con { error: mensaje } si falla.
 
 [RESTRICCIONES]
-- Cambio mínimo. No introduzcas librerías de validación (zod, joi, etc.).
-- No toques services/, storage/, ni los tests existentes.
-- Si la entrada es inválida, responde 400 con { error: <mensaje> }.
-- Mantén el comportamiento actual para entradas válidas.
+- Sin librerías de validación.
+- Cambio acotado a src/routes/notes.ts.
+- Tests existentes sin cambios.
 
 [FORMATO]
-Muéstrame el diff (solo las líneas cambiadas) y propón 3 tests para
-verificar la validación, sin escribirlos todavía.
+Diff (solo líneas cambiadas) + propuesta de 3 tests sin implementarlos.
 ```
 
-Lo que el alumno ve:
-- Cambio acotado a `src/routes/notes.ts`.
-- Propuesta de tests (no implementación todavía).
-- Discusión sobre **dónde validar**: route vs service. Defiendo "en la frontera". Lo dejo claro.
+Lo que el alumno ve: cambio acotado, propuesta de tests antes de implementarlos, debate sobre dónde validar.
+
+> "La ruta valida forma. El service valida negocio."
 
 ### Demo 4 — Antipatrón en directo (≈ 5 min)
-
-Pego este prompt y dejo que pase lo que pase:
 
 ```
 Haz que el código esté bien. Aplica las mejores prácticas.
 ```
 
-Comentario para los alumnos: *"Mirad lo que está tocando. Esto es lo que pasa si vuestro equipo promptea así durante seis meses. El repo se vuelve un patchwork de 'mejores prácticas' que nadie ha decidido."*
+*"Mirad lo que está tocando. Esto es lo que pasa si vuestro equipo promptea así durante seis meses."*
 
 ---
 
-## 4. Ejercicios en clase (≈ 30 min)
-
-> **Rama:** `git checkout tema-08/ejercicio-01` para el ejercicio 1, `tema-08/ejercicio-02` para el 2.
+## 4. Ejercicios en clase (≈ 45 min)
 
 ### Ejercicio 1 — Prompt malo → prompt bueno (15 min)
 
-Los alumnos reciben el mismo escenario de la Demo 1 (refactorizar `archive`/`unarchive`) pero desde cero: lanzan primero un prompt vago, observan el resultado, luego construyen el prompt con los 5 bloques y comparan. Documentan qué diferencias concretas observaron.
+> **Rama:** `git checkout tema-08/ejercicio-01`
+
+Los alumnos lanzan primero un prompt vago sobre el mismo escenario (refactorizar `archive`/`unarchive`), observan el resultado, construyen el prompt con los 5 bloques y comparan. Documentan qué diferencias concretas observaron.
 
 **Lo que el formador observa:**
 - ¿El prompt bueno incluye restricciones de firma?
@@ -205,27 +171,27 @@ Los alumnos reciben el mismo escenario de la Demo 1 (refactorizar `archive`/`una
 
 ### Ejercicio 2 — Alternativas antes del código (15 min)
 
-Los alumnos tienen el bug de búsqueda (`src/search/index.ts`, misma casuística que la Demo 2). Primero piden alternativas siguiendo el patrón del prompt de la demo, eligen una con justificación escrita, y solo después piden la implementación con un segundo prompt acotado.
+> **Rama:** `git checkout tema-08/ejercicio-02`
+
+Los alumnos tienen el bug de búsqueda (`src/search/index.ts`). Primero piden alternativas siguiendo el patrón de la demo 2, eligen una con justificación escrita, y solo después piden la implementación con un segundo prompt acotado.
 
 **Lo que el formador observa:**
 - ¿Eligieron la opción con trade-offs documentados o simplemente ejecutaron la primera?
 - ¿El segundo prompt de implementación tiene restricciones?
 
----
+### Ejercicio 3 — Cambio mínimo y capas de validación (15 min)
 
-## 5. Ejercicio asíncrono
+> **Rama:** `git checkout tema-08/ejercicio-03`
 
-### Ejercicio 3 — Cambio mínimo y capas de validación (30 min, fuera de clase)
+Los alumnos implementan la validación de `POST /notes` (Demo 3) pero deben decidir explícitamente dónde poner la lógica: en la ruta o en el service. Documentan la decisión y sus razones. Después implementan los 3 tests propuestos.
 
-> **Rama:** `tema-08/ejercicio-03`
-
-Los alumnos implementan la validación de `POST /notes` (Demo 3) pero deben decidir explícitamente dónde poner la lógica: en la ruta o en el service. Documentan la decisión y sus razones. Después escriben los 3 tests que propuso Claude en la demo.
-
-**Revisión en la siguiente sesión:** preguntar dónde pusieron la validación. Contrastar las justificaciones. ¿Alguien la puso en el service? ¿Por qué?
+**Lo que el formador observa:**
+- ¿Dónde pusieron la validación? ¿La justificación es técnica o solo intuitiva?
+- Contrastar las justificaciones en clase al terminar.
 
 ---
 
-## 6. Cierre y puente (≈ 5 min)
+## 5. Cierre y puente (≈ 5 min)
 
 Resumen en pizarra:
 
@@ -240,12 +206,12 @@ Resumen en pizarra:
 
 ---
 
-## 7. Notas para el formador
+## 6. Notas para el formador
 
-- Si los alumnos no tienen Node 20+, los tests del proyecto fallan (usa `node --test`). Avísalos antes.
+- Si los alumnos no tienen Node 20+, los tests del proyecto fallan (`node --test`). Avísalos antes.
 - Si una demo se alarga, recorta la 4 (es decorativa, refuerza pero no enseña nuevo).
-- Pregunta típica: *"¿No es muy verboso escribir prompts así?"* → Respuesta: *"Tardas 30 segundos en escribirlo y te ahorra 10 minutos de revertir cambios. La verbosidad es el precio del control."*
-- Preguntas trampa que valen oro si salen del alumnado:
+- Pregunta típica: *"¿No es muy verboso escribir prompts así?"* → *"Tardas 30 segundos en escribirlo y te ahorra 10 minutos de revertir cambios."*
+- El ejercicio 2 tiene trampa: los alumnos tienden a implementar directamente la primera alternativa sin documentar la elección. Recordarlo al arrancar: *"La documentación de la elección es parte del ejercicio."*
+- Preguntas trampa que valen oro:
   - *"¿Y si Claude responde algo que parece bien pero no lo es?"* → Tema 13 (revisión).
   - *"¿Esto se puede convertir en plantilla para todo el equipo?"* → Tema 17 (skills). **Siembra el gancho aquí.**
-- El ejercicio 2 tiene trampa: los alumnos tienden a implementar directamente la primera alternativa sin documentar la elección. Recordarlo al arrancar: *"La documentación de la elección es parte del ejercicio."*
