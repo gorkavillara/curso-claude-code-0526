@@ -1,11 +1,21 @@
 ---
 name: curso-tema-doc
-description: Genera la documentación de un tema del curso de Claude Code en docs/, replicando exactamente la estructura, el estilo esquemático y el formato de demos del Tema 1 (docs/tema-01-fundamentos.md). Usa anexo.md como fuente de verdad para el título y los puntos del tema. Trigger cuando el usuario pida "haz el tema X", "documenta el tema X", "genera la doc del tema X", "el tema X está pendiente", o equivalente, en el contexto del curso.
+description: Genera los tres componentes de un tema del curso de Claude Code — documentación pública en docs/, guion del instructor en curso/ y ejercicios con ramas en el repo de código. Trigger cuando el usuario pida "haz el tema X", "documenta el tema X", "genera la doc del tema X" o equivalente.
 ---
 
 # Skill: curso-tema-doc
 
-Genera el archivo `docs/tema-XX-<slug>.md` siguiendo **exactamente** la estructura y el estilo del Tema 1 (`docs/tema-01-fundamentos.md`), tomando el título y los puntos de `anexo.md`.
+Un tema completo son **tres componentes sincronizados**. Nunca entregues uno sin los otros.
+
+| Componente | Dónde vive | Destinatario |
+|---|---|---|
+| Documentación pública | `docs/tema-XX-<slug>.md` + `docs/SUMMARY.md` | Alumnos (GitBook) |
+| Guion del instructor | `curso/tema-XX-<slug>/guion.md` | Instructor (privado) |
+| Ejercicios en código | Ramas `tema-XX/ejercicio-0N` en `../04 - Claude-codigo` | Alumnos (repo prácticas) |
+
+Además, en `curso/tema-XX-<slug>/` van también:
+- `ejercicios.md` — índice de las 3 ramas de ejercicio con descripción breve
+- `SOLUCION.md` — soluciones de referencia para el instructor
 
 ---
 
@@ -14,157 +24,91 @@ Genera el archivo `docs/tema-XX-<slug>.md` siguiendo **exactamente** la estructu
 - **Número de tema** (1–27). Si el usuario no lo dice, pregúntalo.
 - (Opcional) Indicaciones específicas del usuario para alguna demo o sección.
 
+---
+
 ## Fuentes obligatorias antes de escribir
 
-Antes de generar nada, **lee siempre**:
+Lee siempre, en este orden:
 
 1. `anexo.md` → título y puntos exactos del tema solicitado.
-2. `docs/tema-01-fundamentos.md` → plantilla viva. Si hay duda de formato, gana este archivo.
-3. `docs/SUMMARY.md` → confirma el `filename` del tema y los enlaces a otros temas (para cross-links).
-4. `README.md` y `package.json` del proyecto Notebox (raíz) → recordar el repo de prácticas para diseñar demos realistas.
+2. `docs/tema-01-fundamentos.md` → plantilla viva de formato y demos.
+3. `docs/SUMMARY.md` → confirma el filename del tema y cross-links.
+4. `README.md` + `package.json` del repo Notebox (raíz) → repo de prácticas para las demos.
+5. Si existe, el tema anterior y el siguiente en `docs/` → para los bloques "Puente al Tema X".
 
-> Si el filename del tema no aparece en `SUMMARY.md`, **detente y pide confirmación** al usuario antes de inventarlo.
+> Si el filename del tema no aparece en `SUMMARY.md`, **detente y pide confirmación** antes de inventarlo.
 
 ---
 
-## Reglas inviolables
+## COMPONENTE 1 — Documentación pública (`docs/`)
 
-1. **El título del tema (H1) debe ser el subtítulo en mayúsculas de `anexo.md`** convertido a sentence case y precedido de `# Tema X — `. No reescribas, no resumas, no parafrasees.
-2. **Cada punto del tema debe aparecer EXACTAMENTE igual que en `anexo.md`** como `## N. <punto>`. No corrijas typos, no acortes, no fusiones puntos.
-3. **Recompón los saltos de línea internos** que `anexo.md` tiene por anchura de columna (un punto puede ocupar 2–3 líneas en el anexo: júntalas en una sola).
+### Reglas inviolables
+
+1. **El título (H1) es el subtítulo de `anexo.md`** en sentence case, precedido de `# Tema X — `.
+2. **Cada punto del tema aparece EXACTAMENTE como en `anexo.md`** como `## N. <punto>`. Sin correcciones ni fusiones.
+3. **Recompón saltos de línea** del anexo (un punto puede ocupar 2–3 líneas; júntalas).
 4. **Duración estimada:** `~60 min`.
-5. **Eliminar la sección final "Demos prácticas"** (las demos van intercaladas, no al final).
-6. **No añadir secciones que no estén en el Tema 1** (no metas "Recursos", "FAQ", "Ejercicios" salvo que el usuario lo pida).
-7. **Idioma:** español, con tildes correctas. Tono directo, profesional, opinionado, en segunda persona ("tú").
+5. **No hay sección "Demos prácticas"** al final. Las demos van intercaladas.
+6. **No añadir secciones que no estén en el Tema 1** (sin "Recursos", "FAQ", "Ejercicios").
+7. **Idioma:** español, tildes correctas, tono directo, segunda persona ("tú").
 
----
-
-## Estructura obligatoria del archivo
-
-Replica este esqueleto exactamente:
+### Estructura obligatoria
 
 ```markdown
+---
+hidden: true
+---
+
 # Tema X — <Subtítulo de anexo.md en sentence case>
 
 > **Duración estimada:** ~60 min
-> **Tipo:** <conceptual | conceptual + demos guiadas | práctico | etc.>
+> **Tipo:** <conceptual | práctico | conceptual + demos guiadas>
 
 ## Objetivo del tema
 
-<1–2 frases. Esquemático. Qué se lleva el alumno al terminar.>
+<1–2 frases. Qué se lleva el alumno al terminar.>
 
----
+***
 
 ## 1. <Punto 1 EXACTO de anexo.md>
 
-<Contenido esquemático: tabla, bullets cortos, frases punzantes.>
+<Contenido esquemático: tabla, bullets, frases punzantes.>
 
-### 🧪 Demo 1 — <Título de la demo>
+### 🧪 Demo 1 — <Título>
 
 <Bloque de demo según la plantilla de demos.>
 
-## 2. <Punto 2 EXACTO de anexo.md>
+## 2. <Punto 2 EXACTO>
 
-<Contenido…>
+...
 
-### 🧪 Demo 2 — <Título de la demo>
-
-<…>
-
-## 3. <Punto 3 EXACTO de anexo.md>
-
-<Contenido…>
-
-### 🧪 Demo 3 — <Título de la demo>
-
-<…>
-
-## 4. <Punto 4 EXACTO de anexo.md>
-
-<Contenido…>
-
-(… continúa hasta el último punto del tema en anexo.md …)
-
----
+***
 
 ## Resumen
 
-- <4–5 bullets cortos. Una idea por bullet.>
-- <…>
+- <4–5 bullets cortos.>
 ```
 
----
+### Reglas de estilo
 
-## Reglas de estilo (esquemático)
+- **Tabla**: comparativas, listas con 2+ columnas equivalentes, pasos paralelos de dos herramientas.
+- **Bullets**: casos de uso, riesgos, antipatrones, "qué observar", checkboxes de validación.
+- **Prosa**: solo cuando una idea no se descompone en bullets. Máximo 2–3 frases seguidas.
+- **Blockquotes** (`> `): frases memorables, avisos, reglas mentales.
+- **Cross-links**: cuando un punto se profundiza en otro tema, enlaza usando el filename de `SUMMARY.md`.
 
-Sigue el patrón del Tema 1. Concretamente:
+### Reglas para las demos en docs/
 
-### Cuándo usar **tabla**
-
-- Comparativas (autocompletado vs agentic, chat vs Claude Code, ventajas vs límites).
-- Listas con dos o más columnas semánticamente equivalentes.
-- Pasos paralelos de dos herramientas en la misma tarea.
-
-### Cuándo usar **bullets**
-
-- Listas de casos de uso, riesgos, antipatrones, mitigaciones.
-- "Qué observar" en demos.
-- "Tu trabajo al terminar" → bullets con `- [ ]` (checkbox).
-
-### Cuándo usar **prosa**
-
-- Solo cuando una idea no se descompone limpiamente en bullets.
-- Máximo 2–3 frases seguidas. Si se pasa, partirla en bullets.
-
-### Frases ancla y blockquotes
-
-Usa `> ` para:
-
-- Frases memorables ("El commit lo firmas tú").
-- Avisos ("⚠️ Que pueda hacerlo no significa que deba hacerlo").
-- Reglas mentales ("valor = tiempo ahorrado − revisión − coste").
-
-### Cross-links
-
-Cuando un punto se profundiza en otro tema, enlaza:
+- **2–3 demos por tema**, no más. Intercaladas, no al final.
+- **Formato de demo** (replicar exactamente):
 
 ```markdown
-> Profundizamos en el [Tema 9 — Exploración de repositorios](tema-09-exploracion-repos.md).
-```
-
-Resuelve el filename consultando `SUMMARY.md`.
-
----
-
-## Reglas para las demos
-
-### Cuántas
-
-**2–3 demos por tema**, no más. Distribuirlas, no concentrarlas al final.
-
-### Dónde colocarlas
-
-- **Demo 1** → después del primer punto que se puede demostrar (típicamente punto 1, 2 o 3).
-- **Demo 2** → después de un punto conceptual donde aporte ver el comportamiento real.
-- **Demo 3** → después de un punto que cierre el bucle completo (ej.: edición + ejecución + validación).
-- Si el tema es muy conceptual (ej.: Tema 1, Tema 25), las demos pueden ser de **comparación** o **exploración**.
-- Si el tema es muy práctico (ej.: Tema 4 settings, Tema 17 git), las demos son **operativas** sobre el repo Notebox o sobre `~/.claude/`.
-
-### Formato (replicar exactamente)
-
-```markdown
-### 🧪 Demo N — <Título de la demo>
+### 🧪 Demo N — <Título>
 
 - **Objetivo:** <una frase>.
-- **Setup:** <qué tener listo antes de empezar>.
+- **Setup:** <qué tener listo>.
 
-**Prompt literal:**   ← solo si la demo se basa en un prompt concreto
-
-```
-<prompt copiable, multi-línea>
-```
-
-**Pasos esperados:**   ← solo si tiene sentido enumerarlos
+**Pasos:**
 
 1. <…>
 2. <…>
@@ -173,36 +117,173 @@ Resuelve el filename consultando `SUMMARY.md`.
 
 - <punto 1>
 - <punto 2>
-
-**Tu trabajo al terminar:**   ← solo cuando hay que revisar diff o validar
-
-- [ ] <acción>
-- [ ] <acción>
-
-> **Cierre:** <una frase que conecte con el resto del tema o un tema futuro.>
 ```
 
-Variantes válidas: si la demo es comparativa entre dos herramientas, usar **tabla paso-a-paso** (como Demo 1 del Tema 1) en vez de "Pasos esperados".
+- Las demos usan el **repo Notebox** (raíz: `src/`, `test/`, `package.json`). Si necesitan otro repo, especifícalo en Setup.
 
-### Repositorio de prácticas
+---
 
-- Por defecto, las demos usan el **repo Notebox** del propio proyecto (raíz: `src/`, `test/`, `package.json`). Es una API mínima de notas en Node 24 + Express + TypeScript.
-- Estructura útil para demos:
-  - `src/server.ts` — entry point.
-  - `src/routes/notes.ts` — endpoints HTTP.
-  - `src/services/notes.ts` — lógica.
-  - `src/storage/memory.ts` — repositorio en memoria.
-  - `src/search/index.ts` — búsqueda por texto.
-  - `src/models/note.ts` — tipos + factory.
-  - `test/notes.service.test.ts`, `test/storage.test.ts`.
-- Comandos: `npm install`, `npm run dev`, `npm test`, `npm run typecheck`.
-- Si una demo necesita un repo distinto (ej.: monorepo, repo legacy, repo Python), dilo explícitamente en **Setup**.
+## COMPONENTE 2 — Guion del instructor (`curso/`)
+
+### Regla principal: las demos del guion = las demos de docs/
+
+**El guion no inventa demos distintas.** Usa exactamente los mismos prompts, los mismos archivos y los mismos objetivos que están en la documentación pública. Lo que añade el guion es:
+
+- Timing (cuántos minutos dura cada parte).
+- Encuadre verbal (qué dice el instructor antes de empezar).
+- Descripción de ejercicios en clase (no están en docs/).
+- Notas para el formador (errores comunes, preguntas trampa, variantes).
+
+### Estructura de sesión: batch vs intercalado
+
+Elige según el tipo de tema:
+
+| Cuándo usar **batch** | Cuándo usar **intercalado** |
+|---|---|
+| Las demos se encadenan y el alumno necesita el cuadro completo para hacer cualquier ejercicio | Cada demo es una técnica autónoma: practicarla en caliente refuerza el hábito |
+| Temas conceptuales con interdependencias entre demos | Temas prácticos donde D1→Ej1→D2→Ej2 tiene sentido |
+
+**Plantilla batch:**
+```
+00:00 — Encuadre              (X min)
+00:XX — Demo 1                (X min)
+00:XX — Demo 2                (X min)
+00:XX — Demo 3                (X min)
+00:XX — Ejercicio 1 (clase)   (X min)
+00:XX — Ejercicio 2 (clase)   (X min)
+XX:00 — Cierre y puente       (5 min)
+—————
+Ejercicio 3: asíncrono
+```
+
+**Plantilla intercalada:**
+```
+00:00 — Encuadre                   (X min)
+00:XX — Demo 1                     (X min)
+00:XX — Ejercicio 1 (clase)        (X min)
+00:XX — Demo 2                     (X min)
+00:XX — Ejercicio 2 (clase)        (X min)
+00:XX — Demo 3 (solo demo)         (X min)
+XX:00 — Cierre y puente            (5 min)
+—————
+Ejercicio 3: asíncrono
+```
+
+### Secciones del guion
+
+```markdown
+# Tema X — <Título>
+
+> Duración estimada: YY min · Tipo: ...
+> Repositorio de prácticas: rama `tema-XX/inicio` (notebox, Node 24 + ...).
+
+## 0. Objetivo del tema
+<1–2 frases, igual que en docs pero orientado al instructor.>
+
+## 1. Flujo de sesión
+<Bloque de código con timing.>
+
+## 2. Encuadre — lo que digo (≈ X min)
+<Frase de apertura entre > (cita). 2–3 ideas en pizarra.>
+
+## 3. Demo 1 + Ejercicio 1 — <Título> (≈ XX min)
+### Demo 1 (X min)
+<Prompt exacto de la demo de docs/. Setup. Lo que el alumno ve. Frase de cierre.>
+
+### Ejercicio 1 (X min)
+> **Rama:** `git checkout tema-XX/ejercicio-01`
+<Descripción del ejercicio. Lo que el formador observa.>
+
+## 4. Demo 2 + Ejercicio 2 — ...
+...
+
+## 5. Demo 3 — ... (solo demo, si aplica)
+...
+
+## 6. Ejercicio asíncrono
+### Ejercicio 3 — ...
+...
+
+## 7. Cierre y puente (≈ 5 min)
+<Resumen en pizarra (4 bullets). Frase de puente al tema siguiente.>
+
+## 8. Notas para el formador
+<Requisitos técnicos, errores comunes, preguntas trampa, variantes de tiempo.>
+```
+
+### Cómo añadir el guion a git
+
+`curso/` está en `.gitignore` del repo docs. Los nuevos archivos en `curso/` deben añadirse con:
+```bash
+git add -f "curso/tema-XX-<slug>/guion.md"
+```
+
+---
+
+## COMPONENTE 3 — Ejercicios en el repo de código (`../04 - Claude-codigo`)
+
+### Estructura de ramas
+
+Por cada tema se crean (como mínimo):
+
+| Rama | Propósito |
+|---|---|
+| `tema-XX/inicio` | Base del repo para la sesión (si no existe ya de un tema anterior) |
+| `tema-XX/ejercicio-01` | Ejercicio 1 (en clase) |
+| `tema-XX/ejercicio-02` | Ejercicio 2 (en clase) |
+| `tema-XX/ejercicio-03` | Ejercicio 3 (asíncrono) |
+
+Para crear una rama:
+```bash
+# Desde la rama base adecuada (generalmente el inicio del tema o del anterior)
+git checkout -b tema-XX/ejercicio-01
+```
+
+### Contenido de cada rama
+
+Cada rama tiene, como mínimo, un `EJERCICIO.md` en la raíz con:
+1. Objetivo del ejercicio (1–2 frases).
+2. Contexto (rama, archivos relevantes).
+3. Pasos concretos (numerados, ejecutables).
+4. Criterio de éxito ("los tests deben estar en verde", "rellena la tabla", etc.).
+5. Preguntas de reflexión.
+
+Además puede incluir archivos de soporte específicos del ejercicio (`.env` falso, `CAMBIOS_PENDIENTES.md`, `settings.ejercicio.json`, `INCIDENTE.md`, etc.).
+
+### Qué ignorar
+
+`curso/` debe estar en `.gitignore` de cada rama del repo de código. Verificar que existe la entrada o añadirla.
+
+---
+
+## COMPONENTE 4 — Soluciones e índice (`curso/`)
+
+### `ejercicios.md`
+
+Índice sencillo con una línea por ejercicio:
+
+```markdown
+# Ejercicios — Tema X
+
+| Ejercicio | Rama | Tipo | Descripción breve |
+|---|---|---|---|
+| Ejercicio 1 | `tema-XX/ejercicio-01` | En clase | ... |
+| Ejercicio 2 | `tema-XX/ejercicio-02` | En clase | ... |
+| Ejercicio 3 | `tema-XX/ejercicio-03` | Asíncrono | ... |
+```
+
+### `SOLUCION.md`
+
+Soluciones de referencia para el instructor. Incluir:
+- Respuestas modelo a cada ejercicio.
+- Código correcto cuando aplique.
+- Tabla de errores frecuentes y cómo señalarlos en clase.
 
 ---
 
 ## Convención de filenames
 
-Los slugs de los archivos están definidos en `docs/SUMMARY.md`. **Úsalos tal cual.** Mapeo de referencia:
+Los slugs están en `docs/SUMMARY.md`. Úsalos tal cual. Referencia:
 
 | Tema | Filename |
 |---|---|
@@ -234,45 +315,49 @@ Los slugs de los archivos están definidos en `docs/SUMMARY.md`. **Úsalos tal c
 | 26 | `tema-26-equipo-gobierno.md` |
 | 27 | `tema-27-proyecto-final.md` |
 
-> Si `SUMMARY.md` no coincide con esta tabla, **gana `SUMMARY.md`**.
+> Si `SUMMARY.md` no coincide, **gana `SUMMARY.md`**.
 
 ---
 
 ## Pasos de ejecución
 
-1. **Leer fuentes.** Abre `anexo.md`, localiza el bloque del tema solicitado, extrae el subtítulo y los puntos. Recompón saltos de línea.
-2. **Verificar filename.** Localiza el enlace del tema en `docs/SUMMARY.md`.
-3. **Releer Tema 1.** Asegúrate de tener fresco el formato de demos y secciones.
-4. **Diseñar demos.** Antes de escribir, decide:
-   - 2 o 3 demos.
-   - Después de qué punto va cada una.
-   - Qué se demuestra (con o sin prompt literal, con tabla comparativa o no).
-5. **Escribir el archivo** siguiendo la estructura obligatoria.
-6. **Revisar antes de cerrar:**
-   - [ ] Todos los puntos del anexo aparecen, en orden, con el texto exacto.
-   - [ ] Hay 2 o 3 demos (no más, no menos), intercaladas.
-   - [ ] No existe sección "## Demos prácticas" al final.
-   - [ ] El tono es esquemático: tablas/bullets predominan, prosa solo donde aporta.
-   - [ ] Hay un `## Resumen` final con 4–5 bullets.
-   - [ ] Cross-links a otros temas resueltos correctamente.
-   - [ ] Cero typos en español, tildes correctas.
-7. **Reportar al usuario** un resumen muy breve: qué demos se diseñaron y dónde se colocaron.
+1. **Leer fuentes.** `anexo.md` + tema-01 + SUMMARY.md + README.md del Notebox.
+2. **Verificar filename** en `SUMMARY.md`.
+3. **Decidir estructura de sesión.** ¿Batch o intercalada? Ver tabla de criterios.
+4. **Diseñar demos** (2–3). Antes de escribir nada: qué se demuestra, dónde va en docs/, qué prompt literal usa.
+5. **Escribir `docs/tema-XX.md`** con las demos diseñadas.
+6. **Actualizar `docs/SUMMARY.md`** si el tema no estaba enlazado.
+7. **Escribir `curso/tema-XX-<slug>/guion.md`** usando los mismos prompts de las demos. Añadirlo con `git add -f`.
+8. **Crear ramas y EJERCICIO.md** en `../04 - Claude-codigo` para los 3 ejercicios.
+9. **Escribir `curso/tema-XX-<slug>/ejercicios.md`** y **`SOLUCION.md`**. Añadirlos con `git add -f`.
+10. **Revisar coherencia** entre los 3 componentes:
+    - [ ] Demos en docs/ = demos en guion (mismos prompts, mismos archivos).
+    - [ ] Los 3 ejercicios del guion coinciden con las 3 ramas creadas.
+    - [ ] Todos los puntos del anexo están en docs/, en orden, con texto exacto.
+    - [ ] Hay 2–3 demos intercaladas en docs/, no al final.
+    - [ ] `SUMMARY.md` actualizado.
+    - [ ] Tildes y español correcto.
+11. **Reportar** al usuario: qué demos se diseñaron, qué ramas se crearon, qué archivos nuevos hay.
 
 ---
 
-## Antipatrones (qué NO hacer)
+## Antipatrones
 
-- ❌ Reescribir o "mejorar" los puntos del anexo. Son canon.
-- ❌ Añadir un punto 11, 12… que no esté en el anexo.
-- ❌ Meter las demos al final en una sección "Demos prácticas".
+- ❌ Crear demos distintas en el guion y en docs/. Son las mismas demos.
+- ❌ Crear solo docs/ sin guion ni ejercicios.
+- ❌ Crear solo ejercicios sin docs/ ni guion.
+- ❌ Reescribir los puntos del anexo. Son canon.
+- ❌ Poner las demos al final en una sección "Demos prácticas".
 - ❌ Hacer 4+ demos por tema.
-- ❌ Usar prosa larga cuando un bullet o una tabla resolvería igual.
-- ❌ Inventar comandos o features de Claude Code que no existan; si dudas, dilo en el texto en vez de afirmar.
-- ❌ Crear el archivo en una carpeta distinta a `docs/`.
-- ❌ Dejar el `SUMMARY.md` desactualizado si el tema no estaba enlazado todavía.
+- ❌ Inventar comandos o features de Claude Code que no existan.
+- ❌ Crear archivos en `docs/` que no estén en `SUMMARY.md`.
+- ❌ Olvidar `git add -f` para archivos en `curso/` (están en .gitignore).
+- ❌ Crear ramas en el repo de código sin `curso/` en el `.gitignore` de la rama.
 
 ---
 
 ## Ejemplo canónico
 
-`docs/tema-01-fundamentos.md` es la **referencia viva**. Cuando dudes de cualquier detalle de formato (cómo se separa una sección, cómo se titula una demo, cuántos bullets en el resumen, dónde van los `---`), abre ese archivo y replica.
+`docs/tema-01-fundamentos.md` → formato y estilo de docs/.
+`curso/tema-06-ides/guion.md` + `docs/tema-06-ides.md` → par guion↔docs en sincronía.
+`curso/tema-05-permisos-sandboxing/` → carpeta completa con guion + ejercicios + SOLUCION.
