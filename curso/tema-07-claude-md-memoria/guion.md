@@ -1,202 +1,205 @@
-# Tema 7 — Prompting profesional para desarrollo de software
+# Tema 7 — Contexto persistente: CLAUDE.md y memoria
 
-> Duración estimada: 75-90 min · Tipo: práctico (alumnos delante del teclado).
-> Repositorio de prácticas: rama `tema-07/inicio` (Node 24 + Express + TypeScript). El código vive en la **raíz** del repo (`src/`, `test/`). La carpeta `curso/` se mantiene igual al cambiar de rama.
+> Duración estimada: 60 min · Tipo: práctico (alumnos delante del teclado).
+> Repositorio de prácticas: rama `tema-07/inicio` (notebox, Node 24 + Express + TypeScript).
 
 ## 0. Objetivo del tema
 
-Que el alumno deje de **escribir prompts como si hablara con ChatGPT** y empiece a escribirlos como si redactara una **issue para un compañero senior**. Eso es todo. Si el prompt está bien, el output está bien.
-
-Un alumno bueno termina este tema sabiendo:
-
-- Por qué un prompt sin contexto produce sobreedición.
-- Cómo dar contexto sin escribir un ensayo.
-- Cómo pedir **cambios mínimos** y cómo pedir **alternativas**.
-- Cómo obligar a Claude a **citar evidencia** del repo (rutas, funciones).
-- Qué prompts son antipatrones y por qué.
+Que el alumno deje de repetir instrucciones sesión a sesión y empiece a **escribir el contexto una vez**: en `CLAUDE.md`, en `.claude/rules/`, en la memoria global. Si es una regla del proyecto, vive en el repo. Si es una preferencia personal, vive en el home.
 
 ---
 
-## 1. Encuadre — lo que digo (≈ 10 min)
+## 1. Flujo de sesión
 
-> "El prompt es el diseño. Si vuestro prompt es 'mejora el código', estáis pidiendo a un agente que tome decisiones que vosotros no os habéis molestado en tomar. Y luego os quejáis de que toca cosas que no debería."
-
-Tres ideas que repito hasta que se las sepan:
-
-1. **Un buen prompt tiene contexto, objetivo y restricciones.** Si falta uno, el resultado se degrada.
-2. **Pedir poco es difícil.** "Cambia solo esta función, mantén la firma, no toques tests" es más útil que "refactoriza esto".
-3. **El prompt obliga a razonar.** Si pides "dame 3 alternativas con trade-offs", Claude piensa diferente que si pides "hazlo".
-
-### El esqueleto de un prompt profesional
-
-Lo escribo en pizarra y lo dejo ahí toda la sesión:
+Estructura **intercalada**: cada demo va seguida del ejercicio correspondiente. Así el alumno escribe el `CLAUDE.md` inmediatamente después de ver cómo funciona, y segmenta las reglas justo después de ver los límites del archivo único.
 
 ```
-[CONTEXTO]    qué es el repo / módulo / función
-[OBJETIVO]    qué quieres conseguir, en una frase
-[RESTRICCIONES]  qué NO puede tocar, qué firma mantener, qué tests deben seguir pasando
-[FORMATO]     cómo quieres la respuesta (diff, lista, plan, código completo)
-[EVIDENCIA]   "cita rutas y líneas, no inventes"
+00:00 — Encuadre                              (5 min)
+00:05 — Demo 1: CLAUDE.md desde cero         (10 min)
+00:15 — Ejercicio 1: crear CLAUDE.md         (15 min, en clase)
+00:30 — Demo 2: segmentar con rules/         (10 min)
+00:40 — Ejercicio 2: segmentar y depurar     (15 min, en clase)
+00:55 — Demo 3: corregir y persistir         (5 min, solo demo)
+60:00 — Cierre y puente                      (5 min)
+——————
+Ejercicio 3 (auto memory, sin corrector)      (asíncrono — lo hacen solos)
 ```
 
-No siempre necesitas los 5 bloques. Pero si la tarea es no trivial y te falta alguno, se nota.
-
-### Antipatrones que vamos a evitar
-
-- **"Mejora esto"** sin objetivo → sobreedición.
-- **"Hazlo limpio / pythonic / idiomático"** → criterio del modelo, no tuyo.
-- **"Arregla el bug"** sin describir el síntoma → busca a ciegas.
-- **"Haz que funcione"** → fuerza al modelo a inventar.
-- **Reabrir conversación 20 veces con micro-correcciones** → mejor un prompt con todas las restricciones desde el principio.
+> **Si vas justo de tiempo:** la demo 3 puede comprimirse a 2-3 minutos (solo mostrar el concepto). El ejercicio 3 es completamente autónomo.
 
 ---
 
-## 2. Demos en vivo — lo que prompteo (≈ 35 min)
+## 2. Encuadre — lo que digo (≈ 5 min)
 
-> Antes de empezar las demos: `git checkout tema-07/inicio` desde la raíz del repo, `npm install` y `npm test` para confirmar que parte verde. Claude Code se abre apuntando a la raíz del repo.
+> "¿Cuántas veces habéis escrito 'en este proyecto, los errores van con clases semánticas, no con Error genérico'? Si la respuesta es 'más de dos', eso es ruido que estáis pagando con tiempo. `CLAUDE.md` existe para que lo digáis una vez y valga para siempre."
 
-### Demo 1 — Mismo objetivo, dos prompts (≈ 8 min)
+Dos ideas rápidas:
 
-**Tarea**: refactorizar `archive()` y `unarchive()` en `src/services/notes.ts`. Tienen anidación profunda y duplicación.
-
-**Prompt malo** (lo lanzo primero, deliberadamente):
-
-```
-Refactoriza notes.ts, está feo.
-```
-
-Lo que el alumno ve:
-- Toca cosas que no le hemos pedido.
-- A veces cambia firmas.
-- A veces "mejora" cosas que no son problema (renombra variables, cambia estilo).
-
-**Prompt bueno** (lo lanzo después, en la misma conversación tras `/clear` o en un chat nuevo):
-
-```
-[CONTEXTO]
-Estoy en el archivo src/services/notes.ts. Las funciones archive(id) y
-unarchive(id) tienen anidación profunda y duplican la misma estructura.
-
-[OBJETIVO]
-Reducir la duplicación entre ambas y aplanar los if anidados.
-
-[RESTRICCIONES]
-- Mantén exactamente las firmas: archive(id), unarchive(id).
-- No toques ningún otro archivo.
-- Los tests de test/notes.service.test.ts deben seguir pasando sin cambios.
-- No introduzcas dependencias nuevas.
-
-[FORMATO]
-Muéstrame el archivo completo final y, debajo, una lista corta de los
-cambios que has hecho.
-
-[EVIDENCIA]
-Antes de tocar nada, dime en una línea qué es lo que duplican ambas funciones.
-```
-
-Lo que el alumno ve:
-- Diagnóstico breve antes del cambio.
-- Refactor acotado.
-- Tests siguen verdes (lo enseño en directo: `npm test`).
-
-> "El prompt malo no es 'corto'. Es **vago**. Un prompt corto pero específico es mejor que uno largo y disperso."
-
-### Demo 2 — Pedir alternativas con trade-offs (≈ 8 min)
-
-**Tarea**: hay un bug en `src/search/index.ts`: la búsqueda no encuentra "MAÑANA" cuando la nota dice "mañana", y tampoco "manana" sin tilde.
-
-Antes de pedir el arreglo, **pido alternativas**. Esto cambia la conversación.
-
-```
-[CONTEXTO]
-src/search/index.ts implementa una búsqueda lineal sobre title+body. Un
-usuario reporta que buscar "MAÑANA" no devuelve la nota cuyo título es
-"mañana", y que buscar "manana" tampoco la encuentra.
-
-[OBJETIVO]
-Quiero entender qué opciones hay para arreglarlo, no quiero el código todavía.
-
-[FORMATO]
-Dame 3 alternativas. Por cada una:
-- Qué cambia exactamente.
-- Coste aproximado de implementación (líneas de código y dependencias).
-- Riesgos o efectos secundarios sobre el resto del sistema.
-- En qué casos esta opción se queda corta.
-
-[EVIDENCIA]
-Cita la línea concreta del bug y por qué falla con esos inputs.
-```
-
-Lo que el alumno ve:
-- Claude propone p.ej. (a) `toLowerCase`, (b) `toLowerCase + normalize('NFD')`, (c) usar una lib tipo `fuse.js`.
-- Aparecen los trade-offs por escrito.
-- **Yo elijo** la opción (b). Explico por qué a los alumnos.
-- Después prompteo el cambio con un segundo prompt acotado.
-
-> "Lo que acabamos de hacer es lo que un buen ingeniero hace por defecto: pensar antes de codear. La IA no quita ese paso, lo hace más barato."
-
-### Demo 3 — Cambio mínimo con verificación (≈ 8 min)
-
-**Tarea**: `routes/notes.ts` no valida la entrada de `POST /notes`. Acepta título vacío y body sin límite.
-
-```
-[CONTEXTO]
-src/routes/notes.ts maneja POST /notes. Hoy no valida la entrada: title
-puede venir vacío o ausente, y body no tiene límite de tamaño.
-
-[OBJETIVO]
-Añadir validación mínima en la capa de ruta:
-- title: requerido, string no vacío, máximo 200 caracteres.
-- body: opcional, máximo 5000 caracteres.
-
-[RESTRICCIONES]
-- Cambio mínimo. No introduzcas librerías de validación (zod, joi, etc.).
-- No toques services/, storage/, ni los tests existentes.
-- Si la entrada es inválida, responde 400 con { error: <mensaje> }.
-- Mantén el comportamiento actual para entradas válidas.
-
-[FORMATO]
-Muéstrame el diff (solo las líneas cambiadas) y propón 3 tests para
-test/notes.service.test.ts o un archivo nuevo, sin escribirlos todavía.
-```
-
-Lo que el alumno ve:
-- Cambio acotado a `routes/notes.ts`.
-- Propuesta de tests (no implementación todavía).
-- Discusión sobre **dónde validar**: route vs service. Yo defiendo "en la frontera". Lo dejo claro.
-
-### Demo 4 — Antipatrón en directo (≈ 5 min)
-
-Pego este prompt y dejo que pase lo que pase:
-
-```
-Haz que el código esté bien. Aplica las mejores prácticas.
-```
-
-Comentario para los alumnos: *"Mirad lo que está tocando. Esto es lo que pasa si vuestro equipo promptea así durante seis meses. El repo se vuelve un patchwork de 'mejores prácticas' que nadie ha decidido."*
+1. **Si lo dices más de dos veces, escríbelo.** Cualquier instrucción que repites en sesiones distintas es candidata a `CLAUDE.md`.
+2. **El `CLAUDE.md` versionado es más fiable que la memoria automática.** Auto memory es una capa adicional; el archivo en el repo lo revisa cualquier ingeniero del equipo.
 
 ---
 
-## 3. Cierre y puente (≈ 5 min)
+## 3. Demo 1 + Ejercicio 1 — CLAUDE.md desde cero (≈ 25 min)
+
+### Demo 1 (10 min)
+
+> Setup: `git checkout tema-07/inicio`, `npm install`, VS Code abierto sin ningún `CLAUDE.md`.
+
+**Sin `CLAUDE.md`**, lanza este prompt:
+
+```
+Añade validación: el title no puede ser vacío. Lanza el error correspondiente.
+```
+
+Observa: probablemente lanza un `Error` genérico o un `400` directo en la ruta. No hay patrón de error semántico.
+
+Ahora **crea `CLAUDE.md`** en la raíz del repo:
+
+```markdown
+# Notebox
+
+API mínima de notas en Node 24 + Express + TypeScript.
+
+## Arquitectura
+- `src/routes/` → endpoints HTTP (Express).
+- `src/services/` → lógica de negocio.
+- `src/storage/` → persistencia (in-memory).
+- `src/models/` → tipos y factories.
+
+## Convenciones
+- Nunca lanzar `Error` directo: usar errores semánticos del dominio.
+- Validar inputs en el service, no en la ruta.
+- Tests con `node --test`. No mockear el storage en unit tests del service.
+
+## Comandos
+- `npm test`, `npm run typecheck`, `npm run dev`.
+
+## Reglas
+- No tocar `node_modules/` ni `dist/`.
+- Cambios al modelo `Note` requieren actualizar tests existentes.
+```
+
+**Reinicia la sesión** (nueva conversación). Repite el mismo prompt.
+
+Lo que el alumno ve:
+- Ahora Claude introduce un error semántico (`InvalidNoteError` o similar) y lo propaga a la ruta.
+- El cambio no viene de un prompt diferente — viene del archivo que cargó al arrancar.
+
+> "`CLAUDE.md` no es decorativo. Cambia decisiones reales. Cuanto más concretas las reglas, más predecible la salida."
+
+### Ejercicio 1 (15 min)
+
+> **Rama:** `git checkout tema-07/ejercicio-01`
+
+Los alumnos crean su propio `CLAUDE.md` para el repo notebox: lanzan un prompt sin él, observan el resultado, crean el archivo, y repiten el mismo prompt en sesión nueva. Documentan los cambios observados en la tabla del EJERCICIO.md.
+
+**Lo que el formador observa:**
+- ¿Las reglas son concretas y verificables, o vagas ("escribe código limpio")?
+- ¿Notaron diferencia de comportamiento antes/después?
+
+---
+
+## 4. Demo 2 + Ejercicio 2 — Segmentar con `.claude/rules/` (≈ 25 min)
+
+### Demo 2 (10 min)
+
+> Setup: mismo repo, con el `CLAUDE.md` de la Demo 1.
+
+Muestra un `CLAUDE.md` que empieza a crecer: añade reglas de testing, de errores, de seguridad. Observa que el archivo se vuelve difícil de mantener.
+
+Crea `.claude/rules/testing.md`:
+
+```markdown
+# Reglas de testing — Notebox
+
+- Tests con `node --test`.
+- Cada test cubre **un** comportamiento, no varios.
+- Nombrar tests con el patrón: `<función>: <comportamiento esperado>`.
+- No mockear el storage en tests unitarios del service.
+- Tests de integración solo en `test/*.integration.test.ts`.
+```
+
+Quita esas líneas del `CLAUDE.md`. Lanza:
+
+```
+Añade un test que cubra que createNote rechaza notas con title vacío.
+```
+
+Lo que el alumno ve:
+- El agente carga ambos archivos automáticamente.
+- El test sigue el patrón de naming y no mockea storage.
+- `CLAUDE.md` más corto → más legible → más fácil de mantener.
+
+> "Si tu `CLAUDE.md` tiene más de 50 líneas, tienes candidatos para `.claude/rules/`."
+
+### Ejercicio 2 (15 min)
+
+> **Rama:** `git checkout tema-07/ejercicio-02`
+
+Los alumnos reciben un `CLAUDE.md` con 8 reglas mezcladas (testing, errores, arquitectura) y deben: identificar las reglas vagas (hay 3), moverlas al archivo correcto en `.claude/rules/`, y verificar que el comportamiento se mantiene lanzando el prompt de verificación del EJERCICIO.md.
+
+**Lo que el formador observa:**
+- ¿Identificaron las 3 reglas vagas ("código limpio", "sé profesional", "optimiza para mantenibilidad")?
+- ¿El archivo `rules/` tiene una idea por bullet?
+
+---
+
+## 5. Demo 3 — Corregir y persistir (≈ 5 min, solo demo)
+
+> Esta demo es demostración pura. Muestra el flujo sin necesitar que los alumnos lo hagan en clase.
+
+**Concepto**: una corrección en sesión solo vale para esa sesión. Para que valga mañana, escríbela.
+
+Muestra el flujo:
+
+1. Claude mete lógica en `routes/` (debería ir en `services/`).
+2. Corrección en sesión: *"En este repo, la lógica vive en `services/`, nunca en `routes/`."*
+3. Claude lo hace bien en esa sesión.
+4. Sesión nueva → vuelve al error. No hay memoria entre sesiones sin `CLAUDE.md`.
+5. Añadir la regla a `CLAUDE.md`:
+
+```markdown
+## Convenciones
+- La lógica vive en `services/`, nunca en `routes/`.
+- `routes/` solo parsea input, llama al service y traduce errores.
+```
+
+6. Sesión nueva → separa correctamente sin recordatorio.
+
+> "La corrección en sesión es temporal. `CLAUDE.md` es permanente. Si cometiste el error de corregir en sesión, lo next step es siempre escribirlo en el archivo."
+
+---
+
+## 6. Ejercicio asíncrono
+
+### Ejercicio 3 — Auto memory y contexto personal (sin corrector, fuera de clase)
+
+Los alumnos exploran `~/.claude/CLAUDE.md` para añadir preferencias personales que apliquen en todos sus repos (idioma de respuesta, estilo de código, formato preferido). Reflexionan sobre la diferencia entre contexto personal y contexto de proyecto.
+
+**Revisión opcional:** en la siguiente sesión, preguntar si alguien detectó que auto memory contradecía una regla de `CLAUDE.md`. Usarlo para hablar de precedencia.
+
+---
+
+## 7. Cierre y puente (≈ 5 min)
 
 Resumen en pizarra:
 
-1. **Prompt = contexto + objetivo + restricciones + formato + evidencia.**
-2. **Pedir alternativas antes de pedir código.**
-3. **Pedir el cambio mínimo y verificarlo (tests, diff, ejecutar).**
-4. **Si tu prompt es ambiguo, el problema es tuyo.**
+1. **Si lo dices más de dos veces, escríbelo en `CLAUDE.md`.**
+2. **Reglas concretas y verificables. "Código limpio" no es una regla.**
+3. **`.claude/rules/` para segmentar por tema cuando el archivo crece.**
+4. **La corrección en sesión es temporal. Persiste lo que importa.**
 
 **Puente al Tema 8:**
 
-> "Ahora sabéis prompter una tarea. En el siguiente tema usamos esto para algo más grande: **explorar un repositorio que no conoces** y entender su arquitectura sin abrir 50 archivos a mano."
+> "Sabéis cómo dar contexto permanente al agente. Ahora vemos cómo dar contexto preciso en el momento: cómo estructurar el prompt para que el resultado sea el que queréis, no el que el agente decide."
 
 ---
 
-## 4. Notas para el formador
+## 8. Notas para el formador
 
-- Si los alumnos no tienen Node 20+, los tests del proyecto fallan (usa `node --test`). Avísalos antes.
-- Si una demo se alarga, recorta la 4 (es decorativa, refuerza pero no enseña nuevo).
-- Pregunta típica: *"¿No es muy verboso escribir prompts así?"* → Respuesta: *"Tardas 30 segundos en escribirlo y te ahorra 10 minutos de revertir cambios. La verbosidad es el precio del control."*
-- Preguntas trampa que valen oro si salen del alumnado:
-  - *"¿Y si Claude responde algo que parece bien pero no lo es?"* → Tema 13 (revisión).
-  - *"¿Esto se puede convertir en plantilla para todo el equipo?"* → Tema 17 (skills). **Siembra el gancho aquí.**
+- **Diferencia clave para remarcar**: `CLAUDE.md` en el repo (versionado, para el equipo) vs `~/.claude/CLAUDE.md` (personal, para todos tus repos). Los alumnos los confunden.
+- Si alguien pregunta *"¿y si `CLAUDE.md` tiene instrucciones contradictorias?"*: más específico gana. Subpath > repo > home.
+- El error más común en el ejercicio 2: mover líneas pero no verificar que el agente aún las carga. Pedir que lancen el prompt de verificación siempre.
+- Pregunta típica: *"¿Cuánto debe medir el `CLAUDE.md`?"* → La regla práctica: si tardan más de 2 minutos en leerlo, está demasiado largo. `.claude/rules/` para el resto.
+- Si hay tiempo extra al final del ejercicio 2, mostrar la precedencia subpath: crear `src/payments/CLAUDE.md` con una regla de pago más restrictiva y ver cómo gana a la general.
