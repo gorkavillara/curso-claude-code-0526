@@ -15,3 +15,7 @@ Thumbs.db
 *.sqlite
 *.db
 .claude/settings.local.json
+.claude/skills/curso-forms/credentials.json
+.claude/skills/curso-forms/token.json
+.interno/
+curso/
