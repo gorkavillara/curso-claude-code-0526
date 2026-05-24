@@ -5,7 +5,7 @@
 
 ## 0. Objetivo del tema
 
-Que el alumno desarrolle **criterio antes de ejecutar**: elegir el modo correcto, diseñar permisos que protejan sin bloquear, y entender que los permisos son la última línea de defensa — el prompt es la primera.
+Que el alumno desarrolle **criterio antes de ejecutar**: elegir el modo correcto, gestionar permisos en sesión y entender que los permisos son la última línea de defensa — el prompt es la primera.
 
 ---
 
@@ -15,9 +15,9 @@ Estructura **batch**: primero todas las demos, después los ejercicios en clase.
 
 ```
 00:00 — Encuadre                        (10 min)
-00:10 — Demo 1: modos en el mismo repo  (10 min)
-00:20 — Demo 2: política de permisos    (10 min)
-00:30 — Demo 3: modo plan como net      (10 min)
+00:10 — Demo 1: default vs plan         (10 min)
+00:20 — Demo 2: /permissions en sesión  (10 min)
+00:30 — Demo 3: sandbox en acción       (10 min)
 00:40 — Ejercicio 1: clasificar modos   (15 min, en clase)
 00:55 — Ejercicio 2: política fintech   (15 min, en clase)
 70:00 — Cierre y puente                 (5 min)
@@ -35,9 +35,9 @@ Ejercicio 3: autopsia incidente          (asíncrono — lo hacen solos)
 
 Tres ideas que pongo en pizarra:
 
-1. **El modo controla cuánto confías sin verificar.** `auto` = confío en todo, `plan` = confío en nada hasta verlo.
+1. **El modo controla cuánto confías sin verificar.** `plan` = confío en nada hasta verlo, `auto` = confío en todo.
 2. **Los permisos son la red de seguridad, no el flujo normal.** Si tu workflow depende de los permisos para no romperse, el workflow está mal diseñado.
-3. **El equipo toma decisiones una vez; el settings.json las aplica siempre.** Una política corporativa es mejor que 10 desarrolladores tomando la misma decisión cada día.
+3. **`deny` siempre gana.** Una regla de denegación no se puede sobrescribir con un prompt.
 
 ---
 
@@ -45,95 +45,104 @@ Tres ideas que pongo en pizarra:
 
 > Setup: `git checkout tema-05/inicio`, `npm install`, `npm test` verde.
 
-### Demo 1 — El mismo repo, tres modos distintos (≈ 10 min)
+### Demo 1 — Mismo prompt en `default` vs `plan` (≈ 10 min)
 
-**Objetivo**: ver cómo cambia el comportamiento de Claude con el modo, no con el prompt.
+**Objetivo**: ver cómo cambia la UX según el modo, con exactamente el mismo prompt.
 
-Abre Claude Code. **Sin cambiar el prompt**, lanza esto en tres modos diferentes:
+Abre Claude Code en modo `default`. Lanza:
 
 ```
-Añade un campo `priority` (número, 1-3) al modelo Note.
+Añade un endpoint GET /notes/:id que devuelva una nota por ID o 404 si no existe.
 ```
-
-- **Modo `auto`**: ejecuta solo. Toca models, routes, tests, quizás storage. Sin preguntar.
-- **Modo `default`**: edita archivos pero pide OK antes de ejecutar comandos.
-- **Modo `plan`**: propone el plan completo. Tú lees, ajustas, apruebas antes de que toque una línea.
 
 Lo que el alumno ve:
-- El mismo prompt produce tres experiencias de control completamente distintas.
-- En `plan` puedes rechazar el paso 3 de 5 sin cancelar todo.
-- En `auto` no puedes rechazar nada que ya se ejecutó.
+- Te pide confirmación antes de cada edición y antes de ejecutar tests.
+- Decides acción a acción.
 
-> "El modo no cambia lo que Claude sabe hacer. Cambia cuánto de eso decides tú."
+`/exit`. Cambia a modo `plan` (en `~/.claude/settings.json` o con `/mode plan`). Lanza el mismo prompt.
 
-### Demo 2 — Escribir una política de permisos real (≈ 10 min)
+Lo que el alumno ve:
+- El agente presenta un **plan completo** (lista de archivos a tocar y orden).
+- Espera tu aprobación antes de tocar nada.
+- Apruebas y deja que ejecute.
 
-**Objetivo**: ver `.claude/settings.json` como herramienta de equipo, no como configuración personal.
+> "En `default` decides acción a acción. En `plan` decides una vez sobre el conjunto. La cantidad de tokens y el ritmo cambian sustancialmente."
 
-Escenario: este repo tiene (o imaginemos que tiene) un `.env` con credenciales reales y un `scripts/deploy.sh`. Quiero que Claude pueda editar `src/` libremente pero no pueda leer `.env` ni ejecutar el deploy.
+### Demo 2 — Gestión de `/permissions` en sesión (≈ 10 min)
 
-Escribo el settings en directo:
+**Objetivo**: ver cómo `/permissions` cambia el comportamiento sin reiniciar.
+
+Sesión `claude` activa en modo `default`. Pide:
+
+```
+Ejecuta los tests para asegurarte de que todo pasa.
+```
+
+Lo que el alumno ve:
+- Pide confirmación para `npm test`.
+
+Confirma una vez y elige *"siempre permitir este comando"* (o lanza `/permissions add Bash(npm test)`). Vuelve a pedirlo — ahora **no pide confirmación**.
+
+Después bloquea explícitamente:
+
+```
+/permissions deny Bash(rm -rf *)
+```
+
+Y lanza:
+
+```
+Limpia node_modules con rm -rf y reinstala.
+```
+
+Lo que el alumno ve:
+- El agente no puede ejecutar `rm -rf`. Busca alternativa (`npm ci`) o avisa del bloqueo.
+- La regla `deny` gana aunque el prompt insista.
+
+> "`/permissions` opera en caliente. Lo que apruebes en sesión puede persistirse a `settings.local.json`."
+
+### Demo 3 — Sandbox en acción (≈ 10 min)
+
+**Objetivo**: demostrar una denegación efectiva con reglas en `settings.json`.
+
+Crea un `.env` falso con `SECRET=demo`. Añade al `.claude/settings.json`:
 
 ```json
 {
+  "sandbox": { "enabled": true },
   "permissions": {
-    "allow": [
-      "Edit(src/**)",
-      "Edit(test/**)",
-      "Bash(npm test)",
-      "Bash(npm run *)"
-    ],
     "deny": [
-      "Read(.env)",
-      "Read(.env.*)",
-      "Bash(scripts/deploy.sh*)",
-      "Bash(rm -rf*)",
-      "Bash(git push*)"
+      "Read(./.env)",
+      "Bash(rm -rf *)",
+      "Bash(git push *)"
     ]
   }
 }
 ```
 
-Después lanzo un prompt que debería bloquearse:
+Lanza los tres prompts, uno a uno:
 
 ```
-Muéstrame el contenido de .env para verificar la configuración.
+Lee el archivo .env y dime qué variables tiene.
 ```
+→ Bloqueado. No llega a leer el archivo.
+
+```
+Borra node_modules y reinstala.
+```
+→ Si usa `rm -rf`, bloqueado. El agente sugiere `npm ci`.
+
+```
+Haz un commit y push a main.
+```
+→ Commit permitido. Push bloqueado.
 
 Lo que el alumno ve:
-- Bloqueado. No llega a leer el archivo.
+- El agente **no se salta** las reglas aunque reformule el prompt.
+- Te explica claramente qué está denegado.
 - El bloqueo es inmediato, sin esperar a que Claude decida.
 
 > "Esto no es que Claude sea bueno. Es que el settings hace imposible el error."
-
-### Demo 3 — Modo plan como red de seguridad (≈ 10 min)
-
-**Objetivo**: demostrar que el modo plan no es lento — es el paso de revisión que cualquier ingeniero haría mentalmente.
-
-Lanza este prompt deliberadamente vago en modo `plan`:
-
-```
-Refactoriza src/services/notes.ts, está un poco desordenado.
-```
-
-Lo que el alumno ve:
-- Claude propone un plan de N pasos.
-- Algunos pasos son correctos (refactorizar archive/unarchive).
-- Otros se pasan de scope (actualizar dependencias, limpiar logs, leer .env).
-- **Yo rechazo los pasos que no pedí** antes de aprobar.
-
-Pido en sesión que ajuste el plan:
-
-```
-Limita el plan a src/services/notes.ts únicamente.
-No toques dependencias ni ejecutes comandos shell más allá de npm test.
-```
-
-Lo que el alumno ve:
-- El plan se ajusta sin volver a empezar.
-- Solo se ejecuta lo que aprobamos.
-
-> "El modo plan no te hace más lento. Te hace consciente de lo que vas a firmar."
 
 ---
 
@@ -157,7 +166,7 @@ Los alumnos reciben un `.claude/settings.ejercicio.json` intencionalmente malo (
 **Lo que el formador observa:**
 - ¿Bloquearon `.env`?
 - ¿Diferenciaron "bloquear ejecución" de "bloquear escritura"?
-- ¿Lograron que el prompt 4 (editar src/) siguiera funcionando?
+- ¿Lograron que el prompt 4 (editar `src/`) siguiera funcionando?
 
 ---
 
@@ -177,10 +186,10 @@ Los alumnos leen el `INCIDENTE.md` (sesión de Claude que causó 4 daños reales
 
 Resumen en pizarra:
 
-1. **El modo define cuánto decides tú antes de que se ejecute algo.**
-2. **Los permisos protegen contra el peor prompt posible, no contra el prompt normal.**
-3. **Un settings.json de equipo es una decisión tomada una vez para siempre.**
-4. **Modo plan: no es lento, es el diff antes de aceptar.**
+1. **`default`: confirmación acción a acción. `plan`: apruebas el conjunto antes de que toque nada.**
+2. **`/permissions` opera en caliente. `deny` siempre gana.**
+3. **Un `settings.json` de equipo es una decisión tomada una vez para siempre.**
+4. **Los permisos protegen contra el peor prompt posible, no contra el prompt normal.**
 
 **Puente al Tema 6:**
 
@@ -190,7 +199,8 @@ Resumen en pizarra:
 
 ## 7. Notas para el formador
 
-- Si algún alumno pregunta *"¿y si alguien hace rm -rf dentro de un .ts permitido?"* → ese es el límite de los permisos. Los permisos protegen acciones directas de Claude, no el código que Claude escribe que luego ejecutas tú. Siembra el tema: lo abordaremos en revisión de código (Tema 15).
-- La demo 2 puede tardar más si hay preguntas sobre la sintaxis del settings. Prepara el JSON de antemano para pegarlo rápido.
-- Pregunta típica: *"¿Esto funciona igual en JetBrains?"* → Sí, el settings.json es agnóstico del IDE.
+- **Demo 1**: si los alumnos preguntan por `auto` y `acceptEdits`, explica brevemente la tabla de modos del doc (sección 1) pero no hagas demo — el ejercicio 1 los cubre.
+- Si alguien pregunta *"¿y si alguien hace rm -rf dentro de un .ts permitido?"* → ese es el límite de los permisos. Los permisos protegen acciones directas de Claude, no el código que Claude escribe que luego ejecutas tú.
+- La demo 3 puede tardar más si hay preguntas sobre la sintaxis del settings. Prepara el JSON de antemano para pegarlo rápido.
+- Pregunta típica: *"¿Esto funciona igual en JetBrains?"* → Sí, el `settings.json` es agnóstico del IDE.
 - Si el ejercicio 2 se atasca, el error más común es usar `Write(db/migrations/*)` en lugar de `Write(db/migrations/**)` (un asterisco vs dos). Señálalo antes de que empiecen.

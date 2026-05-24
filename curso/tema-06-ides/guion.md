@@ -1,6 +1,6 @@
 # Tema 6 — Integración con IDEs: VS Code y JetBrains
 
-> Duración estimada: 55 min · Tipo: práctico (alumnos delante del teclado con VS Code).
+> Duración estimada: 60 min · Tipo: práctico (alumnos delante del teclado con VS Code).
 > Repositorio de prácticas: rama `tema-06/inicio` (notebox, Node 24 + Express + TypeScript).
 
 ## 0. Objetivo del tema
@@ -46,26 +46,19 @@ Dos ideas rápidas:
 
 > Setup: `git checkout tema-06/inicio`, `npm install`, VS Code abierto con la extensión activa.
 
-**Sin seleccionar nada**, escribe en el panel lateral:
+Abre `src/services/notes.ts`. **Selecciona la función `createNote`** completa. En el panel lateral escribe:
 
 ```
-¿Qué hace este archivo?
-```
-
-(Apunta a `src/services/notes.ts`.) Observa la respuesta genérica.
-
-Ahora **selecciona la función `archive`** completa y escribe:
-
-```
-Esta función tiene if anidados profundos. Aplana la lógica sin cambiar
-la firma ni el comportamiento. No toques unarchive ni ningún otro archivo.
-Ejecuta npm test al terminar.
+Añade validación: el body no puede superar 5000 caracteres. Devuelve un
+error semántico (no un Error genérico) y añade un test que lo cubra.
+Ejecuta los tests al terminar.
 ```
 
 Lo que el alumno ve:
-- Con selección: el agente sabe exactamente qué función y qué archivo.
+- La selección se transmite como contexto sin que la pegues en el prompt.
 - El diff aparece inline, bloque a bloque.
-- El output de `npm test` aparece en el panel sin abrir terminal.
+- Si el test falla, la siguiente respuesta del agente ya tiene el output del fallo en su contexto.
+- Los tests pasan en el panel sin abrir terminal.
 
 > "La selección hace el trabajo de [CONTEXTO]. Sin ella, Claude decide qué contexto usar — puede elegir demasiado o demasiado poco."
 
@@ -85,27 +78,31 @@ Los alumnos repiten el ciclo con y sin selección sobre la misma tarea, rellenan
 
 ### Demo 2 (10 min)
 
-> Setup: mismo repo, rama `tema-06/inicio`.
+> Setup: mismo repo, hazte checkout de una rama con cambios o usa `tema-06/inicio` comparando contra `main`.
 
-Simula una revisión de PR. Sin abrir ningún archivo:
+Simula una revisión de PR. En el chat (sin abrir ningún archivo manualmente):
 
 ```
-Compara el estado actual de src/ con la rama main. Resume los cambios
-en 5 puntos y márcame los 2 más arriesgados con justificación.
+Compara la rama actual con main. Resume los cambios en 5 puntos
+y marca los 3 más arriesgados con justificación.
 ```
 
 Lo que el alumno ve:
-- Claude cruza el diff con el contexto del repo (no solo lee el patch).
-- Propone una priorización de dónde mirar.
-- Señala que la priorización es suya, no delegada: *"Claude te dice dónde mirar primero, no qué aprobar."*
+- Claude lee el diff completo y devuelve los puntos priorizados.
+- Propone dónde mirar primero.
 
-Selecciona uno de los puntos arriesgados en el editor y pregunta:
+Ve a uno de los puntos arriesgados en el editor. Cuando dudes de algo, pregunta:
 
 ```
-¿Este cambio es compatible con cómo se llama esta función desde routes/?
+Explícame por qué este cambio en services/ es seguro respecto
+a los callers en routes/.
 ```
 
-> "Reduces el coste de revisión sin delegar la revisión. El editor es el sitio natural para esto."
+Lo que el alumno ve:
+- Reduces el coste de revisión sin delegar la revisión.
+- El agente puede equivocarse sobre qué es "arriesgado": tú decides.
+
+> "Claude te dice dónde mirar primero, no qué aprobar. El editor es el sitio natural para esto."
 
 ### Ejercicio 2 (15 min)
 
@@ -123,21 +120,25 @@ Los alumnos tienen un `CAMBIOS_PENDIENTES.md` con 4 cambios documentados (uno re
 
 > Esta demo es demostración pura. El ejercicio correspondiente es asíncrono.
 
-**Concepto**: el estado real del debugger (valores de variables) es más potente que una descripción del bug.
+**Concepto**: el estado real del debugger (valores de variables en el breakpoint) es más potente que una descripción del bug.
 
-Muestra el flujo sin ejecutarlo necesariamente:
+Muestra el flujo:
 
-1. Test con un fallo (el del `EJERCICIO.md` del ejercicio 3).
-2. Copia de los valores exactos del fallo.
-3. Prompt con esos valores como contexto:
+1. Abre un test con un fallo, pon un breakpoint en la línea de la aserción.
+2. Lanza la sesión de debug (`F5`). Cuando pare, copia los valores de las variables relevantes.
+3. En el chat:
 
 ```
-El test falla aquí. expected=1, actual=0. La query es "MAÑANA" y la nota
-tiene title "Mañana es lunes". Mira src/search/index.ts y explícame
-por qué falla con esa query.
+El test pausa aquí. `expected` vale X, `actual` vale Y. Mira la lógica
+de createNote y dime por qué difieren.
 ```
 
-> "La diferencia entre 'el test falla' y 'expected=1, actual=0 con estos valores' es la diferencia entre adivinar y diagnosticar."
+Lo que el alumno ve:
+- El agente razona con datos concretos, no con descripciones vagas.
+- Cada hipótesis del agente es verificable: vuelves al debugger.
+- Esta combinación es difícil de replicar en CLI pura.
+
+> "La diferencia entre 'el test falla' y 'expected=X, actual=Y con estos valores' es la diferencia entre adivinar y diagnosticar."
 
 ---
 
@@ -175,3 +176,4 @@ Resumen en pizarra:
 - El error más común en el ejercicio 1: aceptar el diff en bloque con "Accept all" en lugar de revisarlo por partes. Señálalo al arrancar el ejercicio.
 - Pregunta típica: *"¿Puedo usar la extensión sin la CLI?"* → Sí, pero la CLI y la extensión comparten sesión si arrancas `claude` desde la terminal integrada de VS Code.
 - Si la extensión no se detecta automáticamente: `Cmd/Ctrl+Shift+P` → "Claude Code: Open".
+- Para la demo 3, si no tienes un test roto preparado: modifica temporalmente un test de `test/notes.service.test.ts` para que falle con un valor específico. El punto es mostrar el flujo, no el bug concreto.
