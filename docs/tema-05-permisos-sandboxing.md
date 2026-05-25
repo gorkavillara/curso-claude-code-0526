@@ -1,11 +1,6 @@
----
-hidden: true
----
-
 # Tema 5 — Modos de trabajo, permisos y sandboxing
 
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico + demos guiadas
+> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 

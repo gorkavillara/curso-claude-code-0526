@@ -1,11 +1,6 @@
----
-hidden: true
----
-
 # Tema 8 — Prompting profesional para desarrollo de software
 
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -17,13 +12,13 @@ Dejar de escribir prompts como si fuera un chatbot y empezar a escribirlos como 
 
 El esqueleto COA (Contexto, Objetivo, Acción):
 
-| Bloque | Qué incluye | Por qué importa |
-|---|---|---|
-| `[CONTEXTO]` | Repo, módulo, función afectada | Sin esto, el agente inventa el alcance |
-| `[OBJETIVO]` | Qué quieres conseguir, en una frase | Define el éxito antes de empezar |
-| `[RESTRICCIONES]` | Qué NO puede tocar, qué firma mantener, qué tests deben pasar | Evita la sobreedición |
-| `[FORMATO]` | Diff, lista, plan, código completo | Controla la forma de la respuesta |
-| `[EVIDENCIA]` | "Cita rutas y líneas antes de editar" | Obliga a razonar con datos reales |
+| Bloque            | Qué incluye                                                   | Por qué importa                        |
+| ----------------- | ------------------------------------------------------------- | -------------------------------------- |
+| `[CONTEXTO]`      | Repo, módulo, función afectada                                | Sin esto, el agente inventa el alcance |
+| `[OBJETIVO]`      | Qué quieres conseguir, en una frase                           | Define el éxito antes de empezar       |
+| `[RESTRICCIONES]` | Qué NO puede tocar, qué firma mantener, qué tests deben pasar | Evita la sobreedición                  |
+| `[FORMATO]`       | Diff, lista, plan, código completo                            | Controla la forma de la respuesta      |
+| `[EVIDENCIA]`     | "Cita rutas y líneas antes de editar"                         | Obliga a razonar con datos reales      |
 
 No necesitas los 5 bloques siempre. Pero si la tarea no es trivial y falta uno, se nota.
 
@@ -31,8 +26,8 @@ No necesitas los 5 bloques siempre. Pero si la tarea no es trivial y falta uno, 
 
 ### Demo 1 — Mismo objetivo, dos prompts
 
-- **Objetivo:** ver cómo cambia el output con el mismo objetivo pero diferente nivel de restricciones.
-- **Setup:** rama `tema-08/inicio` (`git checkout tema-08/inicio`, `npm install`, `npm test` verde).
+* **Objetivo:** ver cómo cambia el output con el mismo objetivo pero diferente nivel de restricciones.
+* **Setup:** rama `tema-08/inicio` (`git checkout tema-08/inicio`, `npm install`, `npm test` verde).
 
 **Prompt malo (lanzarlo primero):**
 
@@ -65,8 +60,8 @@ Antes de tocar nada, dime en una frase qué duplican las dos funciones.
 
 **Qué observar:**
 
-- Con el prompt malo: toca archivos no pedidos, cambia firmas, "mejora" cosas no solicitadas.
-- Con el prompt bueno: diagnóstico breve → refactor acotado → tests verdes.
+* Con el prompt malo: toca archivos no pedidos, cambia firmas, "mejora" cosas no solicitadas.
+* Con el prompt bueno: diagnóstico breve → refactor acotado → tests verdes.
 
 > El prompt malo no es "corto". Es **vago**. Un prompt corto pero específico gana siempre.
 
@@ -74,18 +69,20 @@ Antes de tocar nada, dime en una frase qué duplican las dos funciones.
 
 El contexto no es documentación: es el **scope del cambio**.
 
-- Sin contexto → el agente decide qué contexto usar (puede ser demasiado o demasiado poco).
-- Con contexto → defines exactamente qué está dentro y qué está fuera del cambio.
+* Sin contexto → el agente decide qué contexto usar (puede ser demasiado o demasiado poco).
+* Con contexto → defines exactamente qué está dentro y qué está fuera del cambio.
 
 Contexto útil:
-- Nombre del archivo y función afectada.
-- Por qué existe el problema (síntoma observable, no hipótesis).
-- Qué otros archivos dependen de lo que vas a cambiar.
+
+* Nombre del archivo y función afectada.
+* Por qué existe el problema (síntoma observable, no hipótesis).
+* Qué otros archivos dependen de lo que vas a cambiar.
 
 Contexto inútil:
-- Historia del proyecto.
-- "Como ya sabes, el año pasado…"
-- El README completo.
+
+* Historia del proyecto.
+* "Como ya sabes, el año pasado…"
+* El README completo.
 
 ## 3. Prompts para generar código nuevo sin romper estándares existentes
 
@@ -120,8 +117,8 @@ Después **tú decides** cuál implementar. No lo delegues.
 
 ### Demo 2 — Alternativas antes de código
 
-- **Objetivo:** demostrar que pedir alternativas antes de código cambia la calidad de la decisión.
-- **Setup:** rama `tema-08/inicio`.
+* **Objetivo:** demostrar que pedir alternativas antes de código cambia la calidad de la decisión.
+* **Setup:** rama `tema-08/inicio`.
 
 **Prompt:**
 
@@ -143,24 +140,28 @@ Cita la línea del bug y explica por qué falla con esos dos inputs.
 
 **Qué observar:**
 
-- Claude propone opciones con trade-offs concretos.
-- Yo elijo (ej: `toLowerCase + normalize('NFD')`) y explico por qué.
-- Segundo prompt para implementar: acotado, con restricciones, con tests.
+* Claude propone opciones con trade-offs concretos.
+* Yo elijo (ej: `toLowerCase + normalize('NFD')`) y explico por qué.
+* Segundo prompt para implementar: acotado, con restricciones, con tests.
 
 > "Lo que acabamos de hacer es lo que un buen ingeniero hace por defecto: pensar antes de codear. La IA no quita ese paso."
 
 ## 5. Prompts para refactorización, debugging, testing y documentación
 
 ### Refactorización
+
 Restricciones clave: firmas exactas, archivos que no se tocan, tests que deben seguir verdes.
 
 ### Debugging
+
 Dar el estado real: valores exactos de variables, output exacto del test que falla. No describir el problema en abstracto.
 
 ### Testing
+
 Especificar: qué comportamiento cubre cada test, formato de naming, qué no mockear.
 
 ### Documentación
+
 Especificar: qué nivel de detalle, qué audiencia, qué no incluir. "Explica esto" produce párrafos largos. "Explica esto en 3 bullets para un junior que no conoce Express" produce algo usable.
 
 ## 6. Técnicas para pedir cambios mínimos y evitar reescrituras innecesarias
@@ -168,9 +169,10 @@ Especificar: qué nivel de detalle, qué audiencia, qué no incluir. "Explica es
 La restricción más importante: **"no toques ningún otro archivo"**.
 
 Otras técnicas:
-- "Diff mínimo" → pedirle explícitamente el diff en lugar del archivo completo.
-- "Propón primero, implementa después" → dos prompts en lugar de uno.
-- "Lista los archivos que vas a tocar antes de tocar ninguno" → checkpoint antes del cambio.
+
+* "Diff mínimo" → pedirle explícitamente el diff en lugar del archivo completo.
+* "Propón primero, implementa después" → dos prompts en lugar de uno.
+* "Lista los archivos que vas a tocar antes de tocar ninguno" → checkpoint antes del cambio.
 
 > "Pedir poco es difícil. Cambias solo esta función, mantienes la firma, no tocas tests. Más útil que 'refactoriza esto'."
 
@@ -205,8 +207,8 @@ Por cada riesgo: probabilidad (alta/media/baja) + mitigación.
 
 ### Demo 3 — Cambio mínimo con verificación
 
-- **Objetivo:** practicar el ciclo "propón tests → implementa → verifica".
-- **Setup:** rama `tema-08/inicio`.
+* **Objetivo:** practicar el ciclo "propón tests → implementa → verifica".
+* **Setup:** rama `tema-08/inicio`.
 
 **Prompt:**
 
@@ -230,9 +232,9 @@ Diff (solo líneas cambiadas) + propuesta de 3 tests sin implementarlos.
 
 **Qué observar:**
 
-- Cambio acotado a `routes/notes.ts`.
-- Propuesta de tests antes de implementarlos: yo reviso primero.
-- Debate sobre dónde validar: ruta vs service.
+* Cambio acotado a `routes/notes.ts`.
+* Propuesta de tests antes de implementarlos: yo reviso primero.
+* Debate sobre dónde validar: ruta vs service.
 
 > La ruta valida forma (¿está presente? ¿es un string?). El service valida negocio (¿puede archivar?).
 
@@ -264,21 +266,21 @@ No abrir conversaciones nuevas innecesariamente: el historial de la sesión es c
 
 ## 10. Antipatrones de prompting que producen ruido, sobreedición o falsas certezas
 
-| Antipatrón | Por qué falla |
-|---|---|
-| "Mejora esto" | Sin objetivo → sobreedición |
-| "Hazlo limpio / pythonic / idiomático" | El criterio es del modelo, no tuyo |
-| "Arregla el bug" sin describir síntoma | Busca a ciegas o inventa el bug |
-| "Haz que funcione" | Fuerza al modelo a inventar un estado deseado |
+| Antipatrón                                 | Por qué falla                                                     |
+| ------------------------------------------ | ----------------------------------------------------------------- |
+| "Mejora esto"                              | Sin objetivo → sobreedición                                       |
+| "Hazlo limpio / pythonic / idiomático"     | El criterio es del modelo, no tuyo                                |
+| "Arregla el bug" sin describir síntoma     | Busca a ciegas o inventa el bug                                   |
+| "Haz que funcione"                         | Fuerza al modelo a inventar un estado deseado                     |
 | Micro-correcciones en 20 mensajes seguidos | Un prompt con todas las restricciones desde el principio es mejor |
-| "Aplica las mejores prácticas" | Completamente delegado, sin criterio propio |
+| "Aplica las mejores prácticas"             | Completamente delegado, sin criterio propio                       |
 
----
+***
 
 ## Resumen
 
-- **Prompt = contexto + objetivo + restricciones + formato + evidencia.**
-- Pedir alternativas antes de pedir código.
-- "No toques ningún otro archivo" es la restricción más importante.
-- El bloque `[EVIDENCIA]` ancla la respuesta a código real.
-- Si tu prompt es ambiguo, el problema es tuyo.
+* **Prompt = contexto + objetivo + restricciones + formato + evidencia.**
+* Pedir alternativas antes de pedir código.
+* "No toques ningún otro archivo" es la restricción más importante.
+* El bloque `[EVIDENCIA]` ancla la respuesta a código real.
+* Si tu prompt es ambiguo, el problema es tuyo.
