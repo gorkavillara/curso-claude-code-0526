@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 11 — Generación de nuevas funcionalidades
 
-# Tema 11 — Generación de nuevas funcionalidades con control de impacto, alineación arquitectónica y calidad de implementación
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -35,19 +30,19 @@ Antes de escribir código, la pregunta correcta es: **¿qué capas toca esta fun
 
 Para un backend con arquitectura de capas (ruta → servicio → storage → modelo):
 
-| Capa | Cuándo se toca |
-|---|---|
-| **Modelo** | Cambio en la estructura de datos |
-| **Storage** | Cambio en cómo se persiste o recupera |
-| **Servicio** | Nueva lógica de negocio o validación |
-| **Ruta** | Nuevo endpoint o cambio de contrato HTTP |
+| Capa         | Cuándo se toca                           |
+| ------------ | ---------------------------------------- |
+| **Modelo**   | Cambio en la estructura de datos         |
+| **Storage**  | Cambio en cómo se persiste o recupera    |
+| **Servicio** | Nueva lógica de negocio o validación     |
+| **Ruta**     | Nuevo endpoint o cambio de contrato HTTP |
 
 Identificar las capas afectadas antes de implementar determina el scope del cambio.
 
 ### 🧪 Demo 1 — Plan de impacto antes del código
 
-- **Objetivo:** extraer el plan completo de una nueva funcionalidad sin escribir ni una línea de código todavía.
-- **Setup:** `git checkout tema-11/inicio`, `npm test` verde.
+* **Objetivo:** extraer el plan completo de una nueva funcionalidad sin escribir ni una línea de código todavía.
+* **Setup:** `git checkout tema-11/inicio`, `npm test` verde.
 
 **Prompt literal:**
 
@@ -67,10 +62,10 @@ riesgos de la implementación. No escribas código todavía.
 
 **Qué observar:**
 
-- Claude identifica las 4 capas afectadas: modelo, storage, servicio, ruta.
-- Lista los archivos concretos con los cambios necesarios.
-- Propone tests antes de que los pidas.
-- Señala riesgos (p. ej., retrocompatibilidad del storage al añadir un campo nuevo).
+* Claude identifica las 4 capas afectadas: modelo, storage, servicio, ruta.
+* Lista los archivos concretos con los cambios necesarios.
+* Propone tests antes de que los pidas.
+* Señala riesgos (p. ej., retrocompatibilidad del storage al añadir un campo nuevo).
 
 ### 🧩 Ejercicio 1 — Plan de impacto para `PATCH /notes/:id`
 
@@ -82,9 +77,9 @@ Genera el plan de impacto para implementar `PATCH /notes/:id` (actualización pa
 
 Claude Lee el código existente antes de generar nuevo código. Eso significa que si el repo tiene:
 
-- Errores semánticos → el nuevo código usará errores semánticos.
-- Tests con `node --test` → los nuevos tests usarán `node --test`.
-- Validación en el servicio → la nueva validación irá al servicio.
+* Errores semánticos → el nuevo código usará errores semánticos.
+* Tests con `node --test` → los nuevos tests usarán `node --test`.
+* Validación en el servicio → la nueva validación irá al servicio.
 
 Pero solo si el `CLAUDE.md` lo especifica o si las convenciones son visibles en el código. Un repo inconsistente produce código inconsistente.
 
@@ -96,8 +91,8 @@ La regla de oro: **implementa una capa a la vez y valida antes de pasar a la sig
 
 ### 🧪 Demo 2 — Implementar la feature de tags por capas
 
-- **Objetivo:** implementar los tags del plan anterior capa a capa, validando con tests en cada paso.
-- **Setup:** misma rama `tema-11/inicio`. El plan de la Demo 1 está visible en la sesión.
+* **Objetivo:** implementar los tags del plan anterior capa a capa, validando con tests en cada paso.
+* **Setup:** misma rama `tema-11/inicio`. El plan de la Demo 1 está visible en la sesión.
 
 **Capa 1 — modelo:**
 
@@ -132,9 +127,9 @@ Diff + npm test.
 
 **Qué observar:**
 
-- Cada capa es un diff revisable en menos de 2 minutos.
-- Los tests validan cada capa antes de pasar a la siguiente.
-- Si un test falla, el scope del problema está acotado a esa capa.
+* Cada capa es un diff revisable en menos de 2 minutos.
+* Los tests validan cada capa antes de pasar a la siguiente.
+* Si un test falla, el scope del problema está acotado a esa capa.
 
 ### 🧩 Ejercicio 2 — Implementar PATCH por capas
 
@@ -156,9 +151,9 @@ El `CLAUDE.md` del proyecto debe incluir el framework de UI, el sistema de estil
 
 La instrucción `[RESTRICCIONES]` en el prompt es tu línea de defensa:
 
-- `Solo toca src/services/notes.ts` → Claude no toca la ruta aunque crea que debería.
-- `Tests existentes sin cambios` → no hay regresiones inesperadas en el suite.
-- `Sin librerías nuevas` → no aparece una dependencia nueva en el `package.json`.
+* `Solo toca src/services/notes.ts` → Claude no toca la ruta aunque crea que debería.
+* `Tests existentes sin cambios` → no hay regresiones inesperadas en el suite.
+* `Sin librerías nuevas` → no aparece una dependencia nueva en el `package.json`.
 
 > Cuanto más específico el scope, más fácil es el review y más predecible el resultado.
 
@@ -190,8 +185,8 @@ Esta verificación de coherencia es la diferencia entre una implementación que 
 
 ### 🧪 Demo 3 — Checklist de cierre de feature
 
-- **Objetivo:** generar el checklist técnico que garantiza que la feature está lista para producción.
-- **Setup:** tags implementados en modelo y servicio.
+* **Objetivo:** generar el checklist técnico que garantiza que la feature está lista para producción.
+* **Setup:** tags implementados en modelo y servicio.
 
 **Prompt literal:**
 
@@ -208,9 +203,9 @@ sin revisar primero.
 
 **Qué observar:**
 
-- El checklist es específico al estado actual de la implementación, no genérico.
-- Identifica los gaps: tests de integración, validación de entrada en la ruta, docs.
-- La sección "no llegar a producción sin revisar" hace explícitos los riesgos conocidos.
+* El checklist es específico al estado actual de la implementación, no genérico.
+* Identifica los gaps: tests de integración, validación de entrada en la ruta, docs.
+* La sección "no llegar a producción sin revisar" hace explícitos los riesgos conocidos.
 
 > Ver [Tema 15](tema-15-code-review.md) para usar este checklist como base de la revisión de PR.
 
@@ -224,22 +219,22 @@ Genera el checklist técnico de cierre del cambio (qué tests, qué validaciones
 
 Los riesgos reales de dejar que Claude tome decisiones de diseño:
 
-- **Overengineering**: introduce abstracciones que no necesitas porque "es buena práctica".
-- **Divergencia de patrones**: cada feature nueva usa el patrón que Claude prefiere, no el del equipo.
-- **Pérdida de intención**: el código hace lo correcto pero por las razones equivocadas.
+* **Overengineering**: introduce abstracciones que no necesitas porque "es buena práctica".
+* **Divergencia de patrones**: cada feature nueva usa el patrón que Claude prefiere, no el del equipo.
+* **Pérdida de intención**: el código hace lo correcto pero por las razones equivocadas.
 
 Las salvaguardas:
 
-- El plan de impacto es tuyo. Claude lo ejecuta.
-- Pide siempre `[EVIDENCIA]`: que explique por qué el diseño es consistente con lo existente.
-- Si el diff toca algo que no esperabas, pregunta antes de aceptar.
+* El plan de impacto es tuyo. Claude lo ejecuta.
+* Pide siempre `[EVIDENCIA]`: que explique por qué el diseño es consistente con lo existente.
+* Si el diff toca algo que no esperabas, pregunta antes de aceptar.
 
 ***
 
 ## Resumen
 
-- El orden es siempre: plan de impacto → decisión de diseño → implementación por capas → tests → checklist.
-- Una capa a la vez con validación. Si falla algo, el scope está acotado.
-- `[RESTRICCIONES]` en el prompt es la línea de defensa contra la sobreedición.
-- El `CLAUDE.md` determina si el código generado sigue las convenciones del equipo.
-- Las decisiones de arquitectura son tuyas. Claude las ejecuta, no las toma.
+* El orden es siempre: plan de impacto → decisión de diseño → implementación por capas → tests → checklist.
+* Una capa a la vez con validación. Si falla algo, el scope está acotado.
+* `[RESTRICCIONES]` en el prompt es la línea de defensa contra la sobreedición.
+* El `CLAUDE.md` determina si el código generado sigue las convenciones del equipo.
+* Las decisiones de arquitectura son tuyas. Claude las ejecuta, no las toma.

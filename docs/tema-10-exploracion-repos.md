@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 10 — Exploración de repositorios desconocidos
 
-# Tema 10 — Exploración de repositorios desconocidos, comprensión de arquitectura y onboarding acelerado con Claude Code
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -28,28 +23,28 @@ Claude Code no lee el repo entero de golpe. Navega en orden de densidad informat
 
 Un mapa de arquitectura no es un diagrama UML. Es la respuesta a:
 
-- ¿Qué capas hay y qué hace cada una?
-- ¿Cómo fluye una petición de entrada a salida?
-- ¿Qué módulos son autónomos y cuáles están acoplados?
+* ¿Qué capas hay y qué hace cada una?
+* ¿Cómo fluye una petición de entrada a salida?
+* ¿Qué módulos son autónomos y cuáles están acoplados?
 
-El formato más útil es una tabla de capas + descripción + archivos representativos. Más que un diagrama de flechas, necesitas saber *dónde vive cada responsabilidad*.
+El formato más útil es una tabla de capas + descripción + archivos representativos. Más que un diagrama de flechas, necesitas saber _dónde vive cada responsabilidad_.
 
 ## 3. Identificación rápida de entry points, servicios, handlers y dependencias clave
 
 Los tres nodos más importantes de cualquier backend:
 
-| Nodo | Qué buscar | Ejemplo en Notebox |
-|---|---|---|
-| **Entry point** | Archivo que arranca el servidor | `src/server.ts` |
-| **Handlers / rutas** | Dónde entran las peticiones HTTP | `src/routes/notes.ts` |
-| **Servicios** | Dónde vive la lógica de negocio | `src/services/notes.ts` |
+| Nodo                 | Qué buscar                       | Ejemplo en Notebox      |
+| -------------------- | -------------------------------- | ----------------------- |
+| **Entry point**      | Archivo que arranca el servidor  | `src/server.ts`         |
+| **Handlers / rutas** | Dónde entran las peticiones HTTP | `src/routes/notes.ts`   |
+| **Servicios**        | Dónde vive la lógica de negocio  | `src/services/notes.ts` |
 
 Cuando Claude identifica estos tres nodos desde el primer prompt, tienes el 80% del mapa.
 
 ### 🧪 Demo 1 — Mapa de arquitectura desde cero
 
-- **Objetivo:** extraer el mapa completo de capas de Notebox con un único prompt.
-- **Setup:** `git checkout tema-10/inicio`, sin haber leído ningún archivo del repo.
+* **Objetivo:** extraer el mapa completo de capas de Notebox con un único prompt.
+* **Setup:** `git checkout tema-10/inicio`, sin haber leído ningún archivo del repo.
 
 **Prompt literal:**
 
@@ -62,10 +57,10 @@ elemento. Si no estás seguro de algo, dilo explícitamente. No inventes.
 
 **Qué observar:**
 
-- Claude lee `README.md`, `package.json`, `src/server.ts` y los directorios de primer nivel.
-- El mapa cita rutas concretas (`src/routes/notes.ts:42`).
-- El flujo de `POST /notes` sigue la cadena: ruta → servicio → storage.
-- Si hay ambigüedad, la marca como *"no estoy seguro"* en lugar de inventar.
+* Claude lee `README.md`, `package.json`, `src/server.ts` y los directorios de primer nivel.
+* El mapa cita rutas concretas (`src/routes/notes.ts:42`).
+* El flujo de `POST /notes` sigue la cadena: ruta → servicio → storage.
+* Si hay ambigüedad, la marca como _"no estoy seguro"_ en lugar de inventar.
 
 ### 🧩 Ejercicio 1 — Navegar el repo con prompts
 
@@ -77,10 +72,10 @@ Responde 3 preguntas de navegación del `EJERCICIO.md` usando solo prompts de ex
 
 Las convenciones de un repo no están siempre en el `CLAUDE.md`. Se leen en el código:
 
-- **Naming**: ¿camelCase, snake_case, kebab-case? ¿Verbos o sustantivos en funciones?
-- **Estructura de errores**: ¿clases semánticas o `Error` genérico?
-- **Testing**: ¿mocks o integración real? ¿Qué runner?
-- **Flujo de datos**: ¿validación en ruta o en servicio?
+* **Naming**: ¿camelCase, snake\_case, kebab-case? ¿Verbos o sustantivos en funciones?
+* **Estructura de errores**: ¿clases semánticas o `Error` genérico?
+* **Testing**: ¿mocks o integración real? ¿Qué runner?
+* **Flujo de datos**: ¿validación en ruta o en servicio?
 
 > Prompt útil: `"¿Cuáles son las 5 convenciones más consistentes en este repo? Cita ejemplos."` Este análisis tarda 30 segundos con Claude y horas leyendo manualmente.
 
@@ -88,16 +83,16 @@ Las convenciones de un repo no están siempre en el `CLAUDE.md`. Se leen en el c
 
 La deuda técnica deja señales en el código:
 
-- Funciones largas con lógica anidada profunda.
-- Comentarios del tipo `// TODO`, `// FIXME`, `// HACK`.
-- Módulos que todos los demás importan (alta dependencia central).
-- Falta de tests en un módulo concreto.
-- Inconsistencias de convención entre archivos similares.
+* Funciones largas con lógica anidada profunda.
+* Comentarios del tipo `// TODO`, `// FIXME`, `// HACK`.
+* Módulos que todos los demás importan (alta dependencia central).
+* Falta de tests en un módulo concreto.
+* Inconsistencias de convención entre archivos similares.
 
 ### 🧪 Demo 2 — Detectar las zonas más frágiles
 
-- **Objetivo:** identificar deuda técnica con evidencia de código, no intuición.
-- **Setup:** misma rama `tema-10/inicio`.
+* **Objetivo:** identificar deuda técnica con evidencia de código, no intuición.
+* **Setup:** misma rama `tema-10/inicio`.
 
 **Prompt literal:**
 
@@ -109,10 +104,10 @@ lo evidencia, y por qué supone un riesgo real. No listes cosas genéricas.
 
 **Qué observar:**
 
-- Claude cita archivos y líneas concretas, no categorías abstractas.
-- La señal de fragilidad es verificable: puedes ir a esa línea y confirmarla.
-- El riesgo está contextualizado (p. ej., "esta función no tiene tests y es el único punto de escritura al storage").
-- Si Claude dice "parece" sin citar código, pide que lo verifique con una lectura.
+* Claude cita archivos y líneas concretas, no categorías abstractas.
+* La señal de fragilidad es verificable: puedes ir a esa línea y confirmarla.
+* El riesgo está contextualizado (p. ej., "esta función no tiene tests y es el único punto de escritura al storage").
+* Si Claude dice "parece" sin citar código, pide que lo verifique con una lectura.
 
 ### 🧩 Ejercicio 2 — Detectar zonas frágiles con evidencia
 
@@ -124,10 +119,10 @@ Identifica 3 zonas frágiles del repo y entrega una tabla con archivo, función 
 
 Antes de implementar una nueva funcionalidad, Claude puede decirte:
 
-- Dónde añadir la ruta nueva (patrón de las rutas existentes).
-- Qué métodos del servicio hay que añadir o modificar.
-- Qué tipos hay que actualizar en el modelo.
-- Qué tests hay que crear para seguir el patrón del repo.
+* Dónde añadir la ruta nueva (patrón de las rutas existentes).
+* Qué métodos del servicio hay que añadir o modificar.
+* Qué tipos hay que actualizar en el modelo.
+* Qué tests hay que crear para seguir el patrón del repo.
 
 > Prompt: `"Quiero añadir X. ¿Qué archivos tendría que tocar y dónde exactamente? No escribas código todavía."` Profundizamos en el [Tema 11](tema-11-nuevas-funcionalidades.md).
 
@@ -135,17 +130,17 @@ Antes de implementar una nueva funcionalidad, Claude puede decirte:
 
 El onboarding de un desarrollador nuevo cuesta entre 2 y 4 semanas en repos sin documentación. Con Claude Code, el primer día puede tener:
 
-- Mapa de capas con archivos representativos.
-- Lista de los 5 flujos más importantes del sistema.
-- Convenciones del repo y cómo verificarlas.
-- Qué no tocar en los primeros días.
+* Mapa de capas con archivos representativos.
+* Lista de los 5 flujos más importantes del sistema.
+* Convenciones del repo y cómo verificarlas.
+* Qué no tocar en los primeros días.
 
 El output no es un documento de 50 páginas. Es una guía de lectura estructurada de 1-2 páginas.
 
 ### 🧪 Demo 3 — Generar guía de onboarding
 
-- **Objetivo:** producir una guía de lectura lista para compartir con un nuevo desarrollador.
-- **Setup:** misma rama `tema-10/inicio`.
+* **Objetivo:** producir una guía de lectura lista para compartir con un nuevo desarrollador.
+* **Setup:** misma rama `tema-10/inicio`.
 
 **Prompt literal:**
 
@@ -161,10 +156,10 @@ Sé concreto. Cita rutas reales.
 
 **Qué observar:**
 
-- La guía usa rutas reales del repo, no descripciones genéricas.
-- El orden de lectura empieza por los archivos de mayor densidad informativa.
-- Los flujos siguen la cadena de capas (entrada → lógica → persistencia).
-- La sección "no tocar" identifica los módulos más críticos o frágiles.
+* La guía usa rutas reales del repo, no descripciones genéricas.
+* El orden de lectura empieza por los archivos de mayor densidad informativa.
+* Los flujos siguen la cadena de capas (entrada → lógica → persistencia).
+* La sección "no tocar" identifica los módulos más críticos o frágiles.
 
 ### 🧩 Ejercicio 3 — Generar guía de onboarding
 
@@ -193,8 +188,8 @@ Esta comparación detecta inconsistencias que se introducen cuando distintos des
 
 Una guía de lectura es diferente a un onboarding: está orientada a desarrolladores que ya conocen el sistema pero necesitan orientarse en un módulo nuevo o legacy.
 
-- **Para un módulo concreto**: `"Explica qué hace src/search/ y cómo se integra con el resto del sistema. Cita archivos y líneas."`
-- **Para un sistema heredado**: `"Describe cómo funciona el módulo de autenticación sin modernizarlo. Solo entiéndelo primero."`
+* **Para un módulo concreto**: `"Explica qué hace src/search/ y cómo se integra con el resto del sistema. Cita archivos y líneas."`
+* **Para un sistema heredado**: `"Describe cómo funciona el módulo de autenticación sin modernizarlo. Solo entiéndelo primero."`
 
 > Ver [Tema 14](tema-14-documentacion.md) para convertir estas guías en documentación formal del equipo.
 
@@ -213,8 +208,8 @@ Antes de tocar código legacy, invierte 10 minutos en entenderlo:
 
 ## Resumen
 
-- Claude navega el repo por densidad informativa: README, entry point, carpetas, archivos concretos.
-- Siempre pide que cite rutas. Si no cita, está inventando.
-- El mapa de arquitectura, las zonas frágiles y la guía de onboarding son los tres outputs más valiosos.
-- Antes de implementar algo nuevo, usa Claude para localizar los puntos de extensión.
-- Estas técnicas funcionan igual en repos desconocidos que en legacy que nadie quiere tocar.
+* Claude navega el repo por densidad informativa: README, entry point, carpetas, archivos concretos.
+* Siempre pide que cite rutas. Si no cita, está inventando.
+* El mapa de arquitectura, las zonas frágiles y la guía de onboarding son los tres outputs más valiosos.
+* Antes de implementar algo nuevo, usa Claude para localizar los puntos de extensión.
+* Estas técnicas funcionan igual en repos desconocidos que en legacy que nadie quiere tocar.
