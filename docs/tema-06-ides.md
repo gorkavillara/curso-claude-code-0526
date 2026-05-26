@@ -68,6 +68,12 @@ Ciclo típico dentro del IDE:
 * El diff inline te lleva al sitio del cambio.
 * Si un test falla, la siguiente respuesta del agente ya tiene el output del fallo en su contexto.
 
+### 🧩 Ejercicio 1 — Ciclo completo con y sin selección
+
+> **Rama:** `git checkout tema-06/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Repite el ciclo seleccionar → preguntar → diff → ejecutar sobre la misma tarea, una vez con la función seleccionada y otra sin selección. Rellena la tabla comparativa del `EJERCICIO.md` y verifica que los tests siguen verdes.
+
 ## 4. Uso de drag and drop de archivos y carpetas en chats de IDE cuando aplica
 
 * Arrastra archivos del explorador al chat → se añaden como contexto.
@@ -105,6 +111,12 @@ Ciclo típico dentro del IDE:
 * El agente puede equivocarse sobre qué es "arriesgado": tú decides.
 * El editor es el sitio natural para esta tarea, mucho mejor que la CLI.
 
+### 🧩 Ejercicio 2 — Revisión de cambios grandes
+
+> **Rama:** `git checkout tema-06/ejercicio-02` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Tienes un `CAMBIOS_PENDIENTES.md` con 4 cambios documentados (uno de ellos revertido). Usa Claude desde VS Code para clasificarlos y profundizar en el más arriesgado, detectando el revertido sin leer el `git log` manualmente.
+
 ## 6. Navegación contextual entre símbolos, archivos y zonas candidatas de cambio
 
 * _"Llévame a donde se valida X"_ → el agente abre el archivo y línea.
@@ -141,6 +153,12 @@ Ciclo típico dentro del IDE:
 * El estado real (variables en el debugger) es **más potente** que los logs.
 * El agente razona mejor con datos concretos que con descripciones vagas.
 * Esta combinación es difícil de replicar en CLI pura.
+
+### 🧩 Ejercicio 3 — Navegación contextual y debug asistido
+
+> **Rama:** `git checkout tema-06/ejercicio-03` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Responde 4 preguntas de navegación del repo sin abrir archivos manualmente. Después crea un test que falla deliberadamente y usa los valores exactos del fallo para que Claude diagnostique la causa.
 
 ## 8. Particularidades del trabajo desde JetBrains frente a VS Code
 

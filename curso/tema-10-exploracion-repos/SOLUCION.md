@@ -106,3 +106,65 @@ Las tres zonas más probables que Claude detectará:
 | Guía sin rutas de archivo | Señalarlo como output genérico; pedir que refinen el prompt |
 | "No tocar" vacío o genérico | Pedir al alumno: ¿qué sabéis vosotros del proyecto que Claude no sabe? |
 | No añadieron ninguna sección manual | El valor del ejercicio está precisamente en completar lo que la IA no puede saber |
+
+---
+
+## Ejercicio 4 (extra) — Skill `/onboarding-repo`
+
+### Solución de referencia
+
+`.claude/skills/onboarding-repo/SKILL.md`:
+
+```markdown
+---
+name: onboarding-repo
+description: Genera ONBOARDING.md para un repo desconocido cuando el usuario pide "onboarding de este repo", "ayúdame a entrar a este proyecto" o "guía para nuevo dev"
+---
+
+# Skill: onboarding-repo
+
+Acelera la incorporación de un desarrollador a un repositorio desconocido. Genera un fichero `ONBOARDING.md` en la raíz del repo con tres secciones obligatorias, todas con rutas reales citadas.
+
+## Restricciones generales
+
+- **Cita rutas exactas en cada afirmación.** Si no puedes citar un archivo, di "no estoy seguro" en vez de inventarlo.
+- **No leas más de 10 archivos en total.** Prioriza por densidad informativa: README, package.json (o equivalente), entry point, carpetas de primer nivel, después archivos concretos solo si hacen falta.
+- **Idioma del output:** español.
+
+## Pasos
+
+1. **Mapa de capas.** Identifica entry point, rutas/handlers, servicios o lógica de negocio, storage o persistencia. Cita la ruta exacta de cada elemento.
+2. **Zonas frágiles.** Detecta 3 zonas con deuda técnica o riesgo. Para cada una: archivo, función o línea concreta, señal observable, riesgo real. Nada genérico.
+3. **Guía de onboarding.** Genera:
+   - Orden de lectura (máximo 8 archivos, en orden de prioridad).
+   - Qué hace cada archivo en una línea.
+   - Los 3 flujos más importantes del sistema con los archivos que atraviesan.
+   - Qué no debe tocar en los primeros días y por qué.
+4. **Sección manual.** Añade al final un bloque marcado como `<!-- A completar por el equipo -->` para que un humano rellene las decisiones de diseño intencionales que no deben "corregirse" (Claude no puede inferir esto del código).
+
+## Formato de salida
+
+Escribe el resultado en `ONBOARDING.md` en la raíz del repo. No respondas en el chat; usa el fichero como entregable.
+```
+
+### Criterio de éxito
+
+- La skill se auto-activa con frases del estilo "onboarding de este repo" pero **no** se dispara con "explícame este código" o "qué hace este archivo".
+- El `ONBOARDING.md` generado cita rutas reales en cada sección (verificable abriendo los archivos).
+- Las zonas frágiles incluyen archivo y línea, no solo descripción.
+- El alumno probó la skill contra al menos un repo distinto a Notebox.
+- La sección manual `<!-- A completar por el equipo -->` está presente y vacía (es trabajo humano).
+
+### Errores frecuentes
+
+| Error | Cómo señalarlo |
+|---|---|
+| `description:` demasiado abierta ("ayuda con repos") | Auto-dispara en contextos no deseados — pedir que la restrinjan a frases concretas |
+| La skill responde en el chat en vez de crear `ONBOARDING.md` | Falta la instrucción explícita en "Formato de salida" — sin fichero, no hay artefacto reutilizable |
+| El output no cita rutas | La restricción "cita rutas exactas" no está suficientemente reforzada — añadirla también en cada paso, no solo en el preámbulo |
+| Solo se probó contra Notebox | El valor de una skill es que generaliza — pedir que la lancen contra otro repo (puede ser cualquiera del alumno) |
+| Olvidaron la sección manual | El punto del ejercicio 3 era reconocer qué Claude no puede saber. La skill debe preservar ese hueco para que el humano lo rellene |
+
+### Extensión opcional
+
+Si el alumno termina rápido: pedir que añada un paso 5 a la skill que proponga un esqueleto de `CLAUDE.md` para el repo basado en el `ONBOARDING.md` generado. Esto enlaza tema-10 (exploración) con tema-7 (CLAUDE.md como contexto permanente).

@@ -39,6 +39,12 @@ Claude Code = **agente de programación**. Recibe un objetivo → decide qué ar
 
 **Cierre:** no compiten — se complementan. Copilot línea a línea, Claude Code para tareas multiarchivo o que requieren leer antes de escribir.
 
+### 🧩 Ejercicio 1 — "Cuéntame este repo en 5 líneas"
+
+> **Rama:** `git checkout tema-01/ejercicio` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Pide a Claude un resumen del repo en 5 líneas restringidas — citando archivos y sin inventar. Después audita tú al modelo abriendo los archivos a mano y detecta qué se saltó o qué se inventó.
+
 ---
 
 ## 2. Lectura contextual del repositorio y comprensión de varias capas del proyecto
@@ -74,6 +80,12 @@ importantes. No inventes nada: si no estás seguro de algo, dilo.
 **Compara:** un chat web te lo inventa entero. Aquí está leyendo el código real.
 
 > Patrón base de exploración: **preguntar → leer → responder citando**. Profundizamos en el [Tema 10](tema-10-exploracion-repos.md).
+
+### 🧩 Ejercicio 2 — Mismo trabajo, dos herramientas
+
+> **Rama:** `git checkout tema-01/ejercicio` · **Tiempo:** 20 min · **Tipo:** En clase
+
+Implementa `PUT /books/:id` dos veces: primero solo con el autocompletado del IDE y después solo con Claude Code. Cronometra ambas, anota errores corregidos y decide para qué tipo de tarea compensa cada herramienta.
 
 ---
 
@@ -117,6 +129,12 @@ todo pasa antes de devolverme el resultado.
 - [ ] Confirmar que los tests cubren lógica real, no solo el camino feliz.
 
 > Patrón base de trabajo con Claude Code: **intención clara → ejecución agentic → revisión humana del diff**.
+
+### 🧩 Ejercicio 3 — La lista negra del equipo
+
+> **Rama:** `git checkout tema-01/ejercicio` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Pensando en tu proyecto real (no en este de ejemplo), escribe dos listas cortas: 5 tareas que delegarías a Claude Code mañana y 5 que no le pasarías ni con buenos prompts, cada una con una frase de justificación.
 
 ---
 

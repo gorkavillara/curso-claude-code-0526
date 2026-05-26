@@ -64,6 +64,12 @@ Saber **qué puede hacer el agente sin tu permiso, qué requiere confirmación y
 * En `plan` decides una vez sobre el conjunto.
 * La cantidad de tokens y el ritmo cambian sustancialmente.
 
+### 🧩 Ejercicio 1 — Clasificar tareas por modo
+
+> **Rama:** `git checkout tema-05/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Recibe una tabla de 12 tareas y decide el modo correcto (`default` / `acceptEdits` / `plan` / `auto`) **antes** de ejecutar ninguna. Después lanza 3 de ellas en el modo elegido y compara el resultado con tu decisión inicial.
+
 ## 3. Gestión de confirmaciones antes de editar archivos o lanzar comandos
 
 * En `default`, cada edición se muestra como diff aplicable: `y` aceptar, `n` rechazar, `e` editar el prompt.
@@ -125,6 +131,12 @@ Saber **qué puede hacer el agente sin tu permiso, qué requiere confirmación y
 * `/permissions` opera **en caliente**.
 * Las reglas `deny` siempre ganan, incluso si el prompt insiste.
 * Lo que apruebes en sesión puede persistirse a `settings.local.json`.
+
+### 🧩 Ejercicio 2 — Política de permisos para un equipo fintech
+
+> **Rama:** `git checkout tema-05/ejercicio-02` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Recibe un `.claude/settings.ejercicio.json` intencionalmente malo (permite casi todo) y córrigelo para un escenario fintech con datos sensibles. Verifica con 5 prompts concretos que las reglas hacen lo que esperas.
 
 ## 5. Configuración de políticas corporativas que impiden modos inseguros
 
@@ -202,6 +214,12 @@ Saber **qué puede hacer el agente sin tu permiso, qué requiere confirmación y
 * El agente **no se salta** la regla, ni reformulando.
 * Te explica claramente qué está denegado.
 * Puedes registrar estos intentos para auditar el uso de la IA.
+
+### 🧩 Ejercicio 3 — Autopsia de un incidente
+
+> **Rama:** `git checkout tema-05/ejercicio-03` · **Tiempo:** 20 min · **Tipo:** En clase
+
+Lee el `INCIDENTE.md` (sesión real de Claude que causó 4 daños sobre el repo). Analiza qué falló, reescribe el prompt para que sea seguro, pruébalo en modo `plan` y añade la regla preventiva al `settings.json`.
 
 ## 8. Diseño de una política de permisos razonable para equipos empresariales
 

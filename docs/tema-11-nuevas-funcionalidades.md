@@ -72,6 +72,12 @@ riesgos de la implementación. No escribas código todavía.
 - Propone tests antes de que los pidas.
 - Señala riesgos (p. ej., retrocompatibilidad del storage al añadir un campo nuevo).
 
+### 🧩 Ejercicio 1 — Plan de impacto para `PATCH /notes/:id`
+
+> **Rama:** `git checkout tema-11/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Genera el plan de impacto para implementar `PATCH /notes/:id` (actualización parcial: pueden venir `title`, `body` o ambos, nunca más). Entrega capas afectadas, archivos a tocar, tests necesarios y 3 riesgos principales. Sin código todavía.
+
 ## 3. Generación de código alineado con convenciones existentes del proyecto
 
 Claude Lee el código existente antes de generar nuevo código. Eso significa que si el repo tiene:
@@ -129,6 +135,12 @@ Diff + npm test.
 - Cada capa es un diff revisable en menos de 2 minutos.
 - Los tests validan cada capa antes de pasar a la siguiente.
 - Si un test falla, el scope del problema está acotado a esa capa.
+
+### 🧩 Ejercicio 2 — Implementar PATCH por capas
+
+> **Rama:** `git checkout tema-11/ejercicio-02` · **Tiempo:** 20 min · **Tipo:** En clase
+
+Implementa `PATCH /notes/:id` siguiendo el plan del ejercicio anterior: una capa a la vez (servicio → ruta), con `[RESTRICCIONES]` para acotar el scope y `npm test` verde antes de pasar a la siguiente capa.
 
 ## 5. Creación de componentes frontend y lógica de interfaz con contexto real
 
@@ -201,6 +213,12 @@ sin revisar primero.
 - La sección "no llegar a producción sin revisar" hace explícitos los riesgos conocidos.
 
 > Ver [Tema 15](tema-15-code-review.md) para usar este checklist como base de la revisión de PR.
+
+### 🧩 Ejercicio 3 — Checklist y descripción de PR
+
+> **Rama:** `git checkout tema-11/ejercicio-03` · **Tiempo:** 10 min · **Tipo:** En clase
+
+Genera el checklist técnico de cierre del cambio (qué tests, qué validaciones, qué docs faltan) y redacta la descripción del PR resaltando scope, riesgos conocidos y puntos de revisión.
 
 ## 10. Estrategias para usar IA sin perder diseño intencional ni coherencia
 

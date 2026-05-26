@@ -67,6 +67,12 @@ elemento. Si no estás seguro de algo, dilo explícitamente. No inventes.
 - El flujo de `POST /notes` sigue la cadena: ruta → servicio → storage.
 - Si hay ambigüedad, la marca como *"no estoy seguro"* en lugar de inventar.
 
+### 🧩 Ejercicio 1 — Navegar el repo con prompts
+
+> **Rama:** `git checkout tema-10/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Responde 3 preguntas de navegación del `EJERCICIO.md` usando solo prompts de exploración (no leyendo los archivos manualmente). Documenta cada respuesta con el prompt exacto que utilizaste.
+
 ## 4. Análisis de convenciones internas y patrones predominantes del repositorio
 
 Las convenciones de un repo no están siempre en el `CLAUDE.md`. Se leen en el código:
@@ -107,6 +113,12 @@ lo evidencia, y por qué supone un riesgo real. No listes cosas genéricas.
 - La señal de fragilidad es verificable: puedes ir a esa línea y confirmarla.
 - El riesgo está contextualizado (p. ej., "esta función no tiene tests y es el único punto de escritura al storage").
 - Si Claude dice "parece" sin citar código, pide que lo verifique con una lectura.
+
+### 🧩 Ejercicio 2 — Detectar zonas frágiles con evidencia
+
+> **Rama:** `git checkout tema-10/ejercicio-02` · **Tiempo:** 12 min · **Tipo:** En clase
+
+Identifica 3 zonas frágiles del repo y entrega una tabla con archivo, función o línea concreta, señal observable y riesgo real. **No se aceptan respuestas sin cita de código.**
 
 ## 6. Localización de puntos de extensión para nuevas funcionalidades
 
@@ -153,6 +165,18 @@ Sé concreto. Cita rutas reales.
 - El orden de lectura empieza por los archivos de mayor densidad informativa.
 - Los flujos siguen la cadena de capas (entrada → lógica → persistencia).
 - La sección "no tocar" identifica los módulos más críticos o frágiles.
+
+### 🧩 Ejercicio 3 — Generar guía de onboarding
+
+> **Rama:** `git checkout tema-10/ejercicio-03` · **Tiempo:** 20 min · **Tipo:** En clase
+
+Genera la guía de onboarding completa para Notebox siguiendo el prompt de la demo. Después amplía la guía con un cuarto punto que Claude no puede saber sin que se lo digan: las decisiones de diseño intencionales que no deben "corregirse".
+
+### 🧩 Ejercicio 4 — Skill `/onboarding-repo` (extra)
+
+> **Rama:** `git checkout tema-10/ejercicio-04` · **Tiempo:** 25-35 min · **Tipo:** Extra (fuera de sesión)
+
+Empaqueta el flujo completo del tema (mapa de capas → zonas frágiles → guía de onboarding) en una skill `/onboarding-repo` que genere un `ONBOARDING.md` en cualquier repo nuevo. Combina lo del [Tema 9](tema-09-skills.md) con lo de este tema.
 
 ## 8. Comparación entre servicios o módulos con responsabilidades similares
 

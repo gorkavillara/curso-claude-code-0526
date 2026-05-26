@@ -78,6 +78,10 @@ hidden: true
 
 <Bloque de demo según la plantilla de demos.>
 
+### 🧩 Ejercicio 1 — <Título>
+
+<Preview corta del ejercicio según la plantilla de previews.>
+
 ## 2. <Punto 2 EXACTO>
 
 ...
@@ -120,6 +124,27 @@ hidden: true
 ```
 
 - Las demos usan el **repo Notebox** (raíz: `src/`, `test/`, `package.json`). Si necesitan otro repo, especifícalo en Setup.
+
+### Reglas para las previews de ejercicios en docs/
+
+Cada ejercicio del tema tiene también una **preview corta** en `docs/`. La preview es una tarjeta de 1–2 frases que el alumno puede leer antes de la sesión y reutilizar como referencia rápida durante el ejercicio. No reemplaza el `EJERCICIO.md` de la rama, ni el guion del instructor: es un puntero visible desde la doc pública.
+
+- **Una preview por cada ejercicio** del `ejercicios.md` del tema (típicamente 3, más extras si los hay).
+- **Placement:** inmediatamente **después** del bloque "Qué observar" de la demo correspondiente (E1 ↔ Demo 1, E2 ↔ Demo 2, E3 ↔ Demo 3). Si hay un ejercicio extra (E4, E5...) sin demo asociada, agrúpalo al final, antes de pasar al siguiente punto del temario.
+- **Formato de preview** (replicar exactamente):
+
+```markdown
+### 🧩 Ejercicio N — <Título>
+
+> **Rama:** `git checkout tema-XX/ejercicio-0N` · **Tiempo:** XX min · **Tipo:** En clase
+
+<Descripción en 1–2 frases. Qué hace el alumno y qué entrega. Sin "lo que el formador observa" — eso vive en el guion.>
+```
+
+- **Tipo:** usa `En clase` para los ejercicios normales del tema. Para ejercicios opcionales escribe `Extra (fuera de sesión)`. Para asíncronos `Asíncrono` (poco habitual — los tres ejercicios estándar siempre son en clase).
+- **Tiempo:** debe coincidir con el del guion (`### Ejercicio N (XX min)`) y con la columna del `ejercicios.md`. Si divergen, gana el guion y se actualizan los otros dos.
+- **Rama:** debe coincidir literalmente con la rama del repo de código. Si un tema reutiliza una sola rama para todos sus ejercicios (caso tema-01, que tiene solo `tema-01/ejercicio`), repite esa rama en las tres previews.
+- **Sin emoji distinto:** 🧩 es la convención para previews de ejercicios; 🧪 está reservado para demos. No mezclarlas.
 
 ---
 
@@ -333,6 +358,8 @@ Los slugs están en `docs/SUMMARY.md`. Úsalos tal cual. Referencia:
 10. **Revisar coherencia** entre los 3 componentes:
     - [ ] Demos en docs/ = demos en guion (mismos prompts, mismos archivos).
     - [ ] Los 3 ejercicios del guion coinciden con las 3 ramas creadas.
+    - [ ] Cada ejercicio tiene su **preview** (🧩) en docs/, intercalada tras la demo correspondiente.
+    - [ ] Las previews repiten literalmente la rama, el tiempo y el título que aparecen en el guion y en `ejercicios.md`.
     - [ ] Todos los puntos del anexo están en docs/, en orden, con texto exacto.
     - [ ] Hay 2–3 demos intercaladas en docs/, no al final.
     - [ ] `SUMMARY.md` actualizado.
@@ -353,6 +380,9 @@ Los slugs están en `docs/SUMMARY.md`. Úsalos tal cual. Referencia:
 - ❌ Crear archivos en `docs/` que no estén en `SUMMARY.md`.
 - ❌ Olvidar `git add -f` para archivos en `curso/` (están en .gitignore).
 - ❌ Crear ramas en el repo de código sin `curso/` en el `.gitignore` de la rama.
+- ❌ Crear el ejercicio en `guion.md` + `ejercicios.md` pero olvidar la preview 🧩 en `docs/`.
+- ❌ Copiar la descripción larga del guion en la preview. La preview son 1–2 frases; lo demás vive en el guion.
+- ❌ Usar 🧪 para previews de ejercicios o 🧩 para demos. Cada emoji tiene un solo significado.
 
 ---
 

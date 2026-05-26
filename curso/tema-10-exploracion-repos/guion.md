@@ -166,6 +166,38 @@ Documentan la guía completa en el EJERCICIO.md y señalan qué partes generó C
 
 ---
 
+## 5.bis. Ejercicio 4 — Skill `/onboarding-repo` (extra, fuera de sesión)
+
+> **Rama:** `git checkout tema-10/ejercicio-04` · **Tiempo estimado:** 25-35 min · **Tipo:** extra, para alumnos que terminen antes o como tarea entre sesiones. Combina lo del tema 9 (skills) con lo del tema 10 (exploración).
+
+### Idea
+
+El ejercicio 3 deja una guía de onboarding **escrita una vez para Notebox**. El siguiente paso lógico es: empaquetar ese flujo como una skill reutilizable que cualquier persona del equipo pueda ejecutar contra cualquier repo nuevo y obtener la guía en 30 segundos.
+
+### Lo que el alumno construye
+
+Una skill en `.claude/skills/onboarding-repo/SKILL.md` con `description:` calibrada para auto-trigger (p. ej. cuando el usuario dice "onboarding de este repo" o "ayúdame a entrar a este proyecto"). La skill encadena los tres prompts del tema:
+
+1. Mapa de capas (entry point, rutas, servicios, storage).
+2. Zonas frágiles con evidencia citada (mínimo 3, con archivo y línea).
+3. Guía de onboarding: orden de lectura, flujos principales, qué no tocar.
+
+El output final es un fichero `ONBOARDING.md` en el directorio raíz del repo que se ataque, no una respuesta efímera en el chat.
+
+### Lo que el formador valida
+
+- ¿La `description:` está suficientemente acotada para no auto-disparar por accidente?
+- ¿La skill obliga a citar rutas en cada sección (instrucción explícita en el cuerpo)?
+- ¿La skill genera un fichero `ONBOARDING.md` o solo responde en el chat?
+- ¿El alumno probó la skill contra **otro repo distinto a Notebox** para verificar que generaliza?
+
+### Puente con temas anteriores
+
+- Tema 9: estructura del SKILL.md, `description:` para auto-trigger.
+- Tema 7 (CLAUDE.md): si el alumno va más allá, puede pedir que el último paso de la skill sea proponer un `CLAUDE.md` inicial a partir del onboarding generado.
+
+---
+
 ## 6. Cierre y puente (≈ 5 min)
 
 Resumen en pizarra:

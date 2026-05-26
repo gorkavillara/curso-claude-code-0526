@@ -70,6 +70,12 @@ Antes de tocar nada, dime en una frase qué duplican las dos funciones.
 
 > El prompt malo no es "corto". Es **vago**. Un prompt corto pero específico gana siempre.
 
+### 🧩 Ejercicio 1 — Prompt malo → prompt bueno
+
+> **Rama:** `git checkout tema-08/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Lanza primero un prompt vago para refactorizar `archive`/`unarchive`, observa el resultado, construye después el prompt con los 5 bloques y compara. Documenta qué diferencias concretas observas entre ambos outputs.
+
 ## 2. Uso de contexto explícito sobre arquitectura, objetivo y restricciones del cambio
 
 El contexto no es documentación: es el **scope del cambio**.
@@ -148,6 +154,12 @@ Cita la línea del bug y explica por qué falla con esos dos inputs.
 - Segundo prompt para implementar: acotado, con restricciones, con tests.
 
 > "Lo que acabamos de hacer es lo que un buen ingeniero hace por defecto: pensar antes de codear. La IA no quita ese paso."
+
+### 🧩 Ejercicio 2 — Alternativas antes del código
+
+> **Rama:** `git checkout tema-08/ejercicio-02` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Sobre el bug de búsqueda en `src/search/index.ts`, pide primero alternativas con trade-offs (como en la Demo 2), elige una con justificación escrita y solo después pide la implementación con un segundo prompt acotado.
 
 ## 5. Prompts para refactorización, debugging, testing y documentación
 
@@ -235,6 +247,12 @@ Diff (solo líneas cambiadas) + propuesta de 3 tests sin implementarlos.
 - Debate sobre dónde validar: ruta vs service.
 
 > La ruta valida forma (¿está presente? ¿es un string?). El service valida negocio (¿puede archivar?).
+
+### 🧩 Ejercicio 3 — Cambio mínimo y capas de validación
+
+> **Rama:** `git checkout tema-08/ejercicio-03` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Implementa la validación de `POST /notes` decidiendo explícitamente dónde colocar la lógica (ruta vs service) y por qué. Documenta la decisión con sus razones e implementa los 3 tests propuestos.
 
 ## 8. Diseño de prompts que obligan a razonar con evidencia del repositorio
 

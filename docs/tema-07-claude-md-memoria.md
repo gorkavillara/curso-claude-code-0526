@@ -84,6 +84,12 @@ API mínima de notas en Node 24 + Express + TypeScript.
 * Cuanto más concretas las reglas, más fiable la salida.
 * Reglas vagas ("escribe código limpio") no sirven.
 
+### 🧩 Ejercicio 1 — Tu primer CLAUDE.md propio
+
+> **Rama:** `git checkout tema-07/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Lanza un prompt sobre Notebox sin `CLAUDE.md`, observa el resultado, crea tu propio `CLAUDE.md` con las convenciones del repo y repite el prompt en sesión nueva. Documenta los cambios concretos que observes en la tabla del `EJERCICIO.md`.
+
 ## 3. Ubicaciones posibles de `CLAUDE.md` y precedencia entre ámbitos
 
 | Ubicación                    | Alcance                            | Precedencia             |
@@ -143,6 +149,12 @@ Patrones útiles:
 * El agente carga ambos archivos automáticamente.
 * Segmentar mejora la mantenibilidad: si cambias el patrón de tests, solo tocas un archivo.
 
+### 🧩 Ejercicio 2 — Refactorizar un CLAUDE.md mezclado
+
+> **Rama:** `git checkout tema-07/ejercicio-02` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Recibe un `CLAUDE.md` con 8 reglas mezcladas (testing, errores, arquitectura). Identifica las 3 reglas vagas, mueve lo específico a `.claude/rules/` y verifica con el prompt de control que el comportamiento se mantiene.
+
 ## 6. Funcionamiento de auto memory y qué tipo de aprendizajes conviene permitir
 
 * Auto memory = lo que Claude **almacena por sí mismo** sobre tu forma de trabajar.
@@ -198,6 +210,12 @@ Cuando el agente meta la pata:
 * La corrección en sesión sirve **para esa sesión**.
 * Para que sirva mañana, **escríbela** en `CLAUDE.md` o `.claude/rules/`.
 * Auto memory puede capturar patrones, pero `CLAUDE.md` es más predecible y auditable.
+
+### 🧩 Ejercicio 3 — Auto memory y contexto personal
+
+> **Rama:** `git checkout tema-07/ejercicio-03` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Explora `~/.claude/CLAUDE.md` y añade preferencias personales que apliquen en todos tus repos (idioma, estilo de código, formato). Reflexiona sobre la diferencia entre contexto personal y contexto del proyecto y documéntalo en el `EJERCICIO.md`.
 
 ## 8. Límites de memoria y riesgos de instrucciones demasiado ambiguas
 

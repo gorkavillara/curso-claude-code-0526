@@ -104,6 +104,12 @@ add-tests para la función createNote de src/services/notes.ts
 - Sigue las convenciones del repo sin que las repitas en el prompt.
 - El formato es exactamente el que especificaste.
 
+### 🧩 Ejercicio 1 — Skill `/doc-function`
+
+> **Rama:** `git checkout tema-09/ejercicio-01` · **Tiempo:** 15 min · **Tipo:** En clase
+
+Crea una skill `/doc-function` que documente cualquier función de `src/services/notes.ts` con JSDoc en español según las convenciones del equipo: `@param`, `@returns`, `@throws` cuando aplique, sin comentarios de relleno.
+
 ## 3. Diferencia entre skill automática e invocación explícita mediante `/skill-name`
 
 | Modo | Cómo funciona | Cuándo usarlo |
@@ -133,6 +139,12 @@ Una skill sin `description:` solo responde a `/nombre-skill`. Con ella, Claude d
 - El auto-trigger convierte la skill en parte invisible del flujo.
 - Sin `description:`, es un comando consciente, no un comportamiento implícito.
 - La diferencia no está en el resultado sino en quién decide cuándo aplicarla.
+
+### 🧩 Ejercicio 2 — Calibrar la `description:` para auto-trigger
+
+> **Rama:** `git checkout tema-09/ejercicio-02` · **Tiempo:** 12 min · **Tipo:** En clase
+
+Recibe una skill `/add-tests` sin `description:`. Escribe una que active la skill exactamente con frases tipo "tests para createNote", pero que **no** se dispare por accidente con "explícame este código" o "mejora la función".
 
 ## 4. Diseño de skills para code review, testing, docs o despliegue
 
@@ -188,6 +200,12 @@ Conclusión: ¿listo para merge o necesita cambios?
 - Claude detecta la violación de capas y la marca 🔴.
 - El formato es exactamente la tabla definida en la skill.
 - Sin la skill, una revisión genérica no detectaría esta convención específica.
+
+### 🧩 Ejercicio 3 — Diseñar e implementar `/pre-deploy`
+
+> **Rama:** `git checkout tema-09/ejercicio-03` · **Tiempo:** 20 min · **Tipo:** En clase
+
+Diseña e implementa la skill `/pre-deploy` completa para Notebox: tests verdes, typecheck, sin TODOs en código nuevo, dependencias auditadas. Define el formato de salida y verifica que la skill lo respeta al invocarla.
 
 ## 5. Reutilización de skills por proyecto, por usuario o por organización
 
