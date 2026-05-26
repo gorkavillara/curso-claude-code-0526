@@ -1,11 +1,6 @@
----
-hidden: true
----
-
 # Tema 7 — Contexto persistente con CLAUDE.md y memoria
 
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico + demos guiadas
+> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 

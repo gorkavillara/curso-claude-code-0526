@@ -19,4 +19,4 @@
 
 ## Recursos
 
-* [Preguntas frecuentes de alumnos](faq-alumnos.md)
+* [Preguntas frecuentes de alumnos](recursos/preguntas-frecuentes-de-alumnos.md)
