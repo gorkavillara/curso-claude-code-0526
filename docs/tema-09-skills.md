@@ -207,6 +207,30 @@ Conclusión: ¿listo para merge o necesita cambios?
 
 Diseña e implementa la skill `/pre-deploy` completa para Notebox: tests verdes, typecheck, sin TODOs en código nuevo, dependencias auditadas. Define el formato de salida y verifica que la skill lo respeta al invocarla.
 
+### 🔒 Gestión segura de secrets en skills
+
+Las skills del proyecto viven en `.claude/skills/` y, por defecto, **se versionan**. Si una skill toca un sistema externo (Jira, Slack, AWS, una API interna, un servidor por SSH), va a necesitar credenciales en algún momento — y ahí es donde se cuelan las fugas: tokens hardcodeados en `SKILL.md`, URLs internas en scripts, claves "temporales" que llevan dos años en `main`.
+
+**Anti-patrón:** poner credenciales o endpoints sensibles directamente en `SKILL.md` o en scripts dentro de `.claude/skills/`. Cualquiera que clone el repo (o cualquier PR) los expone.
+
+**Patrones recomendados:**
+
+| Patrón | Cómo funciona | Cuándo usarlo |
+|---|---|---|
+| **A. Script local fuera del repo** | La skill invoca un script en `~/.claude/secrets/<servicio>.sh` que vive **fuera** del repo versionado. El script exporta variables o devuelve el secret. | Necesitas varios secrets coordinados (token + URL + región). |
+| **B. Variables de entorno** | La skill lee `$FOO_API_KEY` directamente. Las variables se cargan desde `.envrc` (direnv) o desde el shell, no desde el repo. | Un secret simple, una sola variable. |
+| **C. CLI ya autenticado** | La skill invoca un binario que gestiona credenciales por sí mismo (`gh`, `aws`, `gcloud`, `kubectl`). La skill nunca ve el secret. | El servicio tiene CLI oficial con login persistente. Es el más seguro. |
+
+**Pregunta de aula:** _"¿Es buena práctica usar un script `.sh` local para almacenar secrets?"_
+
+**Respuesta:** sí, **siempre que ese script viva fuera del repo versionado** (típicamente en `~/.claude/secrets/` o `~/.config/<proyecto>/`) y la skill se limite a invocarlo o a leer las variables que exporta. La skill versionada queda libre de credenciales; el script local es responsabilidad de cada developer. Si el script vive dentro del repo — aunque esté en `.gitignore` — antes o después alguien lo comitea por error. Sácalo del árbol.
+
+**Checklist antes de subir una skill al repo:**
+
+1. ¿Hay alguna cadena que parezca un token, una clave o una URL interna en `SKILL.md` o en los scripts que invoca? → Fuera.
+2. ¿La skill funciona si la clono en una máquina nueva sin secrets configurados? → Debe fallar con un error claro pidiendo configurar el secret, no con un timeout misterioso.
+3. ¿Está documentado en `SKILL.md` qué variables de entorno o qué script local espera? → Sin ese contrato, nadie más puede usar la skill.
+
 ## 5. Reutilización de skills por proyecto, por usuario o por organización
 
 | Ámbito | Ubicación | Quién la usa |

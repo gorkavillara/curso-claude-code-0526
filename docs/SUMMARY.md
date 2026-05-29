@@ -16,6 +16,13 @@
 * [Tema 9 — Skills reutilizables para estandarizar tareas técnicas](tema-09-skills.md)
 * [Tema 10 — Exploración de repositorios desconocidos](tema-10-exploracion-repos.md)
 * [Tema 11 — Generación de nuevas funcionalidades](tema-11-nuevas-funcionalidades.md)
+* [Tema 12 — Refactorización profunda y modernización progresiva](tema-12-refactorizacion.md)
+* [Tema 13 — Testing asistido por IA con cobertura útil](tema-13-testing.md)
+* [Tema 14 — Documentación técnica, README y ADR](tema-14-documentacion.md)
+* [Tema 15 — Revisión de código y análisis de pull requests](tema-15-code-review.md)
+* [Tema 16 — Seguridad, vulnerabilidades y hardening](tema-16-seguridad.md)
+* [Tema 17 — Dependencias, paquetes y migraciones](tema-17-dependencias-migraciones.md)
+* [Tema 18 — Git, branching, hotfixes y conflictos](tema-18-git.md)
 
 ## Recursos
 

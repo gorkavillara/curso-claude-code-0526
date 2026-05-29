@@ -95,6 +95,26 @@ Lanza un prompt sobre Notebox sin `CLAUDE.md`, observa el resultado, crea tu pro
 
 > Las instrucciones más específicas (subpath) ganan a las generales (repo) y a las globales (home).
 
+### ✨ Extra — `CLAUDE.local.md`: notas personales que no se versionan
+
+Junto al `CLAUDE.md` del repo, Claude Code también carga **`CLAUDE.local.md`** si existe. La diferencia clave: `CLAUDE.local.md` se añade por defecto al `.gitignore` y **no se sube al repo**. Es el análogo a `settings.local.json` frente a `settings.json` (ver Tema 4).
+
+| Archivo            | Versionado | Para qué                                                                  |
+| ------------------ | ---------- | ------------------------------------------------------------------------- |
+| `CLAUDE.md`        | Sí         | Reglas del equipo, válidas para todo el mundo que clone el repo           |
+| `CLAUDE.local.md`  | No         | Notas personales tuyas dentro de este repo concreto                       |
+| `~/.claude/CLAUDE.md` | No (vive fuera) | Preferencias personales que aplican a **todos** tus repos          |
+
+Cuándo usar `CLAUDE.local.md`:
+
+* Recordatorios temporales mientras dura una tarea ("ahora mismo estoy migrando el módulo X, prefiere tocar Y antes que Z").
+* Atajos personales que no son del equipo ("cuando te pida 'deploy', usa mi script `~/bin/deploy-dev.sh`").
+* Pruebas de reglas que aún no quieres imponer al resto del equipo.
+
+Si existen los dos archivos, Claude carga ambos; las instrucciones de `CLAUDE.local.md` se aplican encima de las del `CLAUDE.md` versionado.
+
+> Aportación de aula: idea surgida en sesión del Tema 5 (gracias a Manu). Encaja conceptualmente aquí, junto al resto de ubicaciones.
+
 ## 4. Organización de reglas por proyecto, por tipo de archivo o por alcance del equipo
 
 Patrones útiles:
@@ -112,6 +132,27 @@ Patrones útiles:
   * `.claude/rules/testing.md` → cómo escribir tests en este repo.
   * `.claude/rules/error-handling.md` → patrón de errores semánticos.
   * `.claude/rules/security.md` → qué nunca tocar sin revisión humana.
+
+### Cuándo se carga una rule en contexto
+
+A diferencia de `CLAUDE.md`, que se carga **siempre** al abrir el repo, las rules de `.claude/rules/` se cargan **bajo demanda**: solo cuando el agente detecta que su contenido es relevante para el prompt actual. Si se cargaran todas siempre, el contexto se saturaría en repos grandes.
+
+**Cómo decide Claude qué rule cargar:**
+
+* La **primera línea / título** de cada archivo actúa como su trigger semántico. Si pides "ayúdame con un test", Claude busca una rule cuyo título encaje (p. ej. `# Reglas de testing — Notebox`) y la carga.
+* El **resto del contenido** sirve para confirmar la relevancia y aplicar las normas.
+* Si dos rules compiten (p. ej. `testing.md` y `security.md` en un prompt sobre "tests de seguridad"), suele cargar las dos.
+
+**Implicación práctica:** escribe los títulos pensando en match con prompts reales. Un archivo titulado `# Misceláneo` no se cargará nunca; uno titulado `# Reglas para escribir tests con Vitest` se cargará en cuanto pidas un test.
+
+**Reproducción sugerida** (útil como ejercicio o demo en clase):
+
+1. Crear `.claude/rules/testing.md` con cabecera explícita: `# Reglas para escribir tests con Vitest en Notebox`.
+2. Lanzar prompt **relevante**: _"Añade un test para `createNote`"_ → al inspeccionar lo que Claude cargó (con `/context` o equivalente), la rule debería aparecer.
+3. Lanzar prompt **no relevante**: _"Refactoriza esta función"_ → la rule **no** debería estar cargada.
+4. Cambiar el título por algo genérico (`# Notas`) y repetir el paso 2. Probable: ya no se carga aunque el contenido siga siendo el mismo.
+
+> Comportamiento observado, sujeto a cambios entre versiones de Claude Code. Si el resultado en tu versión difiere, documéntalo en el `CLAUDE.md` del repo de formación.
 
 ### 🧪 Demo 2 — Segmentar reglas de testing
 

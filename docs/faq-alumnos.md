@@ -242,6 +242,62 @@ Este tema merece una sesión específica si la organización tiene requisitos de
 
 ---
 
+## Dudas surgidas en las sesiones
+
+Recopilación de preguntas que aparecieron durante la formación y que merecen respuesta documentada para futuros repasos.
+
+## 9. "¿Qué diferencia hay entre `sandbox.enabled: true` y el auto mode? ¿No hacen lo mismo?"
+
+**Temas:** T4 · T5
+
+No, son **mecanismos ortogonales**. Resuelven problemas distintos y se pueden combinar:
+
+- **Auto mode** controla **quién decide**: cuando está activo, Claude no pide confirmación para acciones rutinarias y actúa por su cuenta. Es una decisión sobre permisos.
+- **`sandbox.enabled: true`** (en `settings.json`) controla **dónde se ejecuta**: Claude lanza comandos en un sandbox con sistema de ficheros y red restringidos. Aunque tenga permiso para ejecutar `rm -rf /`, ese borrado solo afecta al sandbox; los archivos reales siguen intactos.
+
+La forma simple de recordarlo: **auto mode quita los prompts, sandbox limita el blast radius**.
+
+**Ejemplo para testear en clase:**
+
+| Configuración | Qué ocurre al pedir "borra `tmp/test.txt`" |
+|---|---|
+| Auto mode OFF + sandbox OFF | Claude pide confirmación. Si apruebas, el archivo se borra de verdad. |
+| Auto mode ON  + sandbox OFF | Claude borra sin preguntar. El archivo desaparece. |
+| Auto mode OFF + sandbox ON  | Claude pide confirmación, pero aunque apruebes el borrado solo afecta al sandbox. El archivo real persiste. |
+| Auto mode ON  + sandbox ON  | Claude borra sin preguntar **dentro del sandbox**. El archivo real persiste. |
+
+**Combo recomendado para exploración agresiva** (refactors grandes, prueba y error, agentes autónomos): auto mode + sandbox. Tienes velocidad sin riesgo. Para tareas críticas sobre código real, mantén al menos uno de los dos desactivado.
+
+## 10. "¿Qué hace exactamente la carpeta `.claude/rules/`?"
+
+**Temas:** T7
+
+Es la carpeta donde se guardan **normas especializadas del proyecto segmentadas por dominio**: `testing.md`, `security.md`, `error-handling.md`, `naming.md`, etc. Cada archivo contiene reglas extensas que no tendría sentido meter en `CLAUDE.md` (lo saturarían).
+
+Claude **no carga todas las rules siempre** — eso reventaría el contexto. Carga la rule cuando detecta que su contenido o cabecera coincide con la intención del prompt actual: pides un test → carga `testing.md`; pides hardening → carga `security.md`.
+
+Esto permite mantener `CLAUDE.md` ligero (visión general del proyecto) y delegar la profundidad a rules cargadas bajo demanda.
+
+→ Ver **Tema 7, sección 5** para estructura, ejemplos y la sección "Cuándo se carga una rule en contexto".
+
+## 11. "Si empiezo un mensaje con `#`, ¿se añade a `CLAUDE.md`?"
+
+**Temas:** T7
+
+Sí. Claude Code interpreta cualquier mensaje que empieza con `#` como **una instrucción de memoria**: añade el resto del texto a `CLAUDE.md` (o a `CLAUDE.local.md`, según la elección que ofrece la propia herramienta).
+
+**Comportamiento esperado** (basado en la documentación oficial de Claude Code; conviene reproducirlo en clase con la versión instalada):
+
+- Al enviar `# las funciones públicas deben llevar docstring`, Claude Code ofrece elegir a qué archivo de memoria añadirlo: `./CLAUDE.md` (proyecto, versionado), `./CLAUDE.local.md` (proyecto, no versionado) o `~/.claude/CLAUDE.md` (usuario, global).
+- Una vez elegido, escribe la entrada y queda disponible para futuras sesiones.
+- Funciona aunque no exista aún el archivo de destino: lo crea.
+
+**Cuándo usarlo:** notas cortas que quieres consolidar sin abrir el archivo. Para entradas largas o reorganizar la memoria, sigue siendo mejor editar `CLAUDE.md` directamente.
+
+> ⚠️ **A verificar en cada versión:** la sintaxis exacta y el menú de elección pueden cambiar entre versiones de Claude Code. Si dudas, prueba con una nota corta antes de confiar en ello para algo importante.
+
+---
+
 ## Índice de preguntas por tema del curso
 
 | Pregunta | Temas relacionados |
@@ -254,3 +310,6 @@ Este tema merece una sesión específica si la organización tiene requisitos de
 | Refactoring de Omnis | T10 · T12 · T17 |
 | Agentes autónomos 24/7 | T19 · T20 · T24 |
 | LLMs locales (DGX Spark) | Fuera del temario principal |
+| Sandbox vs auto mode | T4 · T5 |
+| Carpeta `.claude/rules/` | T7 |
+| Sintaxis `#` para memoria | T7 |

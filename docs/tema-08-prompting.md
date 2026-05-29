@@ -116,10 +116,13 @@ Quiero entender qué opciones hay. No quiero código todavía.
 - Qué cambia exactamente.
 - Coste (líneas + dependencias).
 - Riesgos.
+- Escalabilidad (cómo se comporta con 10×/100× del tamaño actual).
 - En qué casos se queda corta.
 ```
 
 Después **tú decides** cuál implementar. No lo delegues.
+
+**Por qué incluir "escalabilidad" como eje propio:** dos alternativas que parecen equivalentes a la escala actual divergen radicalmente a escala mayor (búsqueda lineal vs índice, llamadas síncronas vs cola, transacción única vs batch). Sin este eje, Claude tiende a recomendar la opción más simple aunque sea la que primero se rompe al crecer. Cuanto antes te enteres del techo de cada alternativa, antes evitas reescrituras forzadas en seis meses.
 
 ### Demo 2 — Alternativas antes de código
 
@@ -214,8 +217,13 @@ Para riesgos:
 ```
 [FORMATO]
 Lista de riesgos ordenados por impacto descendente.
-Por cada riesgo: probabilidad (alta/media/baja) + mitigación.
+Por cada riesgo:
+- Probabilidad (alta/media/baja).
+- Mitigación (qué hacer para evitar que ocurra).
+- Plan de rollback (qué hacer si ocurre — pasos concretos para revertir).
 ```
+
+**Mitigación ≠ rollback.** La mitigación es prevención: medidas para que el riesgo no se materialice (validar input antes de migrar, lanzar primero a un 5% de tráfico, feature flag). El rollback es recuperación: qué pasos das **cuando ya ha pasado** (revertir migración con un script concreto, apagar el flag, rotar credenciales). Un plan completo necesita ambos: sin mitigación pasas demasiados sustos, sin rollback los sustos se convierten en incidentes largos.
 
 ### Demo 3 — Cambio mínimo con verificación
 

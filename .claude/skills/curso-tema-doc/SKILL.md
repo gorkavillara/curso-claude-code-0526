@@ -245,16 +245,29 @@ git add -f "curso/tema-XX-<slug>/guion.md"
 
 ## COMPONENTE 3 — Ejercicios en el repo de código (`../04 - Claude-codigo`)
 
+### Principio inviolable
+
+**El ejercicio debe ser ejecutable por el alumno con `git checkout tema-XX/ejercicio-0N && npm install && npm test` — sin configuración manual previa.** Si el ejercicio necesita un escenario (bug, PR a revisar, drift, secretos, conflicto, dependencias desactualizadas, tests problemáticos), ese escenario está **plantado en el código del repo** antes del push, **no instruido en `EJERCICIO.md`**.
+
+> Si el `EJERCICIO.md` dice "si tu copia no tiene X, créalo así..." o "el instructor habrá plantado...", el ejercicio no está terminado. El fixture va en el repo.
+
 ### Estructura de ramas
 
 Por cada tema se crean (como mínimo):
 
 | Rama | Propósito |
 |---|---|
-| `tema-XX/inicio` | Base del repo para la sesión (si no existe ya de un tema anterior) |
+| `tema-XX/inicio` | Base del repo para la sesión (con los fixtures comunes ya plantados) |
 | `tema-XX/ejercicio-01` | Ejercicio 1 (en clase) |
 | `tema-XX/ejercicio-02` | Ejercicio 2 (en clase) |
 | `tema-XX/ejercicio-03` | Ejercicio 3 (en clase) |
+
+Cuando el ejercicio lo requiera, ramas auxiliares:
+
+| Rama auxiliar | Cuándo |
+|---|---|
+| `tema-XX/feature-<slug>` | Conflictos de merge: el alumno mergea esta rama contra `tema-XX/ejercicio-0N` y resuelve el conflicto |
+| `tema-XX/pr-baseline` (opcional) | Baseline explícita para reviews de PR cuando `tema-XX/inicio` no encaja semánticamente |
 
 > **Los tres ejercicios siempre se hacen en clase.** No hay ejercicios asíncronos.
 
@@ -268,16 +281,48 @@ git checkout -b tema-XX/ejercicio-01
 
 Cada rama tiene, como mínimo, un `EJERCICIO.md` en la raíz con:
 1. Objetivo del ejercicio (1–2 frases).
-2. Contexto (rama, archivos relevantes).
-3. Pasos concretos (numerados, ejecutables).
+2. Contexto (rama, archivos relevantes, baseline para diffs si aplica).
+3. Pasos concretos (numerados, ejecutables sobre el código tal como está).
 4. Criterio de éxito ("los tests deben estar en verde", "rellena la tabla", etc.).
 5. Preguntas de reflexión.
 
-Además puede incluir archivos de soporte específicos del ejercicio (`.env` falso, `CAMBIOS_PENDIENTES.md`, `settings.ejercicio.json`, `INCIDENTE.md`, etc.).
+### Fixtures obligatorios por categoría
+
+Identifica de qué tipo es cada ejercicio y planta el fixture correspondiente **antes** de pushear:
+
+| Tipo de ejercicio | Fixture obligatorio | Dónde vive |
+|---|---|---|
+| Bug → regresión / hotfix | Bug reproducible en `src/` (ej. `search()` case-sensitive, validación rota) | Estado de `src/` en `tema-XX/inicio` |
+| Refactor de duplicación / olores | Código duplicado real, función larga, if/else anidado en `src/` | Estado de `src/` en `tema-XX/inicio` |
+| Review de PR | Commits del "PR" encima del baseline, con problemas plantados (validación movida, `console.log`, `throw new Error`, dep nueva sin justificar, tests ausentes) | Cherry-pick en cada `tema-XX/ejercicio-0N`; baseline = `tema-XX/inicio` o `tema-XX/pr-baseline` |
+| Conflicto de merge | Rama feature auxiliar con cambio + commit en la rama actual que colisiona en las mismas líneas | `tema-XX/feature-<slug>` + commit plantado en `tema-XX/ejercicio-0N` |
+| Secretos / seguridad | `.env` tracked con valores demo, `console.log` que imprime body/headers, error handler que filtra stack | Estado de `src/` y raíz en `tema-XX/inicio` (sacar `.env` del `.gitignore` para tracking) |
+| Drift docs ↔ código | README con mentiras verificables (endpoints inventados, scripts que no existen en `package.json`, descripciones falsas) | `README.md` de `tema-XX/inicio` |
+| Tests problemáticos | Suite con al menos un test frágil (verifica detalles internos), uno tautológico (assert trivialmente cierto) y uno redundante/parametrizable | `test/` en `tema-XX/inicio` |
+| Codemod / breaking change mecánico | Ocurrencias reales del patrón a migrar (ej. `.del(`, `res.send(status)`) en varios archivos de `src/` | Estado de `src/` en `tema-XX/inicio` |
+| Dependencias desactualizadas | `package.json` con versiones que disparen `npm outdated` y `npm audit` con señal real | `package.json` de `tema-XX/inicio` |
+
+### Cuándo plantar en `inicio` vs en cada `ejercicio-0N`
+
+- **En `tema-XX/inicio`**: fixtures que valen para varios ejercicios del tema (bug que el ej-01 detecta y el ej-02 arregla; suite con tests problemáticos que se revisan en el ej-03; secretos plantados que se auditan en el ej-01 y mitigan en el ej-02).
+- **En cada `tema-XX/ejercicio-0N`** (cherry-pick): cuando el fixture sólo aplica a un ejercicio concreto y enturbiaría los demás. Caso típico: el "PR plantado" que se revisa en los tres ejercicios de code review se cherry-pickea en cada uno, manteniendo `tema-XX/inicio` como baseline limpia para el diff.
+
+### Verificar el ejercicio antes de pushear
+
+Para cada ejercicio:
+
+```bash
+git checkout tema-XX/ejercicio-0N
+npm install
+npm test               # tests verdes (o rojos si el ejercicio espera empezar en rojo — anótalo en el EJERCICIO.md)
+# Lanza el primer prompt del EJERCICIO.md. ¿Tiene Claude todo el contexto en el repo para responder?
+```
+
+Si el alumno necesita ejecutar un comando que no está en `EJERCICIO.md` para que el ejercicio funcione, el fixture no está completo.
 
 ### Qué ignorar
 
-`curso/` debe estar en `.gitignore` de cada rama del repo de código. Verificar que existe la entrada o añadirla.
+`curso/` debe estar en `.gitignore` de cada rama del repo de código. Verificar que existe la entrada o añadirla. También `.claude/skills/` para evitar trackear skills del autor.
 
 ---
 
@@ -364,7 +409,22 @@ Los slugs están en `docs/SUMMARY.md`. Úsalos tal cual. Referencia:
     - [ ] Hay 2–3 demos intercaladas en docs/, no al final.
     - [ ] `SUMMARY.md` actualizado.
     - [ ] Tildes y español correcto.
-11. **Reportar** al usuario: qué demos se diseñaron, qué ramas se crearon, qué archivos nuevos hay.
+    - [ ] **Cada ejercicio es ejecutable end-to-end con `git checkout` sin pasos manuales de setup** (ver tabla de fixtures del Componente 3).
+    - [ ] Si `EJERCICIO.md` menciona un bug / PR / drift / feature / secret / dep desactualizada / test problemático, ese escenario está **plantado** en `src/`, en una rama auxiliar o en archivos tracked.
+    - [ ] Probaste al menos un ejercicio del tema con `git checkout` limpio antes de hacer push (`npm install && npm test` + primer prompt funciona sin trampas).
+11. **Push a `origin`.** El tema no está terminado hasta que las ramas están en remoto. Antes de pushear:
+    - [ ] Verificar que NINGUNA rama tracquea `.claude/skills/` con skills del autor (`curso-tema-doc`, `curso-forms`, `gmail-skill`, `google-slides-skill`, u otras que no sean del curso). Comando:
+      ```bash
+      for b in tema-XX/inicio tema-XX/ejercicio-01 tema-XX/ejercicio-02 tema-XX/ejercicio-03; do
+        hits=$(git ls-tree -r "$b" --name-only | grep -E "\.claude/skills/" | wc -l)
+        echo "$b: $hits hits"
+      done
+      ```
+      Si hay hits, hacer `git rm -r .claude/skills` + añadir `.claude/skills/` al `.gitignore` antes de pushear.
+    - [ ] Para ramas nuevas o que sólo añaden commits (cherry-pick, additive): `git push -u origin tema-XX/inicio tema-XX/ejercicio-01 ...`.
+    - [ ] Para ramas que han sido **rebaseadas** (rewriting de history, p. ej. cuando plantas un fixture en `inicio` y rebaseas los ejercicios sobre el nuevo `inicio`): `git push --force-with-lease origin ...`. Nunca `--force` sin `-with-lease`.
+    - [ ] Si creaste ramas auxiliares (`tema-XX/feature-<slug>`, `tema-XX/pr-baseline`), pushearlas también.
+12. **Reportar** al usuario: qué demos se diseñaron, qué ramas se crearon (con sus URLs en origin), qué fixtures se plantaron y dónde, qué archivos nuevos hay.
 
 ---
 
@@ -383,6 +443,13 @@ Los slugs están en `docs/SUMMARY.md`. Úsalos tal cual. Referencia:
 - ❌ Crear el ejercicio en `guion.md` + `ejercicios.md` pero olvidar la preview 🧩 en `docs/`.
 - ❌ Copiar la descripción larga del guion en la preview. La preview son 1–2 frases; lo demás vive en el guion.
 - ❌ Usar 🧪 para previews de ejercicios o 🧩 para demos. Cada emoji tiene un solo significado.
+- ❌ **`EJERCICIO.md` que pide al alumno reproducir el escenario manualmente** ("si tu copia no tiene X, créalo así...", "el instructor habrá plantado..."). El fixture va en el repo.
+- ❌ Referenciar `main` en el `EJERCICIO.md` cuando la rama no parte semánticamente de `main`. Usa una baseline explícita (`tema-XX/inicio`, `tema-XX/pr-baseline`).
+- ❌ Ejercicio que asume conocimiento de algo plantado pero **no plantado** (bug que no se reproduce, PR que no existe, dependencia que no aparece en `package.json`).
+- ❌ Pushear ejercicios sin haber hecho `git checkout` limpio y probado el primer prompt.
+- ❌ **Dejar las ramas sin pushear a `origin`.** Sin push, los alumnos no las ven y el tema no está terminado. Es el último paso del flujo, no opcional.
+- ❌ Pushear sin verificar antes que `.claude/skills/` no contiene skills del autor. Si se cuelan, hay que limpiar y force-push, que es ruido evitable.
+- ❌ Usar `git push --force` sin `-with-lease`. `--force-with-lease` falla si alguien empujó algo nuevo a la rama remota desde tu último fetch; `--force` lo machaca silenciosamente.
 
 ---
 
