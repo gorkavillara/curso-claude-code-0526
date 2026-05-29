@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 9 — Skills reutilizables para estandarizar tareas técnicas
 
-# Tema 9 — Skills reutilizables para estandarizar tareas técnicas del equipo y reducir prompting repetitivo
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -17,12 +12,12 @@ Pasar de escribir el mismo prompt diez veces a encapsularlo en una skill que cua
 
 Una skill es una instrucción reutilizable encapsulada en un archivo `SKILL.md`. En lugar de redactar el mismo prompt complejo cada vez, lo escribes una vez con todo el contexto necesario y lo invocas cuando lo necesitas.
 
-| Sin skills | Con skills |
-|---|---|
-| Prompt largo cada vez | Una línea: `/review-pr` |
-| Contexto en tu cabeza | Contexto en el archivo |
-| Inconsistente entre sesiones | Reproducible y versionable |
-| Solo tú lo sabes usar | Todo el equipo lo usa igual |
+| Sin skills                   | Con skills                  |
+| ---------------------------- | --------------------------- |
+| Prompt largo cada vez        | Una línea: `/review-pr`     |
+| Contexto en tu cabeza        | Contexto en el archivo      |
+| Inconsistente entre sesiones | Reproducible y versionable  |
+| Solo tú lo sabes usar        | Todo el equipo lo usa igual |
 
 > Las skills no son atajos de teclado. Son **contratos de comportamiento** compartidos.
 
@@ -43,21 +38,21 @@ description: <cuándo se activa automáticamente — opcional>
 
 Lo que diferencia una skill buena de una mala:
 
-- **Contexto fijo**: convenciones del repo, rutas importantes, framework de tests.
-- **Objetivo claro** en una frase.
-- **Restricciones explícitas**: qué no debe hacer, qué firma debe respetar.
-- **Formato de salida** esperado: tabla, lista, diff, código completo.
+* **Contexto fijo**: convenciones del repo, rutas importantes, framework de tests.
+* **Objetivo claro** en una frase.
+* **Restricciones explícitas**: qué no debe hacer, qué firma debe respetar.
+* **Formato de salida** esperado: tabla, lista, diff, código completo.
 
-Lo que *no* debe tener una skill:
+Lo que _no_ debe tener una skill:
 
-- ❌ Pasos genéricos que Claude ya sabe hacer sin instrucciones.
-- ❌ Más de un objetivo. Si hace A y B, son dos skills.
-- ❌ Instrucciones que cambian cada vez que la usas.
+* ❌ Pasos genéricos que Claude ya sabe hacer sin instrucciones.
+* ❌ Más de un objetivo. Si hace A y B, son dos skills.
+* ❌ Instrucciones que cambian cada vez que la usas.
 
 ### 🧪 Demo 1 — Crear `/add-tests` desde cero
 
-- **Objetivo:** ver el proceso completo de diseñar y activar una skill nueva.
-- **Setup:** repo Notebox en `tema-09/inicio`. Sin ningún archivo en `.claude/skills/`.
+* **Objetivo:** ver el proceso completo de diseñar y activar una skill nueva.
+* **Setup:** repo Notebox en `tema-09/inicio`. Sin ningún archivo en `.claude/skills/`.
 
 **Pasos:**
 
@@ -99,10 +94,10 @@ add-tests para la función createNote de src/services/notes.ts
 
 **Qué observar:**
 
-- Claude carga el `SKILL.md` antes de responder.
-- Lista comportamientos antes de escribir código (como dice la skill).
-- Sigue las convenciones del repo sin que las repitas en el prompt.
-- El formato es exactamente el que especificaste.
+* Claude carga el `SKILL.md` antes de responder.
+* Lista comportamientos antes de escribir código (como dice la skill).
+* Sigue las convenciones del repo sin que las repitas en el prompt.
+* El formato es exactamente el que especificaste.
 
 ### 🧩 Ejercicio 1 — Skill `/doc-function`
 
@@ -112,10 +107,10 @@ Crea una skill `/doc-function` que documente cualquier función de `src/services
 
 ## 3. Diferencia entre skill automática e invocación explícita mediante `/skill-name`
 
-| Modo | Cómo funciona | Cuándo usarlo |
-|---|---|---|
+| Modo           | Cómo funciona                                                             | Cuándo usarlo                                                      |
+| -------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | **Automático** | `description:` actúa como trigger — Claude la activa si el mensaje encaja | Skills que siempre son la respuesta correcta a un tipo de petición |
-| **Explícito** | El usuario escribe `/nombre-skill` | Skills que se activan solo cuando se decide conscientemente |
+| **Explícito**  | El usuario escribe `/nombre-skill`                                        | Skills que se activan solo cuando se decide conscientemente        |
 
 Una skill sin `description:` solo responde a `/nombre-skill`. Con ella, Claude decide cuándo aplicarla.
 
@@ -123,8 +118,8 @@ Una skill sin `description:` solo responde a `/nombre-skill`. Con ella, Claude d
 
 ### 🧪 Demo 2 — Auto-trigger vs invocación explícita
 
-- **Objetivo:** contrastar los dos modos de activación con la misma skill.
-- **Setup:** skill `add-tests` de la Demo 1.
+* **Objetivo:** contrastar los dos modos de activación con la misma skill.
+* **Setup:** skill `add-tests` de la Demo 1.
 
 **Pasos:**
 
@@ -136,9 +131,9 @@ Una skill sin `description:` solo responde a `/nombre-skill`. Con ella, Claude d
 
 **Qué observar:**
 
-- El auto-trigger convierte la skill en parte invisible del flujo.
-- Sin `description:`, es un comando consciente, no un comportamiento implícito.
-- La diferencia no está en el resultado sino en quién decide cuándo aplicarla.
+* El auto-trigger convierte la skill en parte invisible del flujo.
+* Sin `description:`, es un comando consciente, no un comportamiento implícito.
+* La diferencia no está en el resultado sino en quién decide cuándo aplicarla.
 
 ### 🧩 Ejercicio 2 — Calibrar la `description:` para auto-trigger
 
@@ -150,19 +145,19 @@ Recibe una skill `/add-tests` sin `description:`. Escribe una que active la skil
 
 Los cuatro patrones de mayor retorno en equipos de ingeniería:
 
-| Tipo de skill | Qué resuelve | Trigger típico |
-|---|---|---|
-| **Code review** | Revisión según las convenciones del proyecto, no criterios genéricos | `/review-pr` |
-| **Testing** | Tests con el framework y convenciones del repo | Auto: "tests para" |
-| **Docs** | Documentación en el formato interno del equipo | `/doc-module` |
-| **Despliegue** | Checklist de release con los checks obligatorios | `/pre-deploy` |
+| Tipo de skill   | Qué resuelve                                                         | Trigger típico     |
+| --------------- | -------------------------------------------------------------------- | ------------------ |
+| **Code review** | Revisión según las convenciones del proyecto, no criterios genéricos | `/review-pr`       |
+| **Testing**     | Tests con el framework y convenciones del repo                       | Auto: "tests para" |
+| **Docs**        | Documentación en el formato interno del equipo                       | `/doc-module`      |
+| **Despliegue**  | Checklist de release con los checks obligatorios                     | `/pre-deploy`      |
 
 El principio: **lo genérico lo sabe hacer Claude; lo específico de tu proyecto vive en la skill**.
 
 ### 🧪 Demo 3 — Skill de code review con criterios del proyecto
 
-- **Objetivo:** diseñar una skill de revisión que aplique las convenciones específicas del repo.
-- **Setup:** misma rama `tema-09/inicio`.
+* **Objetivo:** diseñar una skill de revisión que aplique las convenciones específicas del repo.
+* **Setup:** misma rama `tema-09/inicio`.
 
 **Pasos:**
 
@@ -197,9 +192,9 @@ Conclusión: ¿listo para merge o necesita cambios?
 
 **Qué observar:**
 
-- Claude detecta la violación de capas y la marca 🔴.
-- El formato es exactamente la tabla definida en la skill.
-- Sin la skill, una revisión genérica no detectaría esta convención específica.
+* Claude detecta la violación de capas y la marca 🔴.
+* El formato es exactamente la tabla definida en la skill.
+* Sin la skill, una revisión genérica no detectaría esta convención específica.
 
 ### 🧩 Ejercicio 3 — Diseñar e implementar `/pre-deploy`
 
@@ -233,11 +228,11 @@ Las skills del proyecto viven en `.claude/skills/` y, por defecto, **se versiona
 
 ## 5. Reutilización de skills por proyecto, por usuario o por organización
 
-| Ámbito | Ubicación | Quién la usa |
-|---|---|---|
-| **Proyecto** | `<repo>/.claude/skills/` | Todos en el repo (versionada en git) |
-| **Usuario** | `~/.claude/skills/` | Tú en todos tus repos |
-| **Organización** | Managed settings | Todo el equipo, sin opción de desactivar |
+| Ámbito           | Ubicación                | Quién la usa                             |
+| ---------------- | ------------------------ | ---------------------------------------- |
+| **Proyecto**     | `<repo>/.claude/skills/` | Todos en el repo (versionada en git)     |
+| **Usuario**      | `~/.claude/skills/`      | Tú en todos tus repos                    |
+| **Organización** | Managed settings         | Todo el equipo, sin opción de desactivar |
 
 Una skill en el repo es parte del contrato del proyecto, como el `CLAUDE.md` o el linter. Una skill personal es una preferencia tuya que no debe imponerse al equipo.
 
@@ -252,35 +247,35 @@ Si tienes scripts de bash personalizados o prompts guardados en notas:
 
 ## 7. Estrategias de nombrado, documentación y mantenimiento de skills
 
-- **Nombres en kebab-case, verbales**: `add-tests`, `review-pr`, `doc-module`. No: `testing`, `reviews`, `utils`.
-- **Una skill, un objetivo**. Si hace A y B, son dos skills.
-- **Documenta el por qué**, no solo el qué: el "por qué existe" es lo que se pierde cuando alguien la edita meses después.
-- **Revisión periódica**: una skill que nadie usa en 30 días tiene un problema de diseño o de naming.
+* **Nombres en kebab-case, verbales**: `add-tests`, `review-pr`, `doc-module`. No: `testing`, `reviews`, `utils`.
+* **Una skill, un objetivo**. Si hace A y B, son dos skills.
+* **Documenta el por qué**, no solo el qué: el "por qué existe" es lo que se pierde cuando alguien la edita meses después.
+* **Revisión periódica**: una skill que nadie usa en 30 días tiene un problema de diseño o de naming.
 
 ## 8. Versionado de skills compartidas sin romper hábitos del equipo
 
 Las skills en el repo siguen el mismo ciclo que el código:
 
-- Los cambios se revisan en PR como cualquier cambio de código.
-- Si cambias el comportamiento de una skill existente, actualiza su documentación y avisa al equipo.
-- Para cambios disruptivos, crea `review-pr-v2/` en paralelo antes de reemplazar la original.
+* Los cambios se revisan en PR como cualquier cambio de código.
+* Si cambias el comportamiento de una skill existente, actualiza su documentación y avisa al equipo.
+* Para cambios disruptivos, crea `review-pr-v2/` en paralelo antes de reemplazar la original.
 
 ## 9. Ejemplos de skills corporativas de alto valor recurrente
 
-| Skill | Qué hace |
-|---|---|
-| `pre-deploy` | Checklist de tests, seguridad y configuración antes de desplegar |
-| `add-migration` | Genera migraciones con las convenciones del ORM del equipo |
-| `doc-adr` | Documenta una decisión arquitectónica en formato ADR |
-| `review-security` | Revisa cambios de autenticación/autorización con criterios OWASP |
-| `onboarding-check` | Lista los pasos para que un repo sea adoptable por el equipo |
+| Skill              | Qué hace                                                         |
+| ------------------ | ---------------------------------------------------------------- |
+| `pre-deploy`       | Checklist de tests, seguridad y configuración antes de desplegar |
+| `add-migration`    | Genera migraciones con las convenciones del ORM del equipo       |
+| `doc-adr`          | Documenta una decisión arquitectónica en formato ADR             |
+| `review-security`  | Revisa cambios de autenticación/autorización con criterios OWASP |
+| `onboarding-check` | Lista los pasos para que un repo sea adoptable por el equipo     |
 
 ## 10. Gobierno de skills para evitar dispersión y duplicidad.
 
-- **Registro centralizado**: `README.md` en `.claude/skills/` con tabla de todas las skills activas.
-- **Responsable por skill**: cada skill tiene un dueño que responde de su mantenimiento.
-- **Auditoría trimestral**: qué skills se usan, cuáles están obsoletas, cuáles deben subirse a managed.
-- **Criterio de entrada**: una skill se crea cuando el mismo prompt se repite más de tres veces en el equipo.
+* **Registro centralizado**: `README.md` en `.claude/skills/` con tabla de todas las skills activas.
+* **Responsable por skill**: cada skill tiene un dueño que responde de su mantenimiento.
+* **Auditoría trimestral**: qué skills se usan, cuáles están obsoletas, cuáles deben subirse a managed.
+* **Criterio de entrada**: una skill se crea cuando el mismo prompt se repite más de tres veces en el equipo.
 
 > Ver [Tema 26](tema-26-equipo-gobierno.md) para políticas de gobierno de skills a escala de organización.
 
@@ -288,8 +283,8 @@ Las skills en el repo siguen el mismo ciclo que el código:
 
 ## Resumen
 
-- Una skill es un `SKILL.md` que encapsula contexto, objetivo y formato para una tarea repetida.
-- Auto-trigger con `description:`; invocación explícita con `/nombre-skill`.
-- El valor está en el contexto específico del proyecto, no en las instrucciones genéricas.
-- Una skill por objetivo, en kebab-case, versionada como el código.
-- Gobernadas con registro, responsable y auditoría periódica.
+* Una skill es un `SKILL.md` que encapsula contexto, objetivo y formato para una tarea repetida.
+* Auto-trigger con `description:`; invocación explícita con `/nombre-skill`.
+* El valor está en el contexto específico del proyecto, no en las instrucciones genéricas.
+* Una skill por objetivo, en kebab-case, versionada como el código.
+* Gobernadas con registro, responsable y auditoría periódica.
