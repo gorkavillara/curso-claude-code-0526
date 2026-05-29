@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 14 — Documentación técnica, README y ADR
 
-# Tema 14 — Documentación técnica, README, ADR y explicaciones de arquitectura que sí sirven al equipo
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico + demos guiadas
+> **Duración estimada:** \~60 min **Tipo:** práctico + demos guiadas
 
 ## Objetivo del tema
 
@@ -17,20 +12,20 @@ Generar documentación que se lee y se actualiza, no la que decora el repo. Usar
 
 Un README útil contesta cinco preguntas en menos de un minuto:
 
-| Pregunta | Sección típica |
-|---|---|
-| ¿Qué hace este proyecto? | Una frase al principio |
-| ¿Cómo lo arranco? | "Quick start": 3 comandos máximo |
-| ¿Cómo está organizado? | Mapa de carpetas con una línea cada una |
-| ¿Cómo testeo y despliego? | "Comandos útiles" |
-| ¿A quién pregunto? | "Mantenimiento" — owner y canal |
+| Pregunta                  | Sección típica                          |
+| ------------------------- | --------------------------------------- |
+| ¿Qué hace este proyecto?  | Una frase al principio                  |
+| ¿Cómo lo arranco?         | "Quick start": 3 comandos máximo        |
+| ¿Cómo está organizado?    | Mapa de carpetas con una línea cada una |
+| ¿Cómo testeo y despliego? | "Comandos útiles"                       |
+| ¿A quién pregunto?        | "Mantenimiento" — owner y canal         |
 
 > Si la respuesta a "¿qué hace?" tarda más de una línea, el README está mal.
 
 ### 🧪 Demo 1 — README desde cero para Notebox
 
-- **Objetivo:** generar un README mínimo útil sin escribir prosa decorativa.
-- **Setup:** `git checkout tema-14/inicio`, repo sin README o con uno minimalista.
+* **Objetivo:** generar un README mínimo útil sin escribir prosa decorativa.
+* **Setup:** `git checkout tema-14/inicio`, repo sin README o con uno minimalista.
 
 **Prompt literal:**
 
@@ -46,10 +41,10 @@ Cita rutas reales. No inventes scripts que no están en package.json.
 
 **Qué observar:**
 
-- Una sola frase para describir el proyecto.
-- Comandos copiados de `package.json`, no inventados.
-- Sin secciones tipo "Features", "Roadmap", "Contributing" salvo que aporten.
-- Mapa de carpetas con rutas reales.
+* Una sola frase para describir el proyecto.
+* Comandos copiados de `package.json`, no inventados.
+* Sin secciones tipo "Features", "Roadmap", "Contributing" salvo que aporten.
+* Mapa de carpetas con rutas reales.
 
 ### 🧩 Ejercicio 1 — README mínimo y útil
 
@@ -61,10 +56,10 @@ Genera un README para Notebox siguiendo el formato de la demo. Verifica que cada
 
 Para módulos internos, lo útil **no es JSDoc en cada función**. Es un `README.md` o `MODULE.md` por módulo con:
 
-- **Responsabilidad** en una frase.
-- **API pública** (qué se exporta, no qué se usa internamente).
-- **Puntos de extensión:** dónde añadir un nuevo caso sin tocar lo demás.
-- **Lo que no debe hacer:** límites explícitos del módulo.
+* **Responsabilidad** en una frase.
+* **API pública** (qué se exporta, no qué se usa internamente).
+* **Puntos de extensión:** dónde añadir un nuevo caso sin tocar lo demás.
+* **Lo que no debe hacer:** límites explícitos del módulo.
 
 > El "qué no debe hacer" es lo que evita que el módulo se infle. Es la sección más infravalorada.
 
@@ -87,14 +82,14 @@ Un ADR (Architecture Decision Record) responde tres preguntas:
 
 Reglas:
 
-- **Una decisión, un ADR.** Si decides 3 cosas, son 3 ADRs.
-- **Numerado y eterno.** No se borra: se sustituye con un ADR nuevo que lo deprecate.
-- **Decisión presente, no aspiracional.** "Vamos a hacer X" — no "deberíamos plantearnos X".
+* **Una decisión, un ADR.** Si decides 3 cosas, son 3 ADRs.
+* **Numerado y eterno.** No se borra: se sustituye con un ADR nuevo que lo deprecate.
+* **Decisión presente, no aspiracional.** "Vamos a hacer X" — no "deberíamos plantearnos X".
 
 ### 🧪 Demo 2 — Escribir un ADR sobre el storage en memoria
 
-- **Objetivo:** documentar una decisión arquitectónica concreta del repo (por qué storage in-memory).
-- **Setup:** misma rama. La decisión existe en el código pero no está documentada.
+* **Objetivo:** documentar una decisión arquitectónica concreta del repo (por qué storage in-memory).
+* **Setup:** misma rama. La decisión existe en el código pero no está documentada.
 
 **Prompt literal:**
 
@@ -114,9 +109,9 @@ Máximo media página. Sin prosa decorativa.
 
 **Qué observar:**
 
-- "Decisión" en presente: "El storage es in-memory" — no "se considera usar".
-- "Consecuencias" incluye lo que se pierde (no hay persistencia) y lo que queda por verificar (cuándo migrar a DB real).
-- La decisión está justificada con datos reales del contexto, no con buzzwords.
+* "Decisión" en presente: "El storage es in-memory" — no "se considera usar".
+* "Consecuencias" incluye lo que se pierde (no hay persistencia) y lo que queda por verificar (cuándo migrar a DB real).
+* La decisión está justificada con datos reales del contexto, no con buzzwords.
 
 ### 🧩 Ejercicio 2 — ADR sobre una decisión real
 
@@ -128,9 +123,9 @@ Identifica una decisión arquitectónica del repo que no está documentada (stor
 
 Profundizamos en cómo generar la guía automáticamente en el [Tema 10](tema-10-exploracion-repos.md). Aquí lo importante es **qué humanos deben añadir**:
 
-- Las decisiones de diseño intencionales que no se infieren del código.
-- Quién es quién en el equipo y a quién preguntar.
-- Las trampas históricas (bugs míticos, áreas embrujadas).
+* Las decisiones de diseño intencionales que no se infieren del código.
+* Quién es quién en el equipo y a quién preguntar.
+* Las trampas históricas (bugs míticos, áreas embrujadas).
 
 > Lo que la IA puede generar es la parte derivable del código. El resto es trabajo humano y no se delega.
 
@@ -167,19 +162,19 @@ curl -X POST http://localhost:3000/notes \
 
 Reglas:
 
-- **Ejemplo completo y ejecutable.** Sin placeholders del estilo `<TODO>`.
-- **Una request, una respuesta esperada.**
-- **Casos de error documentados** con su código HTTP.
+* **Ejemplo completo y ejecutable.** Sin placeholders del estilo `<TODO>`.
+* **Una request, una respuesta esperada.**
+* **Casos de error documentados** con su código HTTP.
 
 ## 7. Refuerzo de comentarios de código donde realmente aportan
 
 Cuándo escribir un comentario:
 
-| Sí escribir | No escribir |
-|---|---|
-| Por qué (decisión no obvia del código) | Qué (lo dice el nombre de la función) |
-| Workaround de un bug externo con link al issue | "Esta función crea una nota" |
-| Invariante no expresada en tipos | Repetición del nombre del parámetro |
+| Sí escribir                                                     | No escribir                                              |
+| --------------------------------------------------------------- | -------------------------------------------------------- |
+| Por qué (decisión no obvia del código)                          | Qué (lo dice el nombre de la función)                    |
+| Workaround de un bug externo con link al issue                  | "Esta función crea una nota"                             |
+| Invariante no expresada en tipos                                | Repetición del nombre del parámetro                      |
 | Trade-off intencional ("usamos O(n²) porque n<100 garantizado") | Decoración tipo `// ============= helpers =============` |
 
 > Si quitar el comentario no confunde a nadie, sobraba.
@@ -204,8 +199,8 @@ Cita ruta y línea para cada inconsistencia.
 
 ### 🧪 Demo 3 — Detectar drift entre README y código
 
-- **Objetivo:** identificar y reparar inconsistencias entre docs y código.
-- **Setup:** misma rama. README con drift introducido a propósito.
+* **Objetivo:** identificar y reparar inconsistencias entre docs y código.
+* **Setup:** misma rama. README con drift introducido a propósito.
 
 **Prompt literal:**
 
@@ -218,9 +213,9 @@ docs o actualizar código).
 
 **Qué observar:**
 
-- Claude detecta comandos del README que no están en `package.json`.
-- Distingue entre "actualizar docs" y "actualizar código" según el caso.
-- Cita rutas y líneas concretas.
+* Claude detecta comandos del README que no están en `package.json`.
+* Distingue entre "actualizar docs" y "actualizar código" según el caso.
+* Cita rutas y líneas concretas.
 
 ### 🧩 Ejercicio 3 — Detectar y reparar drift
 
@@ -232,10 +227,10 @@ Detecta las inconsistencias entre `README.md` y el estado actual del repo. Entre
 
 Señales de documentación generada que no aporta:
 
-- "Este módulo es responsable de manejar la lógica de..." (vacío).
-- "Es importante notar que..." (prefiere imperativo directo).
-- Listas que repiten lo que ya se ve en el código.
-- Secciones tipo "Conclusión" en un README.
+* "Este módulo es responsable de manejar la lógica de..." (vacío).
+* "Es importante notar que..." (prefiere imperativo directo).
+* Listas que repiten lo que ya se ve en el código.
+* Secciones tipo "Conclusión" en un README.
 
 > Si el texto sobrevive a ser borrado entero, no hacía falta escribirlo.
 
@@ -243,24 +238,24 @@ Señales de documentación generada que no aporta:
 
 Usos sistemáticos:
 
-- **Generar borradores** de README, ADR y troubleshooting que un humano revisa.
-- **Detectar drift** periódicamente (mensual, antes de releases).
-- **Convertir conversaciones de Slack** en ADRs cuando la decisión es importante.
-- **Mantener guías de onboarding** actualizadas tras grandes refactors.
+* **Generar borradores** de README, ADR y troubleshooting que un humano revisa.
+* **Detectar drift** periódicamente (mensual, antes de releases).
+* **Convertir conversaciones de Slack** en ADRs cuando la decisión es importante.
+* **Mantener guías de onboarding** actualizadas tras grandes refactors.
 
 Lo que sigue siendo humano:
 
-- Decidir qué merece estar documentado.
-- Decir quién es el dueño.
-- Las trampas históricas que no están en el código.
+* Decidir qué merece estar documentado.
+* Decir quién es el dueño.
+* Las trampas históricas que no están en el código.
 
 ***
 
 ## Resumen
 
-- README útil = 5 preguntas contestadas en 1 minuto.
-- ADR = una decisión, presente imperativa, consecuencias incluidas.
-- "Qué no debe hacer" un módulo es la sección más infravalorada.
-- Comentarios solo donde explican el **por qué**, no el qué.
-- Drift entre docs y código = mentir. Detéctalo cada release.
-- Claude genera el borrador. Tú decides qué merece estar escrito.
+* README útil = 5 preguntas contestadas en 1 minuto.
+* ADR = una decisión, presente imperativa, consecuencias incluidas.
+* "Qué no debe hacer" un módulo es la sección más infravalorada.
+* Comentarios solo donde explican el **por qué**, no el qué.
+* Drift entre docs y código = mentir. Detéctalo cada release.
+* Claude genera el borrador. Tú decides qué merece estar escrito.

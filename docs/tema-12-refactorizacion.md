@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 12 — Refactorización profunda y modernización progresiva
 
-# Tema 12 — Refactorización profunda y modernización progresiva de código heredado sin romper el producto
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -17,20 +12,20 @@ Refactorizar con criterio: distinguir deuda estructural de mejoras cosméticas, 
 
 No todo huele igual. Una lista de olores **priorizada por impacto**:
 
-| Olor | Impacto típico | Cuándo refactorizar ya |
-|---|---|---|
-| Duplicación entre módulos con lógica de negocio | Bugs divergen en cada copia | Antes del siguiente cambio sobre cualquiera |
-| Funciones con anidación profunda (≥4 niveles) | Imposible razonar sobre los caminos | Antes del primer test nuevo |
-| Acoplamiento entre capas (ruta llama a storage) | Imposible cambiar una capa sin tocar la otra | Antes de añadir una capa nueva |
-| Nombres equivocados (función dice `get`, hace `mutate`) | Lectores razonan sobre la mentira | Cuanto antes |
-| Comentarios largos explicando qué hace el código | El código no se explica solo | Renombrar/extraer es mejor que comentar |
+| Olor                                                    | Impacto típico                               | Cuándo refactorizar ya                      |
+| ------------------------------------------------------- | -------------------------------------------- | ------------------------------------------- |
+| Duplicación entre módulos con lógica de negocio         | Bugs divergen en cada copia                  | Antes del siguiente cambio sobre cualquiera |
+| Funciones con anidación profunda (≥4 niveles)           | Imposible razonar sobre los caminos          | Antes del primer test nuevo                 |
+| Acoplamiento entre capas (ruta llama a storage)         | Imposible cambiar una capa sin tocar la otra | Antes de añadir una capa nueva              |
+| Nombres equivocados (función dice `get`, hace `mutate`) | Lectores razonan sobre la mentira            | Cuanto antes                                |
+| Comentarios largos explicando qué hace el código        | El código no se explica solo                 | Renombrar/extraer es mejor que comentar     |
 
 > Refactoriza lo que **vas a tocar la próxima vez**, no lo que te parece feo desde la lejanía.
 
 ### 🧪 Demo 1 — Detectar olores con criterio de impacto
 
-- **Objetivo:** identificar 3 olores en Notebox y ordenarlos por impacto real, no por "fealdad" superficial.
-- **Setup:** `git checkout tema-12/inicio`, `npm test` verde.
+* **Objetivo:** identificar 3 olores en Notebox y ordenarlos por impacto real, no por "fealdad" superficial.
+* **Setup:** `git checkout tema-12/inicio`, `npm test` verde.
 
 **Prompt literal:**
 
@@ -45,9 +40,9 @@ No me digas "podría ser más limpio". Quiero impacto verificable.
 
 **Qué observar:**
 
-- Claude cita archivos y líneas, no categorías abstractas.
-- La justificación menciona un cambio futuro concreto, no "es feo".
-- Si Claude propone reescribir todo, redirígelo: queremos foco.
+* Claude cita archivos y líneas, no categorías abstractas.
+* La justificación menciona un cambio futuro concreto, no "es feo".
+* Si Claude propone reescribir todo, redirígelo: queremos foco.
 
 ### 🧩 Ejercicio 1 — Priorizar olores con criterio de impacto
 
@@ -57,12 +52,12 @@ Identifica 5 olores en `src/` de Notebox y ordénalos en una tabla por impacto r
 
 ## 2. Separación entre deuda estructural y simples mejoras cosméticas
 
-| Estructural (refactorizar) | Cosmético (dejar pasar) |
-|---|---|
-| Duplicación que ya ha causado un bug | Inconsistencias de naming sin impacto |
-| Funciones que mezclan validación y persistencia | Comentarios redundantes |
-| Acoplamiento entre módulos que deberían ser independientes | Falta de JSDoc |
-| Lógica condicional explosiva (cyclomatic ≥ 10) | Líneas largas |
+| Estructural (refactorizar)                                 | Cosmético (dejar pasar)               |
+| ---------------------------------------------------------- | ------------------------------------- |
+| Duplicación que ya ha causado un bug                       | Inconsistencias de naming sin impacto |
+| Funciones que mezclan validación y persistencia            | Comentarios redundantes               |
+| Acoplamiento entre módulos que deberían ser independientes | Falta de JSDoc                        |
+| Lógica condicional explosiva (cyclomatic ≥ 10)             | Líneas largas                         |
 
 > El refactor cosmético tiene coste cero esperado **y** beneficio cero esperado. No lo confundas con valor.
 
@@ -80,8 +75,8 @@ Pasos para extraer con seguridad:
 
 ### 🧪 Demo 2 — Extracción guiada con red de seguridad
 
-- **Objetivo:** extraer una función duplicada manteniendo los tests verdes en cada paso.
-- **Setup:** misma rama, foco en `src/services/notes.ts` (funciones `archive` y `unarchive` duplican estructura).
+* **Objetivo:** extraer una función duplicada manteniendo los tests verdes en cada paso.
+* **Setup:** misma rama, foco en `src/services/notes.ts` (funciones `archive` y `unarchive` duplican estructura).
 
 **Prompt literal:**
 
@@ -106,9 +101,9 @@ Mantener las firmas archive(id) y unarchive(id) intactas.
 
 **Qué observar:**
 
-- Claude divide el refactor en dos commits lógicos.
-- Los tests pasan tras cada paso, no solo al final.
-- La firma pública no cambia: callers no se enteran.
+* Claude divide el refactor en dos commits lógicos.
+* Los tests pasan tras cada paso, no solo al final.
+* La firma pública no cambia: callers no se enteran.
 
 ### 🧩 Ejercicio 2 — Extraer función duplicada paso a paso
 
@@ -147,9 +142,9 @@ Mejor patrón:
 
 Tres objetivos, tres preguntas:
 
-- **Mantenibilidad:** ¿el próximo bug aquí será fácil de arreglar?
-- **Legibilidad:** ¿un dev nuevo entiende esto sin hablar con nadie?
-- **Extensibilidad:** ¿añadir el siguiente requisito se hará sin tocar 10 archivos?
+* **Mantenibilidad:** ¿el próximo bug aquí será fácil de arreglar?
+* **Legibilidad:** ¿un dev nuevo entiende esto sin hablar con nadie?
+* **Extensibilidad:** ¿añadir el siguiente requisito se hará sin tocar 10 archivos?
 
 Si la respuesta a las tres es "sí", no refactorices.
 
@@ -157,12 +152,12 @@ Si la respuesta a las tres es "sí", no refactorices.
 
 Cosas que se rompen sin que los tests las pillen:
 
-| Riesgo | Cómo verificarlo |
-|---|---|
-| Cambio en latencia | Benchmark mínimo del path crítico |
-| Cambio en el contrato público | Diff de tipos exportados o de OpenAPI |
-| Nueva dependencia | Diff del `package.json` antes de aceptar |
-| Cambio en formato de logs | Grep en consumidores de logs |
+| Riesgo                        | Cómo verificarlo                         |
+| ----------------------------- | ---------------------------------------- |
+| Cambio en latencia            | Benchmark mínimo del path crítico        |
+| Cambio en el contrato público | Diff de tipos exportados o de OpenAPI    |
+| Nueva dependencia             | Diff del `package.json` antes de aceptar |
+| Cambio en formato de logs     | Grep en consumidores de logs             |
 
 Pregunta a Claude antes de merge:
 
@@ -189,8 +184,8 @@ Genera la descripción del PR con:
 
 ### 🧪 Demo 3 — Generar descripción before/after del PR
 
-- **Objetivo:** producir la descripción del PR del refactor de la Demo 2.
-- **Setup:** refactor de archive/unarchive aplicado en la rama.
+* **Objetivo:** producir la descripción del PR del refactor de la Demo 2.
+* **Setup:** refactor de archive/unarchive aplicado en la rama.
 
 **Prompt literal:**
 
@@ -206,9 +201,9 @@ Sé conciso. Reviewers no quieren leer prosa.
 
 **Qué observar:**
 
-- La descripción menciona archivos concretos y firmas.
-- "Por qué ahora" no es "porque es buena práctica" — es un motivo verificable.
-- Los riesgos están priorizados, no listados en bloque.
+* La descripción menciona archivos concretos y firmas.
+* "Por qué ahora" no es "porque es buena práctica" — es un motivo verificable.
+* Los riesgos están priorizados, no listados en bloque.
 
 ### 🧩 Ejercicio 3 — Documentar el refactor para PR
 
@@ -220,10 +215,10 @@ A partir del refactor del Ejercicio 2, genera la descripción del PR siguiendo e
 
 Reglas operativas:
 
-- Una rama, **un olor**.
-- Cada commit **deja los tests verdes**.
-- PRs de refactor: nunca mezclados con features.
-- Si el refactor crece más allá de 200 LOC cambiadas, **divídelo**.
+* Una rama, **un olor**.
+* Cada commit **deja los tests verdes**.
+* PRs de refactor: nunca mezclados con features.
+* Si el refactor crece más allá de 200 LOC cambiadas, **divídelo**.
 
 > Lotes pequeños tienen probabilidad alta de mergearse. Lotes grandes mueren en review.
 
@@ -231,11 +226,11 @@ Reglas operativas:
 
 Pídele a Claude que actúe como ayudante mecánico, no como diseñador:
 
-- **Sí:** aplicar un patrón ya decidido por ti a 30 sitios.
-- **Sí:** generar tests de caracterización antes de un refactor.
-- **Sí:** documentar before/after para el PR.
-- **No:** "moderniza este archivo" sin restricciones — sobreedita.
-- **No:** "refactoriza el repo" — no tiene foco, toca todo.
+* **Sí:** aplicar un patrón ya decidido por ti a 30 sitios.
+* **Sí:** generar tests de caracterización antes de un refactor.
+* **Sí:** documentar before/after para el PR.
+* **No:** "moderniza este archivo" sin restricciones — sobreedita.
+* **No:** "refactoriza el repo" — no tiene foco, toca todo.
 
 > El diseño del refactor lo defines tú. Claude lo aplica.
 
@@ -243,8 +238,8 @@ Pídele a Claude que actúe como ayudante mecánico, no como diseñador:
 
 ## Resumen
 
-- Refactoriza lo que vas a tocar pronto, no lo que te parece feo.
-- Distingue deuda estructural (cuesta dinero) de cosméticos (no compensa).
-- Sin test, no hay refactor. Caracteriza antes de tocar.
-- Lotes pequeños, una rama por olor, PR explicado con "antes / después / por qué ahora".
-- Claude ejecuta el cambio mecánico. El diseño es tuyo.
+* Refactoriza lo que vas a tocar pronto, no lo que te parece feo.
+* Distingue deuda estructural (cuesta dinero) de cosméticos (no compensa).
+* Sin test, no hay refactor. Caracteriza antes de tocar.
+* Lotes pequeños, una rama por olor, PR explicado con "antes / después / por qué ahora".
+* Claude ejecuta el cambio mecánico. El diseño es tuyo.
