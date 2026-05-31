@@ -28,6 +28,7 @@
 * [Tema 21 — Sistema de plugins, marketplaces, hooks y extensibilidad](tema-21-plugins.md)
 * [Tema 22 — Opciones avanzadas de CLI, sesiones, historiales y productividad](tema-22-cli.md)
 * [Tema 23 — Docker, entornos reproducibles y troubleshooting](tema-23-docker.md)
+* [Tema 24 — DevOps, CI/CD, pipelines y automatización del ciclo de entrega](tema-24-devops.md)
 
 ## Recursos
 
