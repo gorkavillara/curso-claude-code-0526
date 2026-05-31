@@ -23,6 +23,7 @@
 * [Tema 16 — Seguridad, vulnerabilidades y hardening](tema-16-seguridad.md)
 * [Tema 17 — Dependencias, paquetes y migraciones](tema-17-dependencias-migraciones.md)
 * [Tema 18 — Git, branching, hotfixes y conflictos](tema-18-git.md)
+* [Tema 19 — Subagentes, especialización de roles y trabajo distribuido](tema-19-subagentes.md)
 
 ## Recursos
 
