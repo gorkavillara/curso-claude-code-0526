@@ -196,7 +196,7 @@ Después invoca la tool notebox_list_notes y enséñame el output.
 
 > **Rama:** `git checkout tema-20/ejercicio-02` · **Tiempo:** 25 min · **Tipo:** En clase
 
-Restringe qué tools MCP puede usar Claude en este proyecto editando `.claude/settings.local.json`: bloquea las tools de escritura del servidor `notebox` (las que modifican notas) y permite solo las de lectura. Verifica desde Claude que las denegadas se rebotan. Documenta el resultado y la justificación en `GOBIERNO-MCP.md`.
+Restringe qué tools MCP puede usar Claude en este proyecto editando `.claude/settings.json`: bloquea las tools de escritura del servidor `notebox` (las que modifican notas) y permite solo las de lectura. Verifica desde Claude que las denegadas se rebotan. Documenta el resultado y la justificación en `GOBIERNO-MCP.md`.
 
 ---
 
@@ -248,7 +248,7 @@ Cuando hay varios MCPs conectados a un proyecto, no todas sus tools deben estar 
 
 | Nivel | Dónde se configura | Para qué |
 |---|---|---|
-| **Proyecto** | `.claude/settings.local.json` | Reglas del repo. Versionables, revisables en PR. |
+| **Proyecto** | `.claude/settings.json` | Reglas del repo. Versionables, revisables en PR. (`.claude/settings.json` existe pero está en `.gitignore`: úsalo solo para overrides personales que **no** quieras compartir.) |
 | **Usuario** | `~/.claude/settings.json` | Preferencias personales (qué prefieres bloquear siempre). |
 | **Organización** | Política central (Anthropic Enterprise) | Reglas duras impuestas por TI / Seguridad. |
 
@@ -274,12 +274,12 @@ Formas de restringir:
 - **Denylist** = "todo menos esto". Más permisivo, pero más fácil que se cuele algo.
 - **Por defecto**: allowlist en proyectos sensibles (producción, seguridad), denylist en herramientas internas.
 
-> En un repo de empresa, el `.mcp.json` y el `settings.local.json` se revisan en el mismo PR. Cambiar las tools disponibles **es un cambio de superficie de ataque**: merece review.
+> En un repo de empresa, el `.mcp.json` y el `settings.json` se revisan en el mismo PR. Cambiar las tools disponibles **es un cambio de superficie de ataque**: merece review.
 
 ### 🧪 Demo 3 — Probar una denylist en vivo
 
-- **Objetivo:** ver cómo Claude rechaza una tool denegada en `settings.local.json` aunque el servidor la exponga.
-- **Setup:** rama `tema-20/inicio`. El servidor `notebox` expone una tool `notebox_delete_note`. Editar `.claude/settings.local.json` para añadir esa tool a `deny`.
+- **Objetivo:** ver cómo Claude rechaza una tool denegada en `settings.json` aunque el servidor la exponga.
+- **Setup:** rama `tema-20/inicio`. El servidor `notebox` expone una tool `notebox_delete_note`. Editar `.claude/settings.json` para añadir esa tool a `deny`.
 
 **Prompt literal:**
 
@@ -291,7 +291,7 @@ servidor notebox. Si no puedes, dime exactamente por qué.
 **Qué observar:**
 
 - Claude **detecta el bloqueo a nivel cliente** antes de invocar la tool. No llega al servidor.
-- El mensaje de error cita explícitamente el bloqueo en `settings.local.json`.
+- El mensaje de error cita explícitamente el bloqueo en `settings.json`.
 - Si quitas la tool del `deny` y reintentas, la invocación procede. La política manda.
 - Si pones `allow` con solo lectura y dejas la denylist vacía, el efecto es equivalente para esa tool, pero **bloquea también** las tools nuevas que aparezcan después. Esa es la diferencia clave entre las dos estrategias.
 

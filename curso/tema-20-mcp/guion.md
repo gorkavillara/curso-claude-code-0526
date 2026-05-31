@@ -145,9 +145,9 @@ Lo que el alumno ve:
 
 Los alumnos:
 
-1. Inspeccionan el `.claude/settings.local.json` plantado: ya hay una `allow` y `deny` de ejemplo pero **no cubre todas las tools destructivas** del servidor `notebox`.
+1. Inspeccionan el `.claude/settings.json` plantado: ya hay una `allow` y `deny` de ejemplo pero **no cubre todas las tools destructivas** del servidor `notebox`.
 2. Identifican qué tools del servidor `notebox` son destructivas (`notebox_delete_note`, `notebox_archive_note`).
-3. Editan `settings.local.json` para que **solo se puedan invocar las tools de lectura** del servidor `notebox` (`notebox_list_notes`, `notebox_get_note`). Bloquean explícitamente `notebox_delete_note`.
+3. Editan `settings.json` para que **solo se puedan invocar las tools de lectura** del servidor `notebox` (`notebox_list_notes`, `notebox_get_note`). Bloquean explícitamente `notebox_delete_note`.
 4. Reinician Claude (o ejecutan `/mcp` reconnect) y verifican:
    - Pedirle "lista las notas" → funciona.
    - Pedirle "borra la nota 1" → debe rebotar con un error que cite el bloqueo.
@@ -163,7 +163,7 @@ Los alumnos:
 - ¿Verifican que el bloqueo funciona o se fían del archivo?
 - ¿Alguno responde correctamente la pregunta de "qué pasa con `notebox_purge`"? Solo allowlist la deja fuera por defecto.
 
-> "Un `settings.local.json` que no entendéis es peor que no tenerlo. Es seguridad de cartón: parece que protege, pero solo hasta que alguien añada una tool nueva."
+> "Un `settings.json` que no entendéis es peor que no tenerlo. Es seguridad de cartón: parece que protege, pero solo hasta que alguien añada una tool nueva."
 
 ---
 
@@ -171,7 +171,7 @@ Los alumnos:
 
 ### Demo 3 (5 min)
 
-> Setup: `git checkout tema-20/inicio`. Añadir manualmente `mcp__notebox__notebox_delete_note` a la lista `deny` de `.claude/settings.local.json`. Reiniciar Claude.
+> Setup: `git checkout tema-20/inicio`. Añadir manualmente `mcp__notebox__notebox_delete_note` a la lista `deny` de `.claude/settings.json`. Reiniciar Claude.
 
 **Prompt literal:**
 
@@ -183,10 +183,10 @@ servidor notebox. Si no puedes, dime exactamente por qué.
 Lo que el alumno ve:
 
 - Claude **rechaza la invocación a nivel cliente**, antes de llegar al servidor.
-- El mensaje cita explícitamente la denylist en `settings.local.json`.
+- El mensaje cita explícitamente la denylist en `settings.json`.
 - Si quitas la entrada del `deny` y reintentas, la invocación funciona (la nota se borra).
 
-> "La denylist es **una regla del cliente**, no del servidor. El servidor sigue exponiendo la tool; Claude decide no llamarla. Esto es importante: si alguien usa otro cliente MCP contra el mismo servidor, no está protegido por vuestro `settings.local.json`."
+> "La denylist es **una regla del cliente**, no del servidor. El servidor sigue exponiendo la tool; Claude decide no llamarla. Esto es importante: si alguien usa otro cliente MCP contra el mismo servidor, no está protegido por vuestro `settings.json`."
 
 ### Ejercicio 3 (25 min)
 

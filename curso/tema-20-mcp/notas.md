@@ -4,7 +4,7 @@
 
 - Pregunta recurrente: "¿Y cómo conecto el MCP de Jira de mi empresa?" — recordar que cada empresa tiene su tenant y su OAuth, y que se hace fuera de clase. Dejar enlace a los conectores oficiales que sí están publicados (GitHub, Linear, Notion).
 
-- Pregunta recurrente: "¿Las allowlists viajan con el repo?" — `.claude/settings.local.json` está pensado para no commitearse (acaba en `.gitignore` típicamente). `.claude/settings.json` sí se commitea. Aclarar la diferencia en la próxima edición del tema. Revisar qué hace Notebox por defecto.
+- Pregunta recurrente: "¿Las allowlists viajan con el repo?" — `.claude/settings.json` está pensado para no commitearse (acaba en `.gitignore` típicamente). `.claude/settings.json` sí se commitea. Aclarar la diferencia en la próxima edición del tema. Revisar qué hace Notebox por defecto.
 
 [Modificación de la documentación de temas generados en la carpeta docs]
 

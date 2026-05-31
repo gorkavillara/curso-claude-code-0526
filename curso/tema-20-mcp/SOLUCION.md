@@ -84,7 +84,7 @@ mismas, pero su scope efectivo se reduce.
 
 Tools destructivas del servidor `notebox`: `notebox_create_note`, `notebox_archive_note`, `notebox_delete_note`.
 
-**`.claude/settings.local.json` esperado (estrategia allowlist):**
+**`.claude/settings.json` esperado (estrategia allowlist):**
 
 ```json
 {
@@ -111,7 +111,7 @@ Tools destructivas del servidor `notebox`: `notebox_create_note`, `notebox_archi
 **Verificación:**
 
 - `Lista las notas` → funciona (`notebox_list_notes` está en allow).
-- `Borra la nota 1` → Claude rechaza la invocación citando `settings.local.json`.
+- `Borra la nota 1` → Claude rechaza la invocación citando `settings.json`.
 
 **`GOBIERNO-MCP.md` ejemplo de respuesta correcta:**
 
@@ -141,7 +141,7 @@ gana la allowlist.
 
 ### Criterio de éxito
 
-- [ ] `settings.local.json` bloquea al menos `notebox_delete_note`.
+- [ ] `settings.json` bloquea al menos `notebox_delete_note`.
 - [ ] Al pedir borrar una nota, Claude rebota citando la denylist.
 - [ ] Al pedir listar notas, funciona.
 - [ ] `GOBIERNO-MCP.md` justifica la decisión y responde la pregunta sobre `notebox_purge`.
