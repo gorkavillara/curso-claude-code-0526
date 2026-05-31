@@ -58,7 +58,11 @@ Lo que se pide al agente cuando audita un Dockerfile:
    ```
    Aplica el fix 1. Muéstrame el diff. Explica qué cambia en la build.
    ```
-4. Generar `.dockerignore` mínimo correcto: ignorar `node_modules/`, `.git/`, `.env*`, `logs/`, `coverage/`, `*.md` salvo `README.md`.
+4. Generar `.dockerignore` mínimo correcto:
+   ```
+   Crea un .dockerignore mínimo correcto: ignorar node_modules/, .git/,
+   .env*, logs/, coverage/, *.md salvo README.md.
+   ```
 5. Si hay Docker disponible, ejecutar `docker build -t notebox:audit .` antes y después. Comparar tamaño con `docker images notebox`.
 
 **Qué observar:**
