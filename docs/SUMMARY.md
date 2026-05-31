@@ -27,6 +27,7 @@
 * [Tema 20 — MCP oficial, conectores remotos y servidores propios](tema-20-mcp.md)
 * [Tema 21 — Sistema de plugins, marketplaces, hooks y extensibilidad](tema-21-plugins.md)
 * [Tema 22 — Opciones avanzadas de CLI, sesiones, historiales y productividad](tema-22-cli.md)
+* [Tema 23 — Docker, entornos reproducibles y troubleshooting](tema-23-docker.md)
 
 ## Recursos
 
