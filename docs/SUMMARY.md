@@ -25,6 +25,7 @@
 * [Tema 18 — Git, branching, hotfixes y conflictos](tema-18-git.md)
 * [Tema 19 — Subagentes, especialización de roles y trabajo distribuido](tema-19-subagentes.md)
 * [Tema 20 — MCP oficial, conectores remotos y servidores propios](tema-20-mcp.md)
+* [Tema 21 — Sistema de plugins, marketplaces, hooks y extensibilidad](tema-21-plugins.md)
 
 ## Recursos
 
