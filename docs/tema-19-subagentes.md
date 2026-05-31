@@ -4,7 +4,7 @@ hidden: true
 
 # Tema 19 — Subagentes, especialización de roles y trabajo distribuido dentro de Claude Code
 
-> **Duración estimada:** ~60 min
+> **Duración estimada:** ~90 min
 > **Tipo:** conceptual + demos guiadas
 
 ## Objetivo del tema
@@ -56,7 +56,7 @@ severidad y propuesta concreta. No edites nada todavía.
 **Qué observar:**
 
 - El agente principal **anuncia** que delega en `code-reviewer` (lo verás en la cabecera del turno).
-- El subagente responde **en el formato definido en su `SKILL`**: tabla de hallazgos, severidad, propuesta.
+- El subagente responde **en el formato definido en su frontmatter / system prompt** (`.claude/agents/code-reviewer.md`): tabla de hallazgos, severidad, propuesta.
 - Solo usa `Read` / `Grep` / `Glob` — no edita ni ejecuta tests. Está restringido.
 - Comparado con un `revísame esto` genérico, el output es **predecible** y **comparable** entre PRs.
 

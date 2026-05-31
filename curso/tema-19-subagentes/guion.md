@@ -56,7 +56,7 @@ severidad y propuesta concreta. No edites nada todavía.
 Lo que el alumno ve:
 
 - El agente principal anuncia: "Delegando en `code-reviewer`...".
-- El subagente devuelve **una tabla en el formato definido por su `SKILL`**: categoría, hallazgo, severidad, propuesta.
+- El subagente devuelve **una tabla en el formato definido en su frontmatter / system prompt** (`.claude/agents/code-reviewer.md`): categoría, hallazgo, severidad, propuesta.
 - No edita ni ejecuta tests — solo tiene `Read`, `Grep`, `Glob`.
 - El output es **comparable con la próxima invocación**. Esa es la ganancia.
 
