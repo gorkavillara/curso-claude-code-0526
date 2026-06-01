@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 16 — Seguridad, vulnerabilidades y hardening
 
-# Tema 16 — Seguridad del software, análisis de vulnerabilidades y hardening del código generado o modificado
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -19,19 +14,19 @@ Toda entrada que viene del exterior es **maliciosa hasta demostrar lo contrario*
 
 Capas de defensa típicas:
 
-| Capa | Qué valida |
-|---|---|
-| Ruta | Formato (tipo, presencia, longitud razonable) |
+| Capa     | Qué valida                                        |
+| -------- | ------------------------------------------------- |
+| Ruta     | Formato (tipo, presencia, longitud razonable)     |
 | Servicio | Negocio (estado válido, conflictos, autorización) |
-| Storage | Tipo en persistencia (último filtro) |
-| Output | Escape al renderizar (HTML, SQL, shell) |
+| Storage  | Tipo en persistencia (último filtro)              |
+| Output   | Escape al renderizar (HTML, SQL, shell)           |
 
 > Una sola capa de validación = un único punto de fallo. Defensa en profundidad o nada.
 
 ### 🧪 Demo 1 — Auditar validación de entrada en Notebox
 
-- **Objetivo:** identificar entradas sin validar y proponer fixes priorizados.
-- **Setup:** `git checkout tema-16/inicio`, `npm test` verde.
+* **Objetivo:** identificar entradas sin validar y proponer fixes priorizados.
+* **Setup:** `git checkout tema-16/inicio`, `npm test` verde.
 
 **Prompt literal:**
 
@@ -54,9 +49,9 @@ Ordenado por severidad. No incluyas riesgos genéricos.
 
 **Qué observar:**
 
-- Claude cita rutas y líneas concretas, no categorías generales.
-- Los riesgos están priorizados, no listados en bloque.
-- El fix propuesto es mínimo y aplicable.
+* Claude cita rutas y líneas concretas, no categorías generales.
+* Los riesgos están priorizados, no listados en bloque.
+* El fix propuesto es mínimo y aplicable.
 
 ### 🧩 Ejercicio 1 — Auditar validación de inputs
 
@@ -68,11 +63,11 @@ Audita las entradas HTTP del repo y entrega una tabla con 5 problemas ordenados 
 
 Patrones a buscar:
 
-- Tokens en URLs (acaban en logs).
-- Comparación de tokens con `==` en lugar de comparación constante en tiempo.
-- Sesiones sin expiración.
-- Falta de rate limiting en login.
-- Autorización basada solo en cookie sin verificar identidad en cada request.
+* Tokens en URLs (acaban en logs).
+* Comparación de tokens con `==` en lugar de comparación constante en tiempo.
+* Sesiones sin expiración.
+* Falta de rate limiting en login.
+* Autorización basada solo en cookie sin verificar identidad en cada request.
 
 > Notebox no tiene auth, pero los patrones aplican igual cuando la añadas. Profundizamos en arquitectura en el [Tema 25](tema-25-arquitectura.md).
 
@@ -80,18 +75,18 @@ Patrones a buscar:
 
 Lugares donde se filtran secretos:
 
-| Sitio | Cómo se filtra |
-|---|---|
-| Logs | `console.log(req.body)` con tokens dentro |
-| Errores devueltos al cliente | Stack traces con paths internos |
-| Commits accidentales | `.env` versionado por error |
-| Variables en código | Hardcoded API keys |
-| URLs de redirect | Tokens en query string |
+| Sitio                        | Cómo se filtra                            |
+| ---------------------------- | ----------------------------------------- |
+| Logs                         | `console.log(req.body)` con tokens dentro |
+| Errores devueltos al cliente | Stack traces con paths internos           |
+| Commits accidentales         | `.env` versionado por error               |
+| Variables en código          | Hardcoded API keys                        |
+| URLs de redirect             | Tokens en query string                    |
 
 ### 🧪 Demo 2 — Detectar exposición de secretos
 
-- **Objetivo:** encontrar puntos donde el repo podría filtrar información sensible.
-- **Setup:** misma rama. Hay secretos plantados (un `.env` con clave, un `console.log` que la imprime).
+* **Objetivo:** encontrar puntos donde el repo podría filtrar información sensible.
+* **Setup:** misma rama. Hay secretos plantados (un `.env` con clave, un `console.log` que la imprime).
 
 **Prompt literal:**
 
@@ -114,9 +109,9 @@ No incluyas hallazgos especulativos sin línea concreta.
 
 **Qué observar:**
 
-- Encuentra `.env` versionado y propone añadirlo a `.gitignore`.
-- Detecta el `console.log` que imprime el body de la request.
-- Distingue entre exposición confirmada y patrón sospechoso.
+* Encuentra `.env` versionado y propone añadirlo a `.gitignore`.
+* Detecta el `console.log` que imprime el body de la request.
+* Distingue entre exposición confirmada y patrón sospechoso.
 
 ### 🧩 Ejercicio 2 — Localizar y mitigar fugas de secretos
 
@@ -128,13 +123,13 @@ Detecta exposiciones reales en el repo (mínimo 3). Por cada una, aplica el fix:
 
 Patrones peligrosos:
 
-| Patrón | Por qué es peligroso |
-|---|---|
-| `child_process.exec(userInput)` | Command injection |
-| `fs.readFile(userPath)` sin sanitizar | Path traversal (`../../etc/passwd`) |
-| `eval(userInput)` o `new Function(userInput)` | Ejecución de código arbitrario |
-| `fetch(userUrl)` sin allowlist | SSRF (acceso a redes internas) |
-| Deserialización de JSON sin validación | Prototype pollution |
+| Patrón                                        | Por qué es peligroso                |
+| --------------------------------------------- | ----------------------------------- |
+| `child_process.exec(userInput)`               | Command injection                   |
+| `fs.readFile(userPath)` sin sanitizar         | Path traversal (`../../etc/passwd`) |
+| `eval(userInput)` o `new Function(userInput)` | Ejecución de código arbitrario      |
+| `fetch(userUrl)` sin allowlist                | SSRF (acceso a redes internas)      |
+| Deserialización de JSON sin validación        | Prototype pollution                 |
 
 > Si tu código recibe **algo del usuario** y lo pasa a alguna de estas funciones, ya tienes una vulnerabilidad pendiente de explotar.
 
@@ -142,11 +137,11 @@ Patrones peligrosos:
 
 Preguntas antes de añadir una dependencia:
 
-- ¿Quién la mantiene? ¿Una persona o un equipo?
-- ¿Cuánto tiempo entre commits recientes?
-- ¿Cuántas dependencias transitivas arrastra?
-- ¿Está auditada (`npm audit`)?
-- ¿La necesitas o estás reemplazando 5 líneas de stdlib?
+* ¿Quién la mantiene? ¿Una persona o un equipo?
+* ¿Cuánto tiempo entre commits recientes?
+* ¿Cuántas dependencias transitivas arrastra?
+* ¿Está auditada (`npm audit`)?
+* ¿La necesitas o estás reemplazando 5 líneas de stdlib?
 
 > Cada dependencia es código que ejecutas con permisos de tu proyecto. Trátala como código del equipo, no como "magia gratis".
 
@@ -154,18 +149,18 @@ Preguntas antes de añadir una dependencia:
 
 OWASP Top 10 traducido a Notebox:
 
-| OWASP | Pregunta concreta para Claude |
-|---|---|
-| A01 Broken Access Control | "¿Hay endpoints donde el ID se acepta sin verificar ownership?" |
-| A03 Injection | "¿Hay queries o comandos construidos por concatenación de inputs?" |
-| A05 Security Misconfiguration | "¿`.env` está versionado? ¿Modo debug en producción?" |
-| A07 Auth Failures | "¿Hay endpoints sin autenticación que deberían tenerla?" |
-| A09 Logging Failures | "¿Hay eventos relevantes (login, archive) sin loguear?" |
+| OWASP                         | Pregunta concreta para Claude                                      |
+| ----------------------------- | ------------------------------------------------------------------ |
+| A01 Broken Access Control     | "¿Hay endpoints donde el ID se acepta sin verificar ownership?"    |
+| A03 Injection                 | "¿Hay queries o comandos construidos por concatenación de inputs?" |
+| A05 Security Misconfiguration | "¿`.env` está versionado? ¿Modo debug en producción?"              |
+| A07 Auth Failures             | "¿Hay endpoints sin autenticación que deberían tenerla?"           |
+| A09 Logging Failures          | "¿Hay eventos relevantes (login, archive) sin loguear?"            |
 
 ### 🧪 Demo 3 — Revisión OWASP de un endpoint
 
-- **Objetivo:** revisar un endpoint con criterios OWASP específicos.
-- **Setup:** misma rama. Endpoint `POST /notes` con problemas.
+* **Objetivo:** revisar un endpoint con criterios OWASP específicos.
+* **Setup:** misma rama. Endpoint `POST /notes` con problemas.
 
 **Prompt literal:**
 
@@ -187,9 +182,9 @@ Por cada OWASP: hallazgo (sí/no/parcial), evidencia, fix.
 
 **Qué observar:**
 
-- Claude responde por OWASP, no en bloque.
-- Cuando no aplica, dice "no aplica" en vez de inventar.
-- Los fixes son específicos al endpoint.
+* Claude responde por OWASP, no en bloque.
+* Cuando no aplica, dice "no aplica" en vez de inventar.
+* Los fixes son específicos al endpoint.
 
 ### 🧩 Ejercicio 3 — Revisión OWASP de un endpoint problemático
 
@@ -209,9 +204,9 @@ app.use(rateLimit({ windowMs: 60_000, max: 100 }));
 
 Para tokens:
 
-- **Httponly + Secure + SameSite** en cookies de sesión.
-- **Expiración corta** (acceso) + **refresh largo** (rotable).
-- **Revocación posible** (lista negra de tokens revocados, o tokens de corta vida).
+* **Httponly + Secure + SameSite** en cookies de sesión.
+* **Expiración corta** (acceso) + **refresh largo** (rotable).
+* **Revocación posible** (lista negra de tokens revocados, o tokens de corta vida).
 
 ## 8. Revisión de errores que revelan información sensible al cliente
 
@@ -234,11 +229,11 @@ Antipatrones de respuestas de error:
 
 Antes de mergear cualquier PR que toque inputs, auth, almacenamiento o configuración:
 
-- [ ] ¿Hay tests nuevos para casos maliciosos (no solo camino feliz)?
-- [ ] ¿`npm audit` no introduce nuevas vulnerabilidades?
-- [ ] ¿Los errores no revelan info interna?
-- [ ] ¿Los logs no contienen secretos?
-- [ ] ¿La revisión OWASP del nuevo código se hizo?
+* [ ] ¿Hay tests nuevos para casos maliciosos (no solo camino feliz)?
+* [ ] ¿`npm audit` no introduce nuevas vulnerabilidades?
+* [ ] ¿Los errores no revelan info interna?
+* [ ] ¿Los logs no contienen secretos?
+* [ ] ¿La revisión OWASP del nuevo código se hizo?
 
 > Esto es trabajo del autor del PR, no del reviewer. Si llega al reviewer sin esta lista, vuelve al autor.
 
@@ -246,15 +241,15 @@ Antes de mergear cualquier PR que toque inputs, auth, almacenamiento o configura
 
 Lo que Claude hace bien:
 
-- Detectar patrones inseguros conocidos.
-- Recordar el OWASP Top 10 sin equivocarse.
-- Generar tests con inputs maliciosos.
+* Detectar patrones inseguros conocidos.
+* Recordar el OWASP Top 10 sin equivocarse.
+* Generar tests con inputs maliciosos.
 
 Lo que Claude no puede hacer:
 
-- Decidir si el riesgo residual es aceptable para tu producto.
-- Conocer las amenazas específicas de tu sector (fintech, salud, defensa).
-- Evaluar el impacto reputacional de un incidente.
+* Decidir si el riesgo residual es aceptable para tu producto.
+* Conocer las amenazas específicas de tu sector (fintech, salud, defensa).
+* Evaluar el impacto reputacional de un incidente.
 
 > La seguridad es decisión humana respaldada por análisis técnico. Claude aporta el análisis. La decisión la firmas tú.
 
@@ -262,8 +257,8 @@ Lo que Claude no puede hacer:
 
 ## Resumen
 
-- Defensa en profundidad: validación en cada capa, no en una sola.
-- Toda entrada del exterior es maliciosa hasta probar lo contrario.
-- Logs y mensajes de error son vías de exfiltración. Vigílalos.
-- OWASP Top 10 traducido a tus endpoints concretos, no genérico.
-- Claude detecta patrones. Tú decides qué riesgo es aceptable.
+* Defensa en profundidad: validación en cada capa, no en una sola.
+* Toda entrada del exterior es maliciosa hasta probar lo contrario.
+* Logs y mensajes de error son vías de exfiltración. Vigílalos.
+* OWASP Top 10 traducido a tus endpoints concretos, no genérico.
+* Claude detecta patrones. Tú decides qué riesgo es aceptable.

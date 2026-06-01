@@ -30,7 +30,7 @@
 * [Tema 23 — Docker, entornos reproducibles y troubleshooting](tema-23-docker.md)
 * [Tema 24 — DevOps, CI/CD, pipelines y automatización del ciclo de entrega](tema-24-devops.md)
 * [Tema 25 — Arquitectura, diseño de software, patrones y decisiones técnicas asistidas por IA](tema-25-arquitectura.md)
-* [Tema 26 — Trabajo en equipo, estándares compartidos y gobierno de uso de Claude Code en organizaciones](tema-26-equipo.md)
+* [Tema 26 — Trabajo en equipo, estándares compartidos y gobierno de uso de Claude Code en organizacion](tema-26-equipo.md)
 
 ## Recursos
 

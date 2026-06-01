@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 15 — Revisión de código y análisis de pull requests
 
-# Tema 15 — Revisión de código, pull requests y análisis de cambios con foco en calidad, mantenibilidad y riesgo
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -17,20 +12,20 @@ Usar Claude Code como co-piloto de revisión: leer diffs con criterio del proyec
 
 El primer barrido de un PR no es leer línea a línea. Es contestar:
 
-| Pregunta | Cómo se contesta |
-|---|---|
-| ¿Qué archivos toca? | `git diff --stat main...HEAD` |
-| ¿Hay cambios fuera del scope anunciado? | Comparar con la descripción del PR |
-| ¿Aparecen archivos sensibles? (`migrations/`, `auth/`, `payments/`) | Grep en la lista de archivos |
-| ¿Hay borrados grandes no justificados? | `git diff --stat | sort -k 3 -n` |
-| ¿Hay binarios o lockfiles nuevos? | Listar archivos no de código |
+| Pregunta                                                            | Cómo se contesta                   |
+| ------------------------------------------------------------------- | ---------------------------------- |
+| ¿Qué archivos toca?                                                 | `git diff --stat main...HEAD`      |
+| ¿Hay cambios fuera del scope anunciado?                             | Comparar con la descripción del PR |
+| ¿Aparecen archivos sensibles? (`migrations/`, `auth/`, `payments/`) | Grep en la lista de archivos       |
+| ¿Hay borrados grandes no justificados?                              | \`git diff --stat                  |
+| ¿Hay binarios o lockfiles nuevos?                                   | Listar archivos no de código       |
 
 > Si el diff toca algo que no esperabas según la descripción, **antes de leer línea a línea, pregunta por qué**.
 
 ### 🧪 Demo 1 — Resumen y priorización del PR
 
-- **Objetivo:** Claude propone los 3 puntos más riesgosos del PR para mirar primero.
-- **Setup:** `git checkout tema-15/inicio`, PR no trivial cargado en una rama local (la rama tiene cambios documentados).
+* **Objetivo:** Claude propone los 3 puntos más riesgosos del PR para mirar primero.
+* **Setup:** `git checkout tema-15/inicio`, PR no trivial cargado en una rama local (la rama tiene cambios documentados).
 
 **Prompt literal:**
 
@@ -42,9 +37,9 @@ Cita rutas y líneas para cada riesgo.
 
 **Qué observar:**
 
-- Claude lee el diff entero antes de resumir.
-- "Arriesgado" se justifica con criterios verificables: cambio de contrato, falta de tests, capa crítica, etc.
-- Las rutas y líneas citadas existen.
+* Claude lee el diff entero antes de resumir.
+* "Arriesgado" se justifica con criterios verificables: cambio de contrato, falta de tests, capa crítica, etc.
+* Las rutas y líneas citadas existen.
 
 ### 🧩 Ejercicio 1 — Revisar un diff con criterio del proyecto
 
@@ -56,10 +51,10 @@ Sobre un PR plantado en el repo, lanza el prompt de revisión y entrega: 5 punto
 
 Las normas no obvias del repo (las que viven en `CLAUDE.md`, `.claude/rules/` o solo en el código):
 
-- Validación en service, no en ruta.
-- Errores semánticos de dominio, no `Error` genérico.
-- Tests con `node --test`.
-- No mockear el storage en unit tests del service.
+* Validación en service, no en ruta.
+* Errores semánticos de dominio, no `Error` genérico.
+* Tests con `node --test`.
+* No mockear el storage en unit tests del service.
 
 Pregunta a Claude:
 
@@ -74,10 +69,10 @@ Para cada infracción: archivo, línea, regla violada, propuesta de fix.
 
 Un PR puede pasar tests, cumplir todas las reglas y aún así dejar el repo peor. Señales:
 
-- Duplica un patrón ya existente en otro sitio (sin justificación).
-- Introduce una abstracción de un solo uso ("por si acaso").
-- Borra un test "porque ya no aplica" sin explicar por qué.
-- Añade un parámetro opcional para evitar un breaking change que debía hacerse.
+* Duplica un patrón ya existente en otro sitio (sin justificación).
+* Introduce una abstracción de un solo uso ("por si acaso").
+* Borra un test "porque ya no aplica" sin explicar por qué.
+* Añade un parámetro opcional para evitar un breaking change que debía hacerse.
 
 > Pregunta al PR: ¿el código del repo está mejor o peor después de mergear esto?
 
@@ -85,11 +80,11 @@ Un PR puede pasar tests, cumplir todas las reglas y aún así dejar el repo peor
 
 Métricas baratas que Claude puede calcular:
 
-| Métrica | Umbral típico |
-|---|---|
-| Líneas cambiadas por archivo | > 200 → pedir split |
-| Profundidad de anidación | ≥ 4 → simplificar |
-| Funciones nuevas sin test | > 0 → bloquear |
+| Métrica                             | Umbral típico                   |
+| ----------------------------------- | ------------------------------- |
+| Líneas cambiadas por archivo        | > 200 → pedir split             |
+| Profundidad de anidación            | ≥ 4 → simplificar               |
+| Funciones nuevas sin test           | > 0 → bloquear                  |
 | Imports nuevos a librerías externas | > 0 → justificar en descripción |
 
 Pero la métrica más cara es la legibilidad. Lee 3 funciones del PR sin contexto. Si no entiendes qué hacen por el nombre, no las puedes revisar.
@@ -98,10 +93,10 @@ Pero la métrica más cara es la legibilidad. Lee 3 funciones del PR sin context
 
 Checklist rápido al pasar por cada función nueva o modificada:
 
-- ¿Valida sus inputs? ¿Dónde?
-- ¿Qué pasa si una llamada async falla? ¿Se captura el error?
-- ¿El estado mutable está acotado? ¿Hay race conditions?
-- ¿Los errores que lanza se mapean a respuestas HTTP correctas?
+* ¿Valida sus inputs? ¿Dónde?
+* ¿Qué pasa si una llamada async falla? ¿Se captura el error?
+* ¿El estado mutable está acotado? ¿Hay race conditions?
+* ¿Los errores que lanza se mapean a respuestas HTTP correctas?
 
 > El 80% de los bugs reales que llegan a producción están en uno de estos cuatro sitios. Mira aquí primero.
 
@@ -116,13 +111,12 @@ Por qué importa: <consecuencia concreta, no opinión>
 Sugerencia: <acción específica, no "deberías considerar...">
 ```
 
-Ejemplo malo: *"esto no me gusta, no es muy limpio"*.
-Ejemplo bueno: *"`services/notes.ts:42` — `archive` muta el array original. Si dos requests llegan simultáneas, el segundo verá estado inconsistente. Sugerencia: clonar la nota antes de mutar, como hace `update` en la línea 28."*
+Ejemplo malo: _"esto no me gusta, no es muy limpio"_. Ejemplo bueno: _"`services/notes.ts:42` — `archive` muta el array original. Si dos requests llegan simultáneas, el segundo verá estado inconsistente. Sugerencia: clonar la nota antes de mutar, como hace `update` en la línea 28."_
 
 ### 🧪 Demo 2 — Generar comentarios accionables sobre un PR mal hecho
 
-- **Objetivo:** convertir un diff problemático en 3-4 comentarios procesables.
-- **Setup:** misma rama. PR con problemas conocidos: validación en ruta cuando debería ir en servicio, error genérico en vez de semántico, sin tests.
+* **Objetivo:** convertir un diff problemático en 3-4 comentarios procesables.
+* **Setup:** misma rama. PR con problemas conocidos: validación en ruta cuando debería ir en servicio, error genérico en vez de semántico, sin tests.
 
 **Prompt literal:**
 
@@ -146,9 +140,9 @@ Bloques markdown citables directamente en GitHub/GitLab.
 
 **Qué observar:**
 
-- Cada comentario es accionable: alguien puede aplicar la sugerencia tal cual.
-- La justificación cita la regla violada, no opinión.
-- Tres comentarios pequeños valen más que uno gigante.
+* Cada comentario es accionable: alguien puede aplicar la sugerencia tal cual.
+* La justificación cita la regla violada, no opinión.
+* Tres comentarios pequeños valen más que uno gigante.
 
 ### 🧩 Ejercicio 2 — Comentarios accionables sobre cambios reales
 
@@ -177,11 +171,11 @@ Estructura:
 
 Audiencias distintas, resúmenes distintos:
 
-| Audiencia | Qué quiere ver |
-|---|---|
-| Reviewer técnico | Archivos tocados, riesgos, tests añadidos |
-| Manager técnico | Qué resuelve, qué desbloquea, qué deja pendiente |
-| QA | Casos a verificar manualmente, regresiones potenciales |
+| Audiencia        | Qué quiere ver                                         |
+| ---------------- | ------------------------------------------------------ |
+| Reviewer técnico | Archivos tocados, riesgos, tests añadidos              |
+| Manager técnico  | Qué resuelve, qué desbloquea, qué deja pendiente       |
+| QA               | Casos a verificar manualmente, regresiones potenciales |
 
 Claude puede generar las tres versiones desde el mismo diff con prompts distintos.
 
@@ -189,18 +183,18 @@ Claude puede generar las tres versiones desde el mismo diff con prompts distinto
 
 Donde encaja Claude en el flujo de PR:
 
-| Fase | Quién | Qué hace |
-|---|---|---|
-| Antes de pedir review | Autor | Pide a Claude resumen + descripción de PR |
-| Revisión inicial | Reviewer humano | Lee resumen, marca 2-3 zonas a mirar |
-| Lectura asistida | Reviewer + Claude | Pide explicaciones puntuales sobre las zonas marcadas |
-| Comentarios | Reviewer | Decide qué pedir (Claude propone, humano firma) |
-| Iteración | Autor | Aplica cambios, vuelve a pedir resumen al cierre |
+| Fase                  | Quién             | Qué hace                                              |
+| --------------------- | ----------------- | ----------------------------------------------------- |
+| Antes de pedir review | Autor             | Pide a Claude resumen + descripción de PR             |
+| Revisión inicial      | Reviewer humano   | Lee resumen, marca 2-3 zonas a mirar                  |
+| Lectura asistida      | Reviewer + Claude | Pide explicaciones puntuales sobre las zonas marcadas |
+| Comentarios           | Reviewer          | Decide qué pedir (Claude propone, humano firma)       |
+| Iteración             | Autor             | Aplica cambios, vuelve a pedir resumen al cierre      |
 
 ### 🧪 Demo 3 — Descripción de PR para el cambio del Ejercicio 2
 
-- **Objetivo:** producir la descripción de PR que acompañaría al cambio que se está revisando.
-- **Setup:** misma rama.
+* **Objetivo:** producir la descripción de PR que acompañaría al cambio que se está revisando.
+* **Setup:** misma rama.
 
 **Prompt literal:**
 
@@ -217,9 +211,9 @@ Máximo 200 palabras.
 
 **Qué observar:**
 
-- La descripción es revisable en menos de 2 minutos.
-- "Fuera del scope" preempta comentarios redundantes.
-- Los comandos de verificación son ejecutables.
+* La descripción es revisable en menos de 2 minutos.
+* "Fuera del scope" preempta comentarios redundantes.
+* Los comandos de verificación son ejecutables.
 
 ### 🧩 Ejercicio 3 — Preparar descripción del PR propio
 
@@ -231,10 +225,10 @@ Genera la descripción del PR que acompañe a un cambio plantado en el repo. La 
 
 Claude **no** puede juzgar:
 
-- Si una decisión de arquitectura encaja con la dirección del producto.
-- Si el cambio respeta acuerdos verbales del equipo no escritos.
-- Si el código rompe contratos implícitos con otros equipos.
-- Si la persona que envió el PR está estresada/sobrecargada — y el feedback debe adaptarse a eso.
+* Si una decisión de arquitectura encaja con la dirección del producto.
+* Si el cambio respeta acuerdos verbales del equipo no escritos.
+* Si el código rompe contratos implícitos con otros equipos.
+* Si la persona que envió el PR está estresada/sobrecargada — y el feedback debe adaptarse a eso.
 
 > Lo que Claude propone es texto. Lo que tú firmas son decisiones. La distinción no se delega.
 
@@ -242,8 +236,8 @@ Claude **no** puede juzgar:
 
 ## Resumen
 
-- Primer barrido del PR: archivos tocados, scope, sensibilidades. Después leer línea a línea.
-- Comentarios accionables: ubicación, observación, por qué, sugerencia. Nada de "no me gusta".
-- Las normas del repo (CLAUDE.md, rules) son tu apalancamiento — sin ellas la revisión es opinión.
-- Descripción del PR con "fuera del scope" preempta el 50% de comentarios redundantes.
-- Claude lee rápido lo grande. Tú firmas las decisiones.
+* Primer barrido del PR: archivos tocados, scope, sensibilidades. Después leer línea a línea.
+* Comentarios accionables: ubicación, observación, por qué, sugerencia. Nada de "no me gusta".
+* Las normas del repo (CLAUDE.md, rules) son tu apalancamiento — sin ellas la revisión es opinión.
+* Descripción del PR con "fuera del scope" preempta el 50% de comentarios redundantes.
+* Claude lee rápido lo grande. Tú firmas las decisiones.

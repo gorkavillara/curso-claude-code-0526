@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 18 — Git, branching, hotfixes y conflictos
 
-# Tema 18 — Git, branching, commits, hotfixes y resolución de conflictos de código con ayuda de Claude Code
-
-> **Duración estimada:** ~60 min
-> **Tipo:** práctico — alumnos delante del teclado
+> **Duración estimada:** \~60 min **Tipo:** práctico — alumnos delante del teclado
 
 ## Objetivo del tema
 
@@ -35,8 +30,8 @@ rama remota reciente que parezca related al bug que voy a tocar.
 
 ### 🧪 Demo 1 — Preparar un hotfix acotado
 
-- **Objetivo:** crear una rama de hotfix, aplicar un fix mínimo y dejar todo listo para PR.
-- **Setup:** `git checkout main`. Bug reportado: `searchNotes("MAÑANA")` devuelve vacío con un title "Mañana".
+* **Objetivo:** crear una rama de hotfix, aplicar un fix mínimo y dejar todo listo para PR.
+* **Setup:** `git checkout main`. Bug reportado: `searchNotes("MAÑANA")` devuelve vacío con un title "Mañana".
 
 **Prompt literal:**
 
@@ -60,9 +55,9 @@ Prepara un hotfix:
 
 **Qué observar:**
 
-- Claude crea la rama desde main, no desde la rama actual.
-- El fix es mínimo: solo lo que cubre el bug.
-- El commit message es escaneable: `fix(search): normalize query and title for case/accents`.
+* Claude crea la rama desde main, no desde la rama actual.
+* El fix es mínimo: solo lo que cubre el bug.
+* El commit message es escaneable: `fix(search): normalize query and title for case/accents`.
 
 ### 🧩 Ejercicio 1 — Hotfix sobre un bug crítico
 
@@ -74,10 +69,10 @@ Recibes un bug crítico documentado en el `EJERCICIO.md`. Prepara la rama de hot
 
 Reglas no negociables para hotfix:
 
-- **Rama desde el commit de producción**, no desde main si main ya tiene cambios no desplegados.
-- **Una sola intención por rama.** Si descubres otro bug, otra rama.
-- **Tests primero** (regresión) — el fix llega después.
-- **Revertible:** un único commit que se pueda `git revert` sin efectos colaterales.
+* **Rama desde el commit de producción**, no desde main si main ya tiene cambios no desplegados.
+* **Una sola intención por rama.** Si descubres otro bug, otra rama.
+* **Tests primero** (regresión) — el fix llega después.
+* **Revertible:** un único commit que se pueda `git revert` sin efectos colaterales.
 
 > Hotfix con scope expandido = hotfix que rompe producción dos veces.
 
@@ -95,15 +90,15 @@ Un commit message útil:
 
 Tipos comunes (Conventional Commits):
 
-| Tipo | Cuándo |
-|---|---|
-| `feat` | Nueva funcionalidad visible |
-| `fix` | Corrección de bug |
+| Tipo       | Cuándo                                    |
+| ---------- | ----------------------------------------- |
+| `feat`     | Nueva funcionalidad visible               |
+| `fix`      | Corrección de bug                         |
 | `refactor` | Cambio interno sin alterar comportamiento |
-| `perf` | Mejora de rendimiento |
-| `test` | Añadir o arreglar tests |
-| `docs` | Solo documentación |
-| `chore` | Tareas de mantenimiento (deps, configs) |
+| `perf`     | Mejora de rendimiento                     |
+| `test`     | Añadir o arreglar tests                   |
+| `docs`     | Solo documentación                        |
+| `chore`    | Tareas de mantenimiento (deps, configs)   |
 
 > "Mejoras varias" no es un commit message. Si necesitas más de una frase para el qué, son dos commits.
 
@@ -111,10 +106,10 @@ Tipos comunes (Conventional Commits):
 
 Hay dos tipos de conflictos:
 
-| Tipo | Cómo se detecta | Cómo se resuelve |
-|---|---|---|
-| **Sintáctico** | Git marca `<<<<<<<` | Eligiendo qué mantener |
-| **Semántico** | Tests pasan en ambas ramas, fallan al mergear | Razonamiento humano |
+| Tipo           | Cómo se detecta                               | Cómo se resuelve       |
+| -------------- | --------------------------------------------- | ---------------------- |
+| **Sintáctico** | Git marca `<<<<<<<`                           | Eligiendo qué mantener |
+| **Semántico**  | Tests pasan en ambas ramas, fallan al mergear | Razonamiento humano    |
 
 Los segundos son los peligrosos. Pídele a Claude que los busque:
 
@@ -153,8 +148,8 @@ Resúmeme:
 
 ### 🧪 Demo 2 — Resolver un conflicto de merge con criterio
 
-- **Objetivo:** resolver un conflicto donde la resolución mecánica falla.
-- **Setup:** rama `tema-18/inicio`. Tras `git merge feature/normalize-search` aparece conflicto en `src/search/index.ts`.
+* **Objetivo:** resolver un conflicto donde la resolución mecánica falla.
+* **Setup:** rama `tema-18/inicio`. Tras `git merge feature/normalize-search` aparece conflicto en `src/search/index.ts`.
 
 **Prompt literal:**
 
@@ -176,9 +171,9 @@ por qué cada bloque debe quedar como queda.
 
 **Qué observar:**
 
-- Claude analiza intenciones antes de proponer el merge.
-- Identifica que ambos cambios pueden coexistir (no son mutuamente excluyentes).
-- Propone un test que verifica que ambas intenciones siguen vivas.
+* Claude analiza intenciones antes de proponer el merge.
+* Identifica que ambos cambios pueden coexistir (no son mutuamente excluyentes).
+* Propone un test que verifica que ambas intenciones siguen vivas.
 
 ### 🧩 Ejercicio 2 — Resolver conflictos con criterio
 
@@ -205,12 +200,12 @@ Estoy retomando la rama `wip/auth-refactor`. Resúmeme:
 
 Comandos de sesión de Claude Code relevantes para Git:
 
-| Comando | Para qué |
-|---|---|
-| `/rewind` | Volver atrás varios mensajes en la sesión actual sin perder el contexto del repo |
-| `/resume` | Retomar una sesión previa (útil tras cierre accidental) |
-| `claude --continue` | Continuar la última sesión desde la CLI |
-| `claude --resume <id>` | Retomar una sesión específica |
+| Comando                | Para qué                                                                         |
+| ---------------------- | -------------------------------------------------------------------------------- |
+| `/rewind`              | Volver atrás varios mensajes en la sesión actual sin perder el contexto del repo |
+| `/resume`              | Retomar una sesión previa (útil tras cierre accidental)                          |
+| `claude --continue`    | Continuar la última sesión desde la CLI                                          |
+| `claude --resume <id>` | Retomar una sesión específica                                                    |
 
 Profundizamos en CLI avanzada y sesiones en el [Tema 22](tema-22-cli-avanzada.md).
 
@@ -218,14 +213,14 @@ Profundizamos en CLI avanzada y sesiones en el [Tema 22](tema-22-cli-avanzada.md
 
 Ver patrón completo en el [Tema 15](tema-15-code-review.md). Lo específico para PRs con cambios de Git:
 
-- Si hay cambios en historial (rebase, squash), **explícalo**. Reviewers ven menos commits.
-- Si hay reverts, enlazar el commit revertido.
-- Si la rama parte de un commit no-main (otra rama de feature), aclararlo.
+* Si hay cambios en historial (rebase, squash), **explícalo**. Reviewers ven menos commits.
+* Si hay reverts, enlazar el commit revertido.
+* Si la rama parte de un commit no-main (otra rama de feature), aclararlo.
 
 ### 🧪 Demo 3 — PR con commits limpios
 
-- **Objetivo:** preparar una rama con commits coherentes y un PR auditable.
-- **Setup:** rama con commits intermedios desordenados.
+* **Objetivo:** preparar una rama con commits coherentes y un PR auditable.
+* **Setup:** rama con commits intermedios desordenados.
 
 **Prompt literal:**
 
@@ -248,9 +243,9 @@ Propón cómo reorganizarlos:
 
 **Qué observar:**
 
-- Claude propone agrupación lógica, no por proximidad temporal.
-- Los mensajes finales son escaneables.
-- Los comandos `git rebase -i` son correctos.
+* Claude propone agrupación lógica, no por proximidad temporal.
+* Los mensajes finales son escaneables.
+* Los comandos `git rebase -i` son correctos.
 
 ### 🧩 Ejercicio 3 — PR con commits limpios
 
@@ -262,26 +257,26 @@ Recibe una rama con commits desordenados. Reorganízalos en 2-3 commits coherent
 
 Buenas prácticas con ramas protegidas:
 
-- **Sin push directo a main.** Todo vía PR.
-- **Required reviews.** Mínimo 1, en repos sensibles 2.
-- **CI verde antes de merge.** Sin excepciones manuales salvo emergencia documentada.
-- **Squash o merge commit, no rebase merge:** depende del estilo del repo. Coherencia > preferencia.
-- **Lineal history** vs **merge commits visibles** — decisión del equipo, en ADR (ver [Tema 14](tema-14-documentacion.md)).
+* **Sin push directo a main.** Todo vía PR.
+* **Required reviews.** Mínimo 1, en repos sensibles 2.
+* **CI verde antes de merge.** Sin excepciones manuales salvo emergencia documentada.
+* **Squash o merge commit, no rebase merge:** depende del estilo del repo. Coherencia > preferencia.
+* **Lineal history** vs **merge commits visibles** — decisión del equipo, en ADR (ver [Tema 14](tema-14-documentacion.md)).
 
 ## 10. Buenas prácticas para no convertir la IA en un generador de commits sin juicio
 
 Lo que Claude hace bien:
 
-- **Mensajes de commit en Conventional Commits** a partir del diff.
-- **Descripción de PR** combinada con la descripción del cambio.
-- **Detección de conflictos semánticos** que git no marca.
-- **Reorganización de commits** sin alterar el resultado final.
+* **Mensajes de commit en Conventional Commits** a partir del diff.
+* **Descripción de PR** combinada con la descripción del cambio.
+* **Detección de conflictos semánticos** que git no marca.
+* **Reorganización de commits** sin alterar el resultado final.
 
 Lo que sigue siendo humano:
 
-- Decidir cuándo squash y cuándo no.
-- Decidir si un cambio merece su propia rama o va en la actual.
-- Asumir la responsabilidad del commit firmado.
+* Decidir cuándo squash y cuándo no.
+* Decidir si un cambio merece su propia rama o va en la actual.
+* Asumir la responsabilidad del commit firmado.
 
 > El commit lo firmas tú. Aunque el mensaje lo proponga Claude.
 
@@ -289,8 +284,8 @@ Lo que sigue siendo humano:
 
 ## Resumen
 
-- Hotfix = rama acotada, scope mínimo, revertible con un commit.
-- Conventional Commits no es preferencia: es protocolo legible automatizable.
-- Conflictos semánticos son los caros — no los marca git, los detecta tu cabeza (o Claude si se lo pides).
-- Resolución mecánica de conflictos = pérdida de cambios. Razona la intención de cada lado.
-- Una rama de 3 meses suele ser deuda no priorizada. La pregunta es si compensa retomarla.
+* Hotfix = rama acotada, scope mínimo, revertible con un commit.
+* Conventional Commits no es preferencia: es protocolo legible automatizable.
+* Conflictos semánticos son los caros — no los marca git, los detecta tu cabeza (o Claude si se lo pides).
+* Resolución mecánica de conflictos = pérdida de cambios. Razona la intención de cada lado.
+* Una rama de 3 meses suele ser deuda no priorizada. La pregunta es si compensa retomarla.
