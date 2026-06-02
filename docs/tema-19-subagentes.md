@@ -1,11 +1,6 @@
----
-hidden: true
----
+# Tema 19 — Subagentes, especialización de roles y trabajo distribuido
 
-# Tema 19 — Subagentes, especialización de roles y trabajo distribuido dentro de Claude Code
-
-> **Duración estimada:** ~90 min
-> **Tipo:** conceptual + demos guiadas
+> **Duración estimada:** \~90 min **Tipo:** conceptual + demos guiadas
 
 ## Objetivo del tema
 
@@ -17,12 +12,12 @@ Diseñar subagentes con rol acotado para tareas largas o de dominio (review, tes
 
 Un **subagente** es un agente especializado que vive junto a Claude Code y que se invoca para un tipo de tarea concreto. No es un Claude paralelo: es una **definición de rol** (system prompt + restricciones + herramientas permitidas) que el agente principal delega cuando detecta que toca esa tarea.
 
-| Agente principal | Subagente |
-|---|---|
-| Sesión interactiva con el desarrollador | Rol fijo, invocable bajo demanda |
+| Agente principal                                | Subagente                                          |
+| ----------------------------------------------- | -------------------------------------------------- |
+| Sesión interactiva con el desarrollador         | Rol fijo, invocable bajo demanda                   |
 | Tiene acceso a todo el repo y a todas las tools | Tiene **solo** las tools que su definición permite |
-| Memoria de la sesión actual | Auto memory propia y aislada por invocación |
-| Sirve para tareas abiertas | Sirve para tareas repetibles y delimitadas |
+| Memoria de la sesión actual                     | Auto memory propia y aislada por invocación        |
+| Sirve para tareas abiertas                      | Sirve para tareas repetibles y delimitadas         |
 
 > Un subagente no es "Claude más listo". Es **Claude con menos margen para improvisar** y más contexto del dominio que le toca.
 
@@ -41,8 +36,8 @@ tools: Read, Grep, Glob, Bash(git diff:*), Bash(git log:*)
 
 ### 🧪 Demo 1 — Invocar un subagente plantado para revisar código existente
 
-- **Objetivo:** ver cómo el agente principal delega en un subagente especializado y qué cambia respecto a pedirlo "a pelo".
-- **Setup:** rama `tema-19/inicio` (Notebox con un `.claude/agents/code-reviewer.md` ya plantado). El archivo `src/services/notes.ts` tiene las funciones `archive` y `unarchive` con if/else anidados que claman refactor.
+* **Objetivo:** ver cómo el agente principal delega en un subagente especializado y qué cambia respecto a pedirlo "a pelo".
+* **Setup:** rama `tema-19/inicio` (Notebox con un `.claude/agents/code-reviewer.md` ya plantado). El archivo `src/services/notes.ts` tiene las funciones `archive` y `unarchive` con if/else anidados que claman refactor.
 
 **Prompt literal:**
 
@@ -55,10 +50,10 @@ severidad y propuesta concreta. No edites nada todavía.
 
 **Qué observar:**
 
-- El agente principal **anuncia** que delega en `code-reviewer` (lo verás en la cabecera del turno).
-- El subagente responde **en el formato definido en su frontmatter / system prompt** (`.claude/agents/code-reviewer.md`): tabla de hallazgos, severidad, propuesta.
-- Solo usa `Read` / `Grep` / `Glob` — no edita ni ejecuta tests. Está restringido.
-- Comparado con un `revísame esto` genérico, el output es **predecible** y **comparable** entre PRs.
+* El agente principal **anuncia** que delega en `code-reviewer` (lo verás en la cabecera del turno).
+* El subagente responde **en el formato definido en su frontmatter / system prompt** (`.claude/agents/code-reviewer.md`): tabla de hallazgos, severidad, propuesta.
+* Solo usa `Read` / `Grep` / `Glob` — no edita ni ejecuta tests. Está restringido.
+* Comparado con un `revísame esto` genérico, el output es **predecible** y **comparable** entre PRs.
 
 ### 🧩 Ejercicio 1 — Revisar con un subagente plantado
 
@@ -66,19 +61,19 @@ severidad y propuesta concreta. No edites nada todavía.
 
 Usa el subagente `code-reviewer` plantado en el repo para auditar `src/services/notes.ts`. Anota qué hallazgos detecta el subagente que se te habrían escapado en una review "a pelo" y rellena el formato de salida con tus propias notas.
 
----
+***
 
 ## 2. Cuándo conviene usar un subagente revisor, arquitecto o tester especializado
 
 Tres arquetipos útiles, con criterio de cuándo activarlos:
 
-| Subagente | Cuándo lo invocas | Cuándo NO |
-|---|---|---|
-| **Revisor** (`code-reviewer`) | PRs internos, diffs grandes, checklist de equipo siempre el mismo | Cambio de 1 línea evidente |
-| **Arquitecto** (`architect`) | Decisiones de stack, contratos públicos, ADR | Implementación táctica del día a día |
-| **Tester** (`test-coverage-auditor`) | Diseñar suite nueva, auditar cobertura semántica, detectar tests frágiles | Añadir un test aislado a una función nueva |
-| **Documentador** (`docs-writer`) | JSDoc / TSdoc masivo, README de un módulo, ADR a partir de un diff | Comentario inline puntual |
-| **Auditor de seguridad** (`security-auditor`) | Endpoints nuevos, dependencias añadidas, código con I/O o auth | Cambio cosmético de UI |
+| Subagente                                     | Cuándo lo invocas                                                         | Cuándo NO                                  |
+| --------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------ |
+| **Revisor** (`code-reviewer`)                 | PRs internos, diffs grandes, checklist de equipo siempre el mismo         | Cambio de 1 línea evidente                 |
+| **Arquitecto** (`architect`)                  | Decisiones de stack, contratos públicos, ADR                              | Implementación táctica del día a día       |
+| **Tester** (`test-coverage-auditor`)          | Diseñar suite nueva, auditar cobertura semántica, detectar tests frágiles | Añadir un test aislado a una función nueva |
+| **Documentador** (`docs-writer`)              | JSDoc / TSdoc masivo, README de un módulo, ADR a partir de un diff        | Comentario inline puntual                  |
+| **Auditor de seguridad** (`security-auditor`) | Endpoints nuevos, dependencias añadidas, código con I/O o auth            | Cambio cosmético de UI                     |
 
 > Un subagente compensa cuando la tarea se repite **≥3 veces al mes** y tiene un **formato de salida estable**. Si lo invocarías una vez al año, sobra.
 
@@ -86,16 +81,16 @@ Tres arquetipos útiles, con criterio de cuándo activarlos:
 
 Dos scopes, dos propósitos:
 
-| Scope | Ubicación | Cuándo |
-|---|---|---|
-| **Usuario** | `~/.claude/agents/<nombre>.md` | Tu manera de revisar PRs, tu estilo de tests. Te acompaña entre repos. |
-| **Proyecto** | `<repo>/.claude/agents/<nombre>.md` | Convenciones del equipo. Versionados en git. Comprobados en review. |
+| Scope        | Ubicación                           | Cuándo                                                                 |
+| ------------ | ----------------------------------- | ---------------------------------------------------------------------- |
+| **Usuario**  | `~/.claude/agents/<nombre>.md`      | Tu manera de revisar PRs, tu estilo de tests. Te acompaña entre repos. |
+| **Proyecto** | `<repo>/.claude/agents/<nombre>.md` | Convenciones del equipo. Versionados en git. Comprobados en review.    |
 
 Reglas mentales:
 
-- **Si el subagente refleja las reglas del equipo, va en el repo.** Que entre por PR como cualquier otro cambio.
-- **Si refleja tu hábito personal**, va en `~/.claude/agents/`.
-- **Si dos developers necesitan el mismo subagente**, deja de ser personal: súbelo al repo.
+* **Si el subagente refleja las reglas del equipo, va en el repo.** Que entre por PR como cualquier otro cambio.
+* **Si refleja tu hábito personal**, va en `~/.claude/agents/`.
+* **Si dos developers necesitan el mismo subagente**, deja de ser personal: súbelo al repo.
 
 > Un subagente en `~/.claude/agents/` que nadie más del equipo tiene es invisible para el resto. Si te ayuda tanto que lo invocas a diario, el equipo merece tenerlo también.
 
@@ -103,19 +98,19 @@ Reglas mentales:
 
 La restricción de tools es **el corazón del diseño** de un subagente. Decide qué puede y qué no puede hacer.
 
-| Tipo de subagente | Tools típicas | Por qué |
-|---|---|---|
-| Revisor | `Read`, `Grep`, `Glob`, `Bash(git diff:*)`, `Bash(git log:*)` | Solo audita. **No edita ni ejecuta** comandos arbitrarios. |
-| Tester | `Read`, `Grep`, `Glob`, `Edit`, `Write`, `Bash(npm test:*)` | Puede escribir tests y ejecutarlos, pero no modificar `src/`. |
-| Documentador | `Read`, `Grep`, `Glob`, `Edit(*.md)`, `Write(*.md)` | Edita documentación, **no código**. |
-| Auditor de seguridad | `Read`, `Grep`, `Glob`, `Bash(npm audit:*)`, `Bash(git log:*)` | Solo lectura + auditoría. Cero edición. |
+| Tipo de subagente    | Tools típicas                                                  | Por qué                                                       |
+| -------------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
+| Revisor              | `Read`, `Grep`, `Glob`, `Bash(git diff:*)`, `Bash(git log:*)`  | Solo audita. **No edita ni ejecuta** comandos arbitrarios.    |
+| Tester               | `Read`, `Grep`, `Glob`, `Edit`, `Write`, `Bash(npm test:*)`    | Puede escribir tests y ejecutarlos, pero no modificar `src/`. |
+| Documentador         | `Read`, `Grep`, `Glob`, `Edit(*.md)`, `Write(*.md)`            | Edita documentación, **no código**.                           |
+| Auditor de seguridad | `Read`, `Grep`, `Glob`, `Bash(npm audit:*)`, `Bash(git log:*)` | Solo lectura + auditoría. Cero edición.                       |
 
 > Si el subagente necesita "todas las tools", probablemente no es un subagente: es Claude Code con otro system prompt. Y eso aporta poco.
 
 ### 🧪 Demo 2 — Crear un subagente nuevo con tools restringidas
 
-- **Objetivo:** ver el ciclo completo de diseñar, activar y validar un subagente con permisos acotados.
-- **Setup:** rama `tema-19/inicio`. No existe `.claude/agents/docs-writer.md`.
+* **Objetivo:** ver el ciclo completo de diseñar, activar y validar un subagente con permisos acotados.
+* **Setup:** rama `tema-19/inicio`. No existe `.claude/agents/docs-writer.md`.
 
 **Prompt literal:**
 
@@ -133,9 +128,9 @@ que propone.
 
 **Qué observar:**
 
-- El frontmatter YAML lista **exactamente** las tools permitidas — sin `Bash`.
-- Al invocarlo sobre `memory.ts`, el subagente lee, escribe JSDoc, y reporta. **No intenta** ejecutar tests ni `git diff`.
-- Si pides "y ahora corre los tests", el subagente debe rebotar la petición o devolverla al agente principal. Está restringido por diseño.
+* El frontmatter YAML lista **exactamente** las tools permitidas — sin `Bash`.
+* Al invocarlo sobre `memory.ts`, el subagente lee, escribe JSDoc, y reporta. **No intenta** ejecutar tests ni `git diff`.
+* Si pides "y ahora corre los tests", el subagente debe rebotar la petición o devolverla al agente principal. Está restringido por diseño.
 
 ### 🧩 Ejercicio 2 — Diseñar un subagente con tools acotadas
 
@@ -143,17 +138,17 @@ que propone.
 
 Crea un subagente `test-coverage-auditor` a nivel proyecto con tools que **solo le permitan auditar y escribir tests** (no tocar `src/`). Invócalo sobre el módulo `src/services/notes.ts` y verifica que respeta la restricción cuando se le pide editar el código de producción.
 
----
+***
 
 ## 5. Uso de `--agents` para añadir subagentes dinámicamente en sesión
 
 Hay tres formas de tener subagentes activos en una sesión:
 
-| Forma | Sintaxis | Cuándo |
-|---|---|---|
-| **Por archivo** | `.claude/agents/*.md` en el repo o el home | Permanentes, versionados |
+| Forma                      | Sintaxis                                   | Cuándo                                |
+| -------------------------- | ------------------------------------------ | ------------------------------------- |
+| **Por archivo**            | `.claude/agents/*.md` en el repo o el home | Permanentes, versionados              |
 | **Inyectados al arrancar** | `claude --agents path/to/code-reviewer.md` | Ad-hoc, no quieres trackearlo todavía |
-| **Invocación explícita** | "Usa el subagente X para…" en el chat | Activación bajo demanda |
+| **Invocación explícita**   | "Usa el subagente X para…" en el chat      | Activación bajo demanda               |
 
 `--agents` es útil para **probar un subagente antes de versionarlo** o para casos puntuales (auditoría externa, sesión one-off). En cuanto lo uses dos veces, súbelo al repo.
 
@@ -161,9 +156,9 @@ Hay tres formas de tener subagentes activos en una sesión:
 
 Cada subagente tiene su propio cuaderno de notas (auto memory) **aislado** del agente principal y del resto de subagentes.
 
-- **Utilidad:** el `code-reviewer` recuerda los hallazgos sistemáticos del equipo (siempre se nos cuela `console.log`, las validaciones suelen estar en el sitio equivocado).
-- **Riesgo:** acumular ruido. Una auto memory de 500 líneas en un subagente es señal de que está sobredimensionado o de que la memoria no se ha curado.
-- **Buena práctica:** revisar la auto memory de los subagentes del repo en cada release, igual que se revisa el `CLAUDE.md`.
+* **Utilidad:** el `code-reviewer` recuerda los hallazgos sistemáticos del equipo (siempre se nos cuela `console.log`, las validaciones suelen estar en el sitio equivocado).
+* **Riesgo:** acumular ruido. Una auto memory de 500 líneas en un subagente es señal de que está sobredimensionado o de que la memoria no se ha curado.
+* **Buena práctica:** revisar la auto memory de los subagentes del repo en cada release, igual que se revisa el `CLAUDE.md`.
 
 > La auto memory del subagente es **memoria de rol**, no memoria de proyecto. Si el `code-reviewer` recuerda "el módulo `notes` usa Express 4", esa información va en `CLAUDE.md`, no en su memoria.
 
@@ -185,8 +180,8 @@ Cada subagente trabaja en su fase, deja un artefacto (informe, diff, tests nuevo
 
 ### 🧪 Demo 3 — Orquestar dos subagentes en la misma sesión
 
-- **Objetivo:** ver cómo coordinar dos subagentes (`code-reviewer` + `security-auditor`) para auditar un cambio plantado.
-- **Setup:** rama `tema-19/inicio` con ambos subagentes plantados en `.claude/agents/`. El módulo `src/services/notes.ts` tiene la complejidad anidada y un endpoint expuesto en `src/routes/notes.ts`.
+* **Objetivo:** ver cómo coordinar dos subagentes (`code-reviewer` + `security-auditor`) para auditar un cambio plantado.
+* **Setup:** rama `tema-19/inicio` con ambos subagentes plantados en `.claude/agents/`. El módulo `src/services/notes.ts` tiene la complejidad anidada y un endpoint expuesto en `src/routes/notes.ts`.
 
 **Prompt literal:**
 
@@ -205,10 +200,10 @@ de aprobar el cambio. Coordina así:
 
 **Qué observar:**
 
-- El agente principal invoca los subagentes **en orden**, no en paralelo desordenado.
-- Cada subagente produce **su propio informe** con su formato.
-- La consolidación final identifica **qué subagente** detectó cada cosa (auditoría de tu equipo de agentes).
-- Hay hallazgos que solo aparecen porque tienes el rol correcto mirando (el `security-auditor` ve cosas que el `code-reviewer` ignora, y viceversa).
+* El agente principal invoca los subagentes **en orden**, no en paralelo desordenado.
+* Cada subagente produce **su propio informe** con su formato.
+* La consolidación final identifica **qué subagente** detectó cada cosa (auditoría de tu equipo de agentes).
+* Hay hallazgos que solo aparecen porque tienes el rol correcto mirando (el `security-auditor` ve cosas que el `code-reviewer` ignora, y viceversa).
 
 ### 🧩 Ejercicio 3 — Diseñar un equipo de subagentes
 
@@ -220,29 +215,27 @@ Recibes una tarea ambigua: "auditar un endpoint nuevo antes de mergear". Diseña
 
 Tres ejemplos canónicos:
 
-- **`debug-postmortem`** — recibe un stack trace + archivos afectados, produce hipótesis priorizadas y comandos de bisección.
-  - **Tools:** `Read`, `Grep`, `Glob`, `Bash(git log:*)`, `Bash(git bisect:*)`.
-  - **No tools:** `Edit`, `Write` — el postmortem **analiza**, no corrige.
-
-- **`api-docs`** — recibe un archivo de routes y produce documentación OpenAPI / Markdown con ejemplos.
-  - **Tools:** `Read`, `Grep`, `Glob`, `Edit(*.md)`, `Write(*.md)`.
-  - **No tools:** `Edit(src/**)` — no toca código de producción.
-
-- **`security-auditor`** — recibe un cambio (o el repo entero) y produce un informe con hallazgos de seguridad clasificados.
-  - **Tools:** `Read`, `Grep`, `Glob`, `Bash(npm audit:*)`, `Bash(git log:*)`.
-  - **No tools:** ninguna que edite o ejecute código arbitrario.
+* **`debug-postmortem`** — recibe un stack trace + archivos afectados, produce hipótesis priorizadas y comandos de bisección.
+  * **Tools:** `Read`, `Grep`, `Glob`, `Bash(git log:*)`, `Bash(git bisect:*)`.
+  * **No tools:** `Edit`, `Write` — el postmortem **analiza**, no corrige.
+* **`api-docs`** — recibe un archivo de routes y produce documentación OpenAPI / Markdown con ejemplos.
+  * **Tools:** `Read`, `Grep`, `Glob`, `Edit(*.md)`, `Write(*.md)`.
+  * **No tools:** `Edit(src/**)` — no toca código de producción.
+* **`security-auditor`** — recibe un cambio (o el repo entero) y produce un informe con hallazgos de seguridad clasificados.
+  * **Tools:** `Read`, `Grep`, `Glob`, `Bash(npm audit:*)`, `Bash(git log:*)`.
+  * **No tools:** ninguna que edite o ejecute código arbitrario.
 
 > Patrón: **un subagente por intención**. Si un mismo subagente quiere "auditar y arreglar", son dos.
 
 ## 9. Riesgos de sobreorquestación dentro del flujo del desarrollador
 
-| Antipatrón | Síntoma | Coste |
-|---|---|---|
-| **Subagente por cada función** | 14 archivos en `.claude/agents/` | Nadie sabe cuál invocar; ninguno se mantiene. |
-| **Subagente "general"** sin restricciones | Tools = todas | Es Claude Code disfrazado. No aporta. |
-| **Cadena de subagentes para cambios triviales** | `architect → reviewer → tester` para añadir un campo | Coste alto + delay; el cambio era de 3 minutos. |
-| **Subagentes que se contradicen** | `code-reviewer` dice "valida en routes", `architect` dice "valida en services" | Falta de criterio común en las instrucciones. |
-| **Auto memory descontrolada** | Subagente con 500 líneas de "lecciones aprendidas" | Es ruido. Curar la memoria es parte del mantenimiento. |
+| Antipatrón                                      | Síntoma                                                                        | Coste                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| **Subagente por cada función**                  | 14 archivos en `.claude/agents/`                                               | Nadie sabe cuál invocar; ninguno se mantiene.          |
+| **Subagente "general"** sin restricciones       | Tools = todas                                                                  | Es Claude Code disfrazado. No aporta.                  |
+| **Cadena de subagentes para cambios triviales** | `architect → reviewer → tester` para añadir un campo                           | Coste alto + delay; el cambio era de 3 minutos.        |
+| **Subagentes que se contradicen**               | `code-reviewer` dice "valida en routes", `architect` dice "valida en services" | Falta de criterio común en las instrucciones.          |
+| **Auto memory descontrolada**                   | Subagente con 500 líneas de "lecciones aprendidas"                             | Es ruido. Curar la memoria es parte del mantenimiento. |
 
 > La regla mental: **si invocar el subagente cuesta más que hacer la tarea a mano, sobra**.
 
@@ -250,14 +243,14 @@ Tres ejemplos canónicos:
 
 Checklist mental antes de añadir un subagente al repo:
 
-- [ ] **Intención única**: hace una cosa. Si hace dos, son dos subagentes.
-- [ ] **Tools restringidas**: lista explícita; nada de "todas".
-- [ ] **Formato de salida estable**: cualquier invocación produce un output comparable con la anterior.
-- [ ] **Documentado**: el archivo explica para qué sirve y cuándo NO usarlo.
-- [ ] **Versionado**: vive en `.claude/agents/` del repo, entra por PR.
-- [ ] **Revisado**: el equipo lo ha visto. No es propiedad de quien lo escribió.
-- [ ] **Curado periódicamente**: auto memory revisada cada release.
-- [ ] **Con criterio de baja**: si nadie lo invoca en 3 meses, se borra.
+* [ ] **Intención única**: hace una cosa. Si hace dos, son dos subagentes.
+* [ ] **Tools restringidas**: lista explícita; nada de "todas".
+* [ ] **Formato de salida estable**: cualquier invocación produce un output comparable con la anterior.
+* [ ] **Documentado**: el archivo explica para qué sirve y cuándo NO usarlo.
+* [ ] **Versionado**: vive en `.claude/agents/` del repo, entra por PR.
+* [ ] **Revisado**: el equipo lo ha visto. No es propiedad de quien lo escribió.
+* [ ] **Curado periódicamente**: auto memory revisada cada release.
+* [ ] **Con criterio de baja**: si nadie lo invoca en 3 meses, se borra.
 
 > Los subagentes que sobreviven son los que el equipo **invoca sin pensarlo**. El resto son archivos muertos en `.claude/agents/` que nadie audita.
 
@@ -265,9 +258,9 @@ Checklist mental antes de añadir un subagente al repo:
 
 ## Resumen
 
-- Un subagente es un **rol acotado** (system prompt + restricciones + tools), no un Claude paralelo.
-- Tres scopes: archivo en proyecto, archivo en home, inyección con `--agents`.
-- **Restringir tools es el corazón del diseño**: si no lo restringes, no aporta.
-- Compensa cuando la tarea es **repetida (≥3 veces/mes)** y tiene **formato de salida estable**.
-- Equipo de agentes ≠ delegación ciega. Tú decides el orden, tú revisas cada artefacto.
-- Subagente sin uso real en 3 meses = subagente que se borra.
+* Un subagente es un **rol acotado** (system prompt + restricciones + tools), no un Claude paralelo.
+* Tres scopes: archivo en proyecto, archivo en home, inyección con `--agents`.
+* **Restringir tools es el corazón del diseño**: si no lo restringes, no aporta.
+* Compensa cuando la tarea es **repetida (≥3 veces/mes)** y tiene **formato de salida estable**.
+* Equipo de agentes ≠ delegación ciega. Tú decides el orden, tú revisas cada artefacto.
+* Subagente sin uso real en 3 meses = subagente que se borra.
