@@ -1,0 +1,2 @@
+Esta es una nota legítima de Notebox.
+El endpoint /nota debería poder leer SOLO archivos dentro de este directorio.

@@ -459,6 +459,14 @@ Lo que la IA **sí** puede hacer:
 
 En equipos con plataforma y DevOps separados de desarrollo, el pipeline es **frontera política**: dónde acaba el dev y empieza la plataforma, quién toca qué archivo, qué cambios pasan por review de quién. Sin reglas claras, Claude Code amplifica la fricción — genera workflows que un equipo no validó, scripts que el otro mantiene a regañadientes.
 
+> **Nota sobre los equipos implicados.** Los nombres varían mucho según la empresa; lo que importa es el rol, no la etiqueta:
+>
+> - **Desarrollo (dev):** escribe el código de producto, sus features y sus tests. *Usa* el pipeline.
+> - **Plataforma (Platform Engineering):** *posee* la infraestructura de entrega — workflows base, scripts de release, environments, secretos, scanners. La encontrarás también como *plataforma interna*, *Developer Experience (DevEx/DX)*, *Release Engineering* o, en empresas pequeñas, dentro de *Infraestructura* o del *departamento de Sistemas* (aunque "Sistemas" suele abarcar además IT clásico: redes, hardware, soporte).
+> - **DevOps:** en origen es una **cultura** (romper el muro entre dev y operaciones), no un puesto. En el mercado, "**ingeniero de DevOps**" es el nombre más habitual para quien monta y opera el pipeline — en muchas organizaciones hace de facto el trabajo de plataforma. En equipos grandes se separa para centrar el foco en despliegue, observabilidad y fiabilidad en producción (solapa con **SRE**).
+>
+> Aquí se separan **plataforma** y **DevOps** para ilustrar la negociación de fronteras. En una empresa pequeña pueden ser la misma persona — y se le suele llamar "el de DevOps".
+
 | Quién toca qué                           | Patrón sano                                               | Antipatrón                                                |
 | ---------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
 | Workflows base (`.github/workflows/*`)   | Plataforma propone, dev revisa, ambos aprueban            | Dev modifica sin pedir, "ya luego veo qué rompí"          |
