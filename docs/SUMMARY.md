@@ -34,4 +34,5 @@
 
 ## Recursos
 
+* [Buenas prácticas — situaciones frecuentes](recursos/buenas-practicas-situaciones-frecuentes.md)
 * [Preguntas frecuentes de alumnos](recursos/preguntas-frecuentes-de-alumnos.md)

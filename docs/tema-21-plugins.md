@@ -284,6 +284,95 @@ Reglas duras de diseño:
 * **Idempotencia**: el hook se puede re-disparar si el cliente reintenta. No genere efectos secundarios persistentes en cada call.
 * **Fail closed para seguridad, fail open para auditoría**. Decide qué te importa: ¿que pase un comando peligroso, o que se rompa la sesión si el log no escribe?
 
+### Ejemplos de uso típicos
+
+Los hooks se repiten en cuatro grandes intenciones. Estos son los casos que un equipo acaba implementando casi siempre:
+
+| Intención        | Evento         | Qué resuelve el hook                                                       |
+| ---------------- | -------------- | ------------------------------------------------------------------------- |
+| **Seguridad**    | `PreToolUse`   | Bloquear `rm -rf`, escritura en `.env`, `git push --force` a `main`       |
+| **Calidad**      | `PostToolUse`  | Formatear / lintar el archivo justo después de que el agente lo edite     |
+| **Auditoría**    | `PreToolUse`   | Registrar quién, qué y cuándo se ejecutó cada Bash o cada llamada MCP      |
+| **Contexto**     | `SessionStart` | Inyectar rama actual, ticket de Jira o convenciones al arrancar la sesión |
+| **Automatización** | `Stop`       | Lanzar tests, formatear todo o avisar por Slack al cerrar el turno        |
+
+**1. Seguridad — bloquear comandos destructivos (`PreToolUse`)**
+
+El caso más común: impedir que el agente ejecute algo irreversible aunque el prompt se lo pida.
+
+```bash
+#!/usr/bin/env bash
+# Bloquea force-push a ramas protegidas
+input="$(cat)"
+cmd="$(echo "$input" | jq -r '.tool_input.command // ""')"
+
+if echo "$cmd" | grep -qE 'git push.*--force.*(main|master|production)'; then
+  echo "Force-push a rama protegida bloqueado por política del equipo." >&2
+  exit 2   # 2 = aborta la tool
+fi
+exit 0
+```
+
+**2. Calidad — formatear automáticamente lo que el agente edita (`PostToolUse`)**
+
+Tras cada `Write`/`Edit`, pasa el formateador al archivo tocado. El equipo formatea igual sin que nadie lo recuerde.
+
+```bash
+#!/usr/bin/env bash
+# Formatea el archivo recién editado según su extensión
+input="$(cat)"
+file="$(echo "$input" | jq -r '.tool_input.file_path // ""')"
+
+case "$file" in
+  *.js|*.ts|*.jsx|*.tsx) npx prettier --write "$file" ;;
+  *.py)                  black -q "$file" ;;
+  *.go)                  gofmt -w "$file" ;;
+esac
+exit 0
+```
+
+**3. Contexto — inyectar estado del repo al arrancar (`SessionStart`)**
+
+El hook devuelve por stdout contexto que Claude recibe al inicio de la sesión: en qué rama estás, qué cambios tienes sin commitear, qué ticket activo hay.
+
+```bash
+#!/usr/bin/env bash
+# Inyecta contexto de git al inicio de la sesión
+branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+changes="$(git status --porcelain | wc -l)"
+echo "Rama actual: $branch · Archivos modificados sin commitear: $changes"
+exit 0
+```
+
+**4. Auditoría con secretos redactados (`UserPromptSubmit`)**
+
+Registrar la actividad para cumplimiento, pero sin filtrar credenciales al log.
+
+```bash
+#!/usr/bin/env bash
+# Loguea el prompt redactando tokens que parezcan secretos
+input="$(cat)"
+prompt="$(echo "$input" | jq -r '.prompt // ""' | sed -E 's/(sk-|ghp_)[A-Za-z0-9]+/[REDACTED]/g')"
+echo "[$(date -Iseconds)] $prompt" >> .claude/audit/prompts.log
+exit 0
+```
+
+**5. Automatización al cerrar el turno (`Stop`)**
+
+Disparar una acción cuando el agente termina: correr la suite de tests, o notificar a un canal.
+
+```bash
+#!/usr/bin/env bash
+# Avisa por Slack si los tests quedaron en rojo al terminar el turno
+if ! npm test --silent >/dev/null 2>&1; then
+  curl -s -X POST "$SLACK_WEBHOOK" \
+    -d '{"text":"⚠️ La sesión de Claude terminó con tests en rojo"}' >/dev/null
+fi
+exit 0
+```
+
+> Regla de oro al elegir el evento: **`PreToolUse` para prevenir** (puede bloquear), **`PostToolUse` para reaccionar** a algo ya hecho, **`SessionStart` para preparar el terreno** y **`Stop` para cerrar**. Si dudas entre `Pre` y `Post`, pregúntate: *¿necesito poder cancelar la acción?* Si sí, es `Pre`.
+
 ## 9. Casos de plugin interno para formato, despliegue o seguridad
 
 Dónde un plugin interno paga el coste de mantenerlo:
