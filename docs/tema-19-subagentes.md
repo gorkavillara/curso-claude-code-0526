@@ -144,13 +144,28 @@ Crea un subagente `test-coverage-auditor` a nivel proyecto con tools que **solo 
 
 Hay tres formas de tener subagentes activos en una sesión:
 
-| Forma                      | Sintaxis                                   | Cuándo                                |
-| -------------------------- | ------------------------------------------ | ------------------------------------- |
-| **Por archivo**            | `.claude/agents/*.md` en el repo o el home | Permanentes, versionados              |
-| **Inyectados al arrancar** | `claude --agents path/to/code-reviewer.md` | Ad-hoc, no quieres trackearlo todavía |
-| **Invocación explícita**   | "Usa el subagente X para…" en el chat      | Activación bajo demanda               |
+| Forma                      | Sintaxis                                          | Cuándo                                |
+| -------------------------- | ------------------------------------------------- | ------------------------------------- |
+| **Por archivo**            | `.claude/agents/*.md` en el repo o el home        | Permanentes, versionados              |
+| **Inyectados al arrancar** | `claude --agents '{"<nombre>": { ... }}'` (JSON)  | Ad-hoc, no quieres trackearlo todavía |
+| **Invocación explícita**   | "Usa el subagente X para…" en el chat             | Activación bajo demanda               |
 
-`--agents` es útil para **probar un subagente antes de versionarlo** o para casos puntuales (auditoría externa, sesión one-off). En cuanto lo uses dos veces, súbelo al repo.
+> ⚠️ **`--agents` NO acepta una ruta a un archivo `.md`.** Espera un **objeto JSON inline** con la definición de cada subagente. La forma `claude --agents path/to/code-reviewer.md` **no funciona** (versiones actuales de Claude Code). Cada clave del objeto es el nombre del subagente y su valor lleva, como mínimo, `description` (cuándo invocarlo) y `prompt` (su system prompt). Campos opcionales: `model`, `tools`, `disallowedTools`, `skills`, `maxTurns`, etc.
+
+```bash
+claude --agents '{
+  "code-reviewer": {
+    "description": "Revisa código en busca de bugs, seguridad y mantenibilidad",
+    "prompt": "Eres un revisor de código experto. Sé directo y accionable.",
+    "model": "sonnet",
+    "disallowedTools": ["Bash"]
+  }
+}'
+```
+
+> Truco práctico: el JSON inline es incómodo de teclear. Lo habitual es escribir la definición en un `.md` normal, y cuando estés conforme, **moverlo a `.claude/agents/`** (forma por archivo) en lugar de seguir pasándolo por `--agents`.
+
+`--agents` es útil para **probar un subagente antes de versionarlo** o para casos puntuales (auditoría externa, sesión one-off). En cuanto lo uses dos veces, súbelo al repo como archivo en `.claude/agents/`.
 
 ## 6. Auto memory propio de subagentes y su utilidad práctica
 

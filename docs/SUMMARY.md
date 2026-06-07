@@ -31,8 +31,8 @@
 * [Tema 24 — DevOps, CI/CD, pipelines y automatización del ciclo de entrega](tema-24-devops.md)
 * [Tema 25 — Arquitectura, diseño de software, patrones y decisiones técnicas asistidas por IA](tema-25-arquitectura.md)
 * [Tema 26 — Trabajo en equipo, estándares compartidos y gobierno de uso de Claude Code en organizacion](tema-26-equipo.md)
+* [Tema 27 — Proyecto final: flujo completo de ingeniería sobre un repositorio real](tema-27-proyecto-final.md)
 
 ## Recursos
 
-* [Buenas prácticas — situaciones frecuentes](recursos/buenas-practicas-situaciones-frecuentes.md)
 * [Preguntas frecuentes de alumnos](recursos/preguntas-frecuentes-de-alumnos.md)

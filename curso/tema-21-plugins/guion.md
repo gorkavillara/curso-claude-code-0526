@@ -263,6 +263,7 @@ Resumen en pizarra:
 - **Error común en el Ejercicio 3:** modifican el plugin pero no suben la versión, o la suben sin lógica (de `1.0.0` a `2.0.0` por un cambio cosmético). Insistir en semver.
 
 - **Sobre marketplaces remotos en vivo:** **no se hace en clase.** Cada empresa tiene su flujo (o no tiene). Si algún alumno quiere demostrarlo con un marketplace propio, dejar tiempo al final (5 min) para que lo enseñe; pero no es parte del recorrido obligatorio.
+  - **Recurso opcional disponible:** hay un marketplace público real montado para el curso en `github.com/gorkavillara/cc-marketplace-imagina` (plugin `test-helper`). Si la sesión va sobrada o un alumno quiere ver el flujo remoto, basta con `/plugin marketplace add gorkavillara/cc-marketplace-imagina` y `/plugin install test-helper@imagina-marketplace`. No sustituye el ejercicio 1 (que sigue siendo local); es solo demostración del flujo remoto.
 
 - **Sobre la dependencia `jq` y la portabilidad del hook:** si el bash con `jq` da problemas en la sala, el `notas.md` propone una variante con `node -e` (puro Node, sin dependencias externas). Si la sesión es de mayoría Windows, considerar usar la variante Node desde el principio.
 

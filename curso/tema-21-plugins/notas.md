@@ -8,9 +8,16 @@
 
 [Modificación de la documentación de temas generados en la carpeta docs]
 
-- Verificar la API exacta de `extraKnownMarketplaces` y de `enabledPlugins` contra la documentación oficial actualizada en cada edición del curso. La nomenclatura ha cambiado al menos una vez en la evolución de Claude Code y puede volver a cambiar.
+- **[VERIFICADO 2026-06] `extraKnownMarketplaces`** es un **objeto indexado por nombre**, NO un array, y cada entrada lleva un `source` (no una `url` suelta con `trust`):
+  ```jsonc
+  { "extraKnownMarketplaces": { "imagina-marketplace": { "source": { "source": "github", "repo": "owner/repo" } } } }
+  ```
+  El docs del tema ya está corregido. Seguir reverificando en cada edición: la nomenclatura ha cambiado al menos una vez.
 
-- Confirmar si la forma canónica de declarar hooks en `plugin.json` es `"hooks": { "PreToolUse": "ruta-script.sh" }` (formato simple) o `"hooks": [ { "event": "PreToolUse", "script": "..." } ]` (formato extendido). Ambos aparecen en distintos ejemplos. **Plantamos el formato simple por claridad pedagógica**; si la versión oficial obliga al extendido, ajustar el `plugin.json` del fixture.
+- **[VERIFICADO 2026-06] La forma canónica de declarar hooks en un plugin NO es el formato simple** `"hooks": { "PreToolUse": "ruta.sh" }` que plantamos. El formato real es el mismo de `settings.json`: un `hooks/hooks.json` (descubierto por convención) o inline en el manifest, con `matcher` + `hooks: [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/..." }]`.
+  ⚠️ **El `plugin.json` del fixture (`pr-helper`) en `SOLUCION.md` usa el formato simple, que no es el real.** Pendiente: actualizar el fixture en la rama `tema-21/inicio` del repo de código y el `plugin.json` de `SOLUCION.md` al formato `hooks/hooks.json` real. No tocado todavía porque vive en el repo de código (otra rama), no en este repo de docs.
+
+- **[VERIFICADO 2026-06] El manifest vive en `.claude-plugin/plugin.json`**, no en `plugin.json` de la raíz del plugin. Los componentes (`commands/`, `agents/`, `skills/`, `hooks/`) se descubren por convención; el manifest solo requiere `name`. El fixture y `SOLUCION.md` deberían reflejar esta ruta cuando se actualicen.
 
 - Revisar la convención de namespace para commands de plugin: `<plugin>:<command>` o `/<plugin>:<command>`. Documentar el que use la versión vigente.
 

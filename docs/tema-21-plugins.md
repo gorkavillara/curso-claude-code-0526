@@ -82,23 +82,47 @@ Un plugin no tiene que empaquetar las cinco cosas. Lo habitual es que combine **
 Anatomía típica de un plugin:
 
 ```
-.claude/plugins/<nombre-plugin>/
-├── plugin.json              # Manifest: name, version, author, contracts
+<nombre-plugin>/
+├── .claude-plugin/
+│   └── plugin.json          # Manifest: name (obligatorio), version, description, author...
 ├── README.md                # Para humanos: qué hace, cómo se usa
-├── commands/                # Slash commands del plugin
-│   ├── summary.md           # /pr-helper:summary
+├── commands/                # Slash commands del plugin → /pr-helper:summary
+│   ├── summary.md
 │   └── checklist.md
-├── hooks/                   # Handlers de eventos
-│   └── pre-bash-audit.sh
-├── skills/                  # Skills auto-invocables
-│   └── commit-msg-style/SKILL.md
 ├── agents/                  # Subagentes
 │   └── pr-reviewer.md
-└── mcp-servers/             # (opcional) Servidores MCP del plugin
-    └── jira-internal/server.js
+├── skills/                  # Skills auto-invocables
+│   └── commit-msg-style/
+│       └── SKILL.md
+├── hooks/                   # Handlers de eventos
+│   ├── hooks.json           # Declara qué evento dispara qué script
+│   └── pre-bash-audit.sh
+└── .mcp.json                # (opcional) Servidores MCP del plugin
 ```
 
-Lo que distingue un plugin de un `.claude/` suelto es **el manifest** (`plugin.json`). Es lo que permite a Claude Code identificarlo, versionarlo y activarlo o desactivarlo como una unidad.
+Dos detalles que confunden a casi todo el mundo la primera vez:
+
+* **El manifest vive en `.claude-plugin/plugin.json`**, no en la raíz del plugin. Es el único archivo que va dentro de `.claude-plugin/`; todo lo demás (`commands/`, `agents/`, `skills/`, `hooks/`) cuelga de la **raíz** del plugin.
+* **Los componentes se descubren por convención**, no hace falta declararlos uno a uno en el manifest. Si pones commands en `commands/`, agentes en `agents/`, skills en `skills/` y un `hooks/hooks.json`, Claude Code los carga solo. El manifest solo necesita `name`; el resto de campos (`version`, `description`, `author`) son metadata. Solo declaras rutas explícitas en el manifest si las pones en una ubicación no estándar.
+
+> Lo que distingue un plugin de un `.claude/` suelto es **el manifest** (`.claude-plugin/plugin.json`). Es lo que permite a Claude Code identificarlo, versionarlo y activarlo o desactivarlo como una unidad.
+
+Los hooks de un plugin no se declaran como un `.sh` suelto: van en un `hooks/hooks.json` (o inline en el manifest) con el mismo formato que los hooks de `settings.json` — `matcher` + `type: command` + ruta al script usando la variable `${CLAUDE_PLUGIN_ROOT}`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/pre-bash-audit.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
 
 ## 3. Gestión mediante `/plugin install`, `/plugin enable`, `/plugin disable` y `/plugin marketplace`
 
@@ -119,9 +143,9 @@ Los comandos de Claude Code para gobernar plugins forman un ciclo de vida claro:
 
 Tres fuentes habituales para `/plugin install`:
 
+* **Marketplace** — `/plugin install <plugin>@<marketplace>` (ej. `/plugin install test-helper@imagina-marketplace`). Antes hay que registrar el marketplace con `/plugin marketplace add <owner>/<repo>`.
 * **Ruta local** — `.claude/plugins/<nombre>/` plantado en el repo. Útil para plugins internos del equipo o en desarrollo.
-* **Marketplace** — `<marketplace>/<plugin>` (ej. una entrada del marketplace oficial de Anthropic o de uno propio).
-* **Git URL** — `https://github.com/<org>/<repo>` con un `plugin.json` en la raíz. Útil para plugins en repos propios sin publicar.
+* **Git URL** — un repo con `.claude-plugin/plugin.json` (registrado como marketplace de un solo plugin). Útil para plugins en repos propios sin publicar.
 
 ## 4. Validación de plugins con `/plugin validate` antes de distribuirlos
 
@@ -172,42 +196,59 @@ Extiende el hook plantado: en lugar de **loguear todo Bash**, debe **bloquear** 
 
 ## 5. Uso de marketplaces adicionales con `extraKnownMarketplaces`
 
-Un **marketplace** es un índice de plugins descubribles. Claude Code trae uno oficial por defecto, y permite añadir más mediante el campo `extraKnownMarketplaces` en el `settings.json` (a nivel usuario o proyecto):
+Un **marketplace** es un índice de plugins descubribles: un repo git con un `.claude-plugin/marketplace.json` en la raíz. La forma más directa de añadir uno es desde la propia sesión:
+
+```
+/plugin marketplace add <owner>/<repo>        # ej. gorkavillara/cc-marketplace-imagina
+/plugin marketplace                            # lista marketplaces y sus plugins
+/plugin install <plugin>@<marketplace>         # ej. test-helper@imagina-marketplace
+```
+
+`add` también acepta una URL completa de git (`https://gitlab.com/...`) o la URL directa a un `marketplace.json`.
+
+Si quieres que un marketplace esté **disponible de entrada** sin teclear `add`, se declara en `settings.json` (usuario o proyecto) con `extraKnownMarketplaces`. Ojo: es un **objeto indexado por nombre**, y cada entrada lleva un `source` (no una `url` suelta):
 
 ```jsonc
 {
-  "extraKnownMarketplaces": [
-    {
-      "name": "imagina-internal",
-      "url": "https://plugins.imagina.example/registry.json",
-      "trust": "trusted"
+  "extraKnownMarketplaces": {
+    "imagina-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "gorkavillara/cc-marketplace-imagina"
+      }
     }
-  ]
+  }
 }
 ```
 
-| Campo   | Para qué                                                                 |
-| ------- | ------------------------------------------------------------------------ |
-| `name`  | Nombre estable que usarás en `/plugin install <market>/<plugin>`         |
-| `url`   | Endpoint que devuelve el índice (JSON con la lista de plugins)           |
-| `trust` | `trusted` salta confirmaciones de instalación; `prompt` siempre pregunta |
+> Un marketplace adicional es **un canal de actualización abierto** al agente. Tratarlo con el mismo cuidado que un mirror de npm interno: si el repo cae bajo control de otro, todos los plugins instalados desde él son vector de ataque.
 
-> Un marketplace adicional es **un canal de actualización abierto** al agente. Tratarlo con el mismo cuidado que un mirror de npm interno: si la URL cae bajo control de otro, todos los plugins instalados desde ella son vector de ataque.
-
-Indices de marketplace internos suelen ser un JSON estático servido por un bucket o repo:
+El `marketplace.json` es el catálogo. Requiere `name`, `owner` y `plugins[]`; cada plugin declara su `source` (ruta relativa dentro del mismo repo, o un repo `github`/`url` externo):
 
 ```json
 {
+  "name": "imagina-marketplace",
+  "owner": { "name": "Imagina Formación" },
   "plugins": [
     {
-      "name": "pr-helper",
-      "version": "1.3.0",
-      "source": "https://github.com/imagina/cc-plugin-pr-helper",
-      "description": "Comandos y hooks para PRs internos"
+      "name": "test-helper",
+      "source": "./plugins/test-helper",
+      "description": "Lanza tests, escribe tests con el estilo del repo y recuerda correrlos tras editar",
+      "version": "1.0.0"
     }
   ]
 }
 ```
+
+> 🧰 **Recurso opcional — marketplace real de prácticas.** Hay un marketplace público montado para el curso en [`github.com/gorkavillara/cc-marketplace-imagina`](https://github.com/gorkavillara/cc-marketplace-imagina). Quien quiera ver el flujo remoto de punta a punta (sin tocar el ejercicio, que sigue siendo local) puede probar en su sesión:
+>
+> ```
+> /plugin marketplace add gorkavillara/cc-marketplace-imagina
+> /plugin install test-helper@imagina-marketplace
+> /plugin enable test-helper
+> ```
+>
+> Trae el plugin `test-helper` (command `/test-helper:run`, skill `test-writer` y un hook `PostToolUse`). Sirve para comprobar que el patrón aprendido con el plugin local funciona igual desde un repo remoto.
 
 ## 6. Configuración de plugins a nivel usuario y a nivel repositorio
 
