@@ -4,6 +4,28 @@ Notas operativas del autor sobre decisiones de diseño y limitaciones que no cab
 
 ---
 
+## ⚠️ Actualización: ejercicios migrados a GitLab CI
+
+Los **tres ejercicios** (ramas `tema-24/ejercicio-0N`) se migraron de GitHub Actions a **GitLab CI**. Las notas de abajo describen el diseño original sobre `.github/workflows/`; siguen siendo válidas conceptualmente, pero estos son los cambios reales en el repo de código:
+
+- **`tema-24/inicio` NO se tocó**: conserva `.github/workflows/{ci,release}.yml`. Las **demos** del guion (Demo 1 y la verificación de la Demo 3) se siguen haciendo sobre GitHub Actions ahí. Es deliberado: el punto 1 del temario cubre ambas plataformas; el alumno ve el patrón en Actions (demo) y lo aplica en GitLab CI (ejercicio).
+- **Cada `tema-24/ejercicio-0N`** trae sus propios fixtures de GitLab plantados (sustituyen a `.github/workflows/`): un `.gitlab-ci.yml` con olores, un `logs/pipeline-fail.log` en formato GitLab Runner y un `test/ci-fixtures.test.ts` adaptado. El `README.md` de esas ramas también describe GitLab.
+- **Mapa de olores GitHub → GitLab** (mismo concepto, otra sintaxis):
+  | Olor en Actions | Equivalente plantado en GitLab CI |
+  |---|---|
+  | `actions/*@v3` sin pin a SHA | `image: node:latest` sin pin a digest `@sha256` |
+  | Job único con lint+typecheck+test | Job único `ci` (sin `stages`/`needs:` separados) |
+  | Sin `cache:` en `setup-node` | Sin bloque `cache:` para `~/.npm` |
+  | Sin `permissions:` (token con write) | Secreto `NPM_TOKEN` en `variables:` global |
+  | Sin `concurrency: cancel-in-progress` | Sin `interruptible: true` |
+  | `branches: '*'` permisivo | Sin `workflow: rules` |
+  | `runs-on: ubuntu-latest` flotante | (cubierto por `image: node:latest`) |
+- **Detalle clave de GitLab:** la mitigación del secreto se completa en las *CI/CD Variables* protegidas del proyecto, **fuera del YAML**. Es la trampa conceptual del Ejercicio 1 y conviene señalarla en clase.
+- El `release.yml` separado de GitHub pasa a ser un **job `release`** dentro del mismo `.gitlab-ci.yml` (regla `$CI_COMMIT_TAG`).
+- El fallo del log sigue siendo el mismo (`npm ci` rompe por lockfile desactualizado, `Missing: vitest@1.6.0`); cambia el envoltorio: `npm error code EUSAGE` + `ERROR: Job failed: exit code 1` en vez de `npm ERR!` + `##[error]`.
+
+---
+
 ## Sobre la verificación con GitHub Actions durante la preparación del tema
 
 Durante la generación del tema **no se ejecutaron** los workflows plantados contra un runner real (`act` ni en el fork de GitHub). La validación del fixture se hizo por:

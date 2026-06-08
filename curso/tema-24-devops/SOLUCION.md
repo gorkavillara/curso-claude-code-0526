@@ -2,6 +2,8 @@
 
 Soluciones de referencia para el instructor. No compartir con alumnos antes de la sesión.
 
+> **Plataforma:** los ejercicios son sobre **GitLab CI** (`.gitlab-ci.yml`). Las demos del guion se hacen sobre GitHub Actions (`.github/workflows/ci.yml` en `tema-24/inicio`); el patrón es el mismo y la doc da la tabla de equivalencias.
+
 ---
 
 ## Ejercicio 1 — `CI-AUDIT.md` esperado
@@ -10,112 +12,115 @@ Soluciones de referencia para el instructor. No compartir con alumnos antes de l
 
 | Olor | Riesgo | Severidad |
 |---|---|---|
-| `uses: actions/checkout@v3` sin pin a SHA | Reproducibilidad / Seguridad: supply-chain attack invisible | Alta |
-| `uses: actions/setup-node@v3` (deprecado, recomendado `@v4`) | Reproducibilidad: romperá cuando GitHub lo jubile | Alta |
-| Sin `cache:` en `setup-node` ni `actions/cache@v4` | Coste: cada job baja `node_modules` desde cero (~2 min) | Alta |
-| Un único job `ci` con `lint && typecheck && test` en el mismo `run:` | DX: un fallo de lint esconde fallos de tipos o tests | Alta |
-| Sin bloque `permissions:` declarado | Seguridad: `GITHUB_TOKEN` tiene `write` por defecto | Alta |
-| Sin `concurrency:` con `cancel-in-progress` | Coste: runs antiguos siguen quemando minutos al hacer un nuevo push | Media |
-| `on: push: branches: '*'` permisivo (corre en cualquier rama) | Coste: pipelines en ramas WIP sin valor | Media |
-| Runner `runs-on: ubuntu-latest` (versión flotante) | Reproducibilidad: el runner cambia bajo nuestros pies | Baja |
+| `image: node:latest` (tag flotante, sin pin a versión ni digest `@sha256`) | Reproducibilidad: la imagen base cambia bajo nuestros pies | Alta |
+| Un único job `ci` que mezcla `npm ci + lint + typecheck + test + build` | DX: un fallo de lint esconde fallos de tipos o tests | Alta |
+| Secreto `NPM_TOKEN` en `variables:` global (visible para todos los jobs) | Seguridad: cualquier job, lint incluido, ve el secreto; filtrable con un `echo` accidental | Alta |
+| Sin bloque `cache:` para `~/.npm` | Coste: cada pipeline baja las deps desde cero (~2 min) | Alta |
+| Sin `interruptible: true` en los jobs | Coste: un push nuevo no cancela el pipeline anterior en cola | Media |
+| Sin `workflow: rules` (corre en cualquier rama y evento) | Coste: pipelines en ramas WIP sin valor | Media |
+| `release` heredando `image: node:latest` y el secreto global | Reproducibilidad + Seguridad: el job de release arrastra los mismos olores | Media |
 
 ### Los 3 fixes priorizados
 
-1. **Separar `lint / typecheck / test` en jobs con `needs:`.** Diff conceptual:
+1. **Separar `lint / typecheck / test` en stages (o jobs con `needs:`).** Diff conceptual:
    ```diff
-   -  ci:
-   -    runs-on: ubuntu-latest
-   -    steps:
-   -      - uses: actions/checkout@v3
-   -      - uses: actions/setup-node@v3
-   -        with:
-   -          node-version: 24
-   -      - run: npm install
-   -      - run: npm run lint
-   -      - run: npm run typecheck
-   -      - run: npm test
-   +  lint:
-   +    runs-on: ubuntu-22.04
-   +    steps:
-   +      - uses: actions/checkout@v4
-   +      - uses: actions/setup-node@v4
-   +        with: { node-version: 24, cache: 'npm' }
-   +      - run: npm ci
-   +      - run: npm run lint
-   +  typecheck:
-   +    runs-on: ubuntu-22.04
-   +    needs: [lint]
-   +    steps:
-   +      - uses: actions/checkout@v4
-   +      - uses: actions/setup-node@v4
-   +        with: { node-version: 24, cache: 'npm' }
-   +      - run: npm ci
-   +      - run: npm run typecheck
-   +  test:
-   +    runs-on: ubuntu-22.04
-   +    needs: [lint, typecheck]
-   +    steps:
-   +      - uses: actions/checkout@v4
-   +      - uses: actions/setup-node@v4
-   +        with: { node-version: 24, cache: 'npm' }
-   +      - run: npm ci
-   +      - run: npm test
-   ```
-   Renta porque el PR ve tres status checks por separado: un fallo de lint no enmascara fallos de tipos.
-
-2. **Añadir `permissions: contents: read` al workflow.** Diff:
-   ```diff
-   +permissions:
-   +  contents: read
+   -stages:
+   -  - ci
+   -
+   -ci:
+   -  stage: ci
+   -  script:
+   -    - npm ci
+   -    - npm run lint --if-present
+   -    - npm run typecheck
+   -    - npm test
+   -    - npm run build --if-present
+   +stages:
+   +  - lint
+   +  - typecheck
+   +  - test
    +
-    on:
-      pull_request:
-      push:
-        branches: [main]
-   ```
-   Renta por seguridad: reduce drásticamente lo que un script comprometido puede hacer con el `GITHUB_TOKEN`.
-
-3. **Añadir `concurrency:` con `cancel-in-progress`.** Diff:
-   ```diff
-   +concurrency:
-   +  group: ci-${{ github.ref }}
-   +  cancel-in-progress: true
+   +.node:
+   +  image: node:24.0.0@sha256:<digest>   # base común
+   +  cache:
+   +    key:
+   +      files: [package-lock.json]
+   +    paths: [.npm/]
+   +  before_script:
+   +    - npm ci --cache .npm --prefer-offline
    +
-    on:
-      pull_request:
-      push:
-        branches: [main]
+   +lint:
+   +  extends: .node
+   +  stage: lint
+   +  interruptible: true
+   +  script: [npm run lint --if-present]
+   +
+   +typecheck:
+   +  extends: .node
+   +  stage: typecheck
+   +  interruptible: true
+   +  script: [npm run typecheck]
+   +
+   +test:
+   +  extends: .node
+   +  stage: test
+   +  interruptible: true
+   +  script: [npm test]
    ```
-   Renta por coste: si un PR recibe varios pushes seguidos, solo corre el último.
+   Renta porque el MR ve tres jobs por separado: un fallo de lint no enmascara fallos de tipos.
 
-### Pinear actions a SHA (mínimo `checkout` y `setup-node`)
+2. **Sacar el secreto `NPM_TOKEN` de `variables:` global.** El secreto real vive en **Settings → CI/CD → Variables** (marcada *Protected* + *Masked*), no en el YAML. Diff:
+   ```diff
+   -variables:
+   -  NPM_TOKEN: "demo-npm-token-CHANGEME"   # secreto global
+   ```
+   ```diff
+   # Solo el job que lo necesita lo referencia (el valor llega desde
+   # las CI/CD Variables protegidas del proyecto, no desde el YAML):
+   +release:
+   +  script:
+   +    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+   ```
+   Renta por seguridad: `lint` y `test` dejan de ver el token. **Clave conceptual:** parte de la mitigación NO se ve en el `.gitlab-ci.yml` — vive en la configuración del proyecto.
+
+3. **Añadir `interruptible: true` a los jobs** (+ activar *Auto-cancel redundant pipelines* en Settings → CI/CD → General pipelines). Diff:
+   ```diff
+    test:
+      stage: test
+   +  interruptible: true
+      script: [npm test]
+   ```
+   Renta por coste: si un MR recibe varios pushes seguidos, GitLab cancela el pipeline anterior y solo corre el último.
+
+### Pin de la imagen a digest
 
 ```yaml
-- uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-- uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+# node:24.0.0 (tag legible como referencia; el digest es lo inmutable)
+image: node:24.0.0@sha256:6c3f7a1e9d2b4c5f8a0e1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60
 ```
 
-(Los SHAs exactos cambian según versión disponible — el alumno puede usar el HEAD de la última release tagueada.)
+(El digest exacto cambia según la versión disponible — el alumno puede resolverlo con `docker pull node:24.0.0 && docker inspect --format='{{index .RepoDigests 0}}' node:24.0.0`, o dejar un placeholder `@sha256:<digest>` si no tiene red.)
 
 ### Sección "Qué dejo para otra iteración"
 
 Mínimo 2 puntos. Ejemplos válidos:
 
-- **Job de scan (gitleaks o trufflehog) sobre el diff** — útil pero hay que decidir umbral con plataforma antes de meterlo bloqueante.
-- **Job de coverage con umbral** — primero hay que establecer cobertura actual y consensuar el mínimo.
-- **Matrix de Node 22 + 24** — útil para libs públicas; en una app interna que clavamos a Node 24 no aporta.
-- **Restringir `on:` a `push` solo en `main` + `pull_request`** — discutir si las ramas `release/*` necesitan correr el workflow también.
-- **Migrar a `runs-on: ubuntu-24.04`** — cuando GitHub anuncie EOL de `22.04`, no antes.
+- **`workflow: rules`** para limitar el pipeline a MRs y a la rama por defecto — útil pero hay que consensuar con plataforma qué ramas disparan pipeline.
+- **Job de `secret_detection` / SAST** (plantillas `Security/Secret-Detection.gitlab-ci.yml`) — útil, pero primero hay que decidir umbral con plataforma antes de meterlo bloqueante.
+- **Job de coverage con umbral** (`coverage:` + `rules`) — primero hay que establecer cobertura actual y consensuar el mínimo.
+- **Matrix con `parallel: matrix:` para Node 22 + 24** — útil para libs públicas; en una app interna que clavamos a Node 24 no aporta.
+- **Auditar el job `release`** por los mismos criterios (imagen, cache, secreto) — fuera del alcance de esta iteración.
 
 ### Errores frecuentes a señalar
 
 | Síntoma | Diagnóstico |
 |---|---|
-| Priorizan "renombrar steps" o "ordenar el yaml" arriba | Criterio cosmético. Empujar a seguridad + DX. |
+| Priorizan "renombrar el job" o "ordenar el yaml" arriba | Criterio cosmético. Empujar a seguridad + DX. |
 | Aplican los 3 fixes en un solo prompt sin ver diffs | Pierden la trazabilidad. Forzar uno a uno. |
-| Ponen `permissions: write-all` "por si acaso" | Lo contrario del fix. `contents: read` y se eleva por job si hace falta. |
-| Pinean a SHA pero olvidan el comentario con el tag (`# v4.1.1`) | Aceptable pero pierdes legibilidad. Recomendar dejar el comentario. |
-| Usan `concurrency` con `cancel-in-progress: false` "para no perder runs" | Defeat la utilidad. Si es eso, no añadan `concurrency`. |
+| "Mitigan" el secreto poniéndolo en `variables:` de cada job | Sigue en el YAML en claro. El valor real va en CI/CD Variables protegidas. |
+| Creen que sacar el secreto del YAML basta y olvidan marcarla *Protected/Masked* | La mitigación se completa en Settings del proyecto, no solo en el YAML. |
+| Pinean a digest pero olvidan el comentario con el tag legible | Aceptable pero pierdes legibilidad. Recomendar dejar el comentario. |
+| Usan `interruptible: false` "para no perder runs" | Defeat la utilidad. Si es eso, que lo justifiquen. |
 
 ---
 
@@ -166,6 +171,8 @@ echo "Revisa el commit con: git show HEAD"
 echo "Publica con: git push origin main --follow-tags"
 ```
 
+> Nota: al pushear el tag `v$VERSION`, el job `release` del `.gitlab-ci.yml` (regla `$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/`) es el que se dispara en GitLab. El script local crea el tag; GitLab CI reacciona al push.
+
 ### Contenido completo de `rollback.sh` esperable
 
 ```bash
@@ -187,9 +194,9 @@ read -r confirm
 # 3. Re-deploy del artifact anterior. PLACEHOLDER — adaptar al stack real.
 echo "Re-deployando v$PREVIOUS..."
 # Ejemplos según stack:
-#   docker pull registry.example.com/notebox:$PREVIOUS && \
-#     docker service update --image registry.example.com/notebox:$PREVIOUS notebox
-#   kubectl set image deployment/notebox notebox=registry.example.com/notebox:$PREVIOUS
+#   docker pull registry.gitlab.com/notebox/notebox:$PREVIOUS && \
+#     docker service update --image registry.gitlab.com/notebox/notebox:$PREVIOUS notebox
+#   kubectl set image deployment/notebox notebox=registry.gitlab.com/notebox/notebox:$PREVIOUS
 #   npm dist-tag add notebox@$PREVIOUS latest
 
 # 4. Smoke test post-rollback.
@@ -228,30 +235,34 @@ Mínimo 2 ejemplos. Respuesta esperable:
 
 ### Bloque del log relevante (citado literal)
 
-El alumno debe localizar y citar **solo** las líneas alrededor del error real, no el log entero. Bloque esperable (aprox.):
+El alumno debe localizar y citar **solo** las líneas alrededor del error real, no el log entero. Bloque esperable (job de GitLab Runner):
 
 ```
-2024-01-15T10:23:45.1234567Z Run npm ci
-2024-01-15T10:23:45.2345678Z npm ERR! code EUSAGE
-2024-01-15T10:23:45.2456789Z npm ERR!
-2024-01-15T10:23:45.2567890Z npm ERR! `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync.
-2024-01-15T10:23:45.2678901Z npm ERR! Missing: vitest@1.6.0 from lock file
-2024-01-15T10:23:45.2789012Z npm ERR! Missing: @vitest/expect@1.6.0 from lock file
-2024-01-15T10:23:45.2890123Z npm ERR! Missing: @vitest/runner@1.6.0 from lock file
-2024-01-15T10:23:45.3001234Z npm ERR!
-2024-01-15T10:23:45.3112345Z npm ERR! Clean install a project
-2024-01-15T10:23:45.3223456Z
-2024-01-15T10:23:45.3334567Z npm ERR! A complete log of this run can be found in: /home/runner/.npm/_logs/2024-01-15T10_23_45_000Z-debug-0.log
-2024-01-15T10:23:46.0000000Z ##[error]Process completed with exit code 1.
+$ npm ci
+npm error code EUSAGE
+npm error
+npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+npm error
+npm error Missing: vitest@1.6.0 from lock file
+npm error Missing: @vitest/expect@1.6.0 from lock file
+npm error Missing: @vitest/runner@1.6.0 from lock file
+npm error Missing: @vitest/snapshot@1.6.0 from lock file
+npm error Missing: @vitest/utils@1.6.0 from lock file
+npm error
+npm error Clean install a project
+...
+npm error A complete log of this run can be found in: /root/.npm/_logs/2024-01-15T10_23_45_123Z-debug-0.log
+section_end:1705315417:step_script
+ERROR: Job failed: exit code 1
 ```
 
-Si el alumno pega el log entero (las 3.000+ líneas) al `.md`, señalar el antipatrón: el `.md` debe contener **el bloque útil**, no todo.
+Si el alumno pega el log entero al `.md`, señalar el antipatrón: el `.md` debe contener **el bloque útil**, no todo.
 
 ### Las 3 hipótesis esperables (en este orden)
 
-1. **`package.json` y `package-lock.json` desincronizados.** El PR añadió `vitest` a `devDependencies` en `package.json` pero no se regeneró el `package-lock.json`. Verificación: `git log -p package.json package-lock.json` para ver si solo uno de los dos cambió en el PR.
+1. **`package.json` y `package-lock.json` desincronizados.** El MR añadió `vitest` a `devDependencies` en `package.json` pero no se regeneró el `package-lock.json`. Verificación: `git log -p package.json package-lock.json` para ver si solo uno de los dos cambió en el MR.
 
-2. **Versión de Node del workflow diferente a la del lockfile.** El lockfile fue generado con Node 20 y el workflow corre Node 18. `npm ci` puede fallar por incompatibilidades. Verificación: comparar `setup-node` del workflow con `engines.node` en `package.json`.
+2. **La `image: node:latest` resolvió a una versión de Node/npm distinta de la del lockfile.** Como la imagen es flotante, el lockfile pudo generarse con un npm anterior. Verificación: comparar el `node --version` / `npm --version` del log con `engines.node` en `package.json`.
 
 3. **`package-lock.json` corrupto tras un merge.** Conflicto resuelto mal a mano, lockfile inconsistente. Verificación: `git log --merges` en `package-lock.json`, intentar regenerarlo localmente con `npm install --package-lock-only` y comparar.
 
@@ -261,7 +272,7 @@ Lo crítico es que la 1 esté arriba. La pista clave del log es `Missing: vitest
 
 Respuesta modelo:
 
-> "Fix mínimo: regenerar `package-lock.json` localmente con `npm install --package-lock-only` y commitearlo. No toco el workflow — `npm ci` está bien usado (es lo correcto en CI). El bug es del PR que añadió la dep sin regenerar el lock.
+> "Fix mínimo: regenerar `package-lock.json` localmente con `npm install --package-lock-only` y commitearlo. No toco el `.gitlab-ci.yml` — `npm ci` está bien usado (es lo correcto en CI). El bug es del MR que añadió la dep sin regenerar el lock.
 >
 > **Diff esperado:**
 > ```diff
@@ -270,31 +281,31 @@ Respuesta modelo:
 >  +    ... (entradas de las deps transitorias añadidas)
 > ```
 >
-> No es opción cambiar `npm ci` por `npm install` en el workflow: rompería la reproducibilidad. El lockfile manda; si está desactualizado, **se actualiza**, no se enmascara."
+> No es opción cambiar `npm ci` por `npm install` en el `.gitlab-ci.yml`: rompería la reproducibilidad. El lockfile manda; si está desactualizado, **se actualiza**, no se enmascara. (Bonus: pinear la imagen a una versión fija evita además la hipótesis 2.)"
 
-Aceptable la respuesta alternativa "ajusto el workflow a `npm install`" solo si el alumno justifica explícitamente que **ese repo concreto** no tiene política de lockfile (caso raro, criticar).
+Aceptable la respuesta alternativa "ablando el pipeline a `npm install`" solo si el alumno justifica explícitamente que **ese repo concreto** no tiene política de lockfile (caso raro, criticar).
 
 ### "Qué grep / filtro me habría llevado más rápido al error"
 
 Respuesta modelo. Mínimo 2 keywords útiles:
 
 ```bash
-grep -n -i "npm ERR\|EUSAGE\|ERESOLVE" logs/pipeline-fail.log
-grep -n "##\[error\]" logs/pipeline-fail.log
+grep -n -i "npm error\|EUSAGE\|ERESOLVE" logs/pipeline-fail.log
+grep -n "ERROR: Job failed" logs/pipeline-fail.log
 grep -n -B 2 -A 20 "exit code [^0]" logs/pipeline-fail.log
 ```
 
-- `npm ERR` lleva directo al bloque de npm (saltando los 200 líneas de setup).
-- `##[error]` es el marker que GitHub Actions imprime en cada fallo — siempre útil.
-- `exit code [^0]` con contexto antes/después captura el momento exacto del fallo en cualquier step.
+- `npm error` lleva directo al bloque de npm (saltando las ~40 líneas de setup del runner).
+- `ERROR: Job failed` es la línea que GitLab Runner imprime al final de cada job fallido — siempre útil para encontrar el desenlace.
+- `exit code [^0]` con contexto antes/después captura el momento exacto del fallo.
 
 ### "Cómo evito que vuelva"
 
 Respuesta modelo. Accionable, no decorativo:
 
-> "1. **Job de pipeline `lock-check`** que corre `npm ci` en un job dedicado (ya lo hacíamos, pero implícito en `test`); separarlo da feedback granular y deja claro qué falló si vuelve.
+> "1. **Job de pipeline `lockfile-check`** (stage temprano) que corre `npm ci` aislado: da feedback granular y deja claro que el problema es el lock, no los tests.
 >
-> 2. **Pre-commit hook** o **status check obligatorio** que valide que `package-lock.json` está al día tras tocar `package.json`. Patrón típico:
+> 2. **Pre-commit hook** o **status check obligatorio en el MR** que valide que `package-lock.json` está al día tras tocar `package.json`. Patrón típico:
 > ```bash
 > # .githooks/pre-commit
 > git diff --cached --name-only | grep -q '^package\.json$' && {
@@ -306,17 +317,17 @@ Respuesta modelo. Accionable, no decorativo:
 > }
 > ```
 >
-> 3. **Convención de equipo:** cualquier PR que toque `package.json` debe tocar `package-lock.json` en el mismo commit. Es revisable a ojo en el diff."
+> 3. **Convención de equipo:** cualquier MR que toque `package.json` debe tocar `package-lock.json` en el mismo commit. Es revisable a ojo en el diff."
 
-Bonus si proponen un workflow `on: pull_request` con job `lockfile-sync-check` que falla si `package.json` cambia sin `package-lock.json` (o viceversa).
+Bonus si proponen un job `lockfile-sync-check` con `rules: - if: $CI_PIPELINE_SOURCE == "merge_request_event"` que falla si `package.json` cambia sin `package-lock.json` (o viceversa).
 
 ### Errores frecuentes a señalar
 
 | Síntoma | Diagnóstico |
 |---|---|
-| Pegan las 3.000 líneas del log al agente "porque es lo que tengo" | Antipatrón. Forzar filtrado previo con `grep`. |
+| Pegan el log entero al agente "porque es lo que tengo" | Antipatrón. Forzar filtrado previo con `grep`. |
 | La hipótesis 1 es "rerun" o "el runner falló" | Sin evidencia. `Missing: vitest@1.6.0` es muy concreto para echar la culpa al runner. |
-| Cambian el workflow a `npm install` "para que pase" | Mete bug a futuro. Discutir por qué `npm ci` es correcto en CI. |
+| Cambian el `.gitlab-ci.yml` a `npm install` "para que pase" | Mete bug a futuro. Discutir por qué `npm ci` es correcto en CI. |
 | "Cómo evito que vuelva: poner más atención" | No es accionable. Forzar a un check técnico (hook, job, convención escrita). |
 | No citan el log en el `.md`: lo describen con palabras | Sin la cita literal, el siguiente que lea el `.md` no puede verificar. |
 | Aceptan la primera hipótesis sin verificarla en los archivos del repo | Pueden coger la incorrecta. Forzar verificación cruzada. |
@@ -325,8 +336,8 @@ Bonus si proponen un workflow `on: pull_request` con job `lockfile-sync-check` q
 
 ## Coherencia con docs/ y guion
 
-- Las tres demos del guion (auditar `ci.yml`, endurecer `release.sh`, triage de `pipeline-fail.log`) coinciden 1:1 con las del `docs/tema-24-devops.md`. Mismos prompts literales.
-- Los tres ejercicios entregan tres documentos distintos: `CI-AUDIT.md`, `RELEASE-NOTES.md`, `PIPELINE-TRIAGE.md`. No se confunden entre ramas.
-- Las previews 🧩 en docs/ repiten literalmente la rama, el tiempo (30 min) y el tipo (En clase).
-- Los fixtures (`.github/workflows/ci.yml`, `.github/workflows/release.yml`, `scripts/release.sh`, `logs/pipeline-fail.log`) están plantados en `tema-24/inicio`. Ningún ejercicio pide al alumno "crea el archivo X" — está ya en el repo.
-- El smoke test `test/ci-fixtures.test.ts` valida que los fixtures siguen con la forma esperada entre cohortes.
+- Las tres demos del guion (auditar `ci.yml`, endurecer `release.sh`, triage de `pipeline-fail.log`) se hacen sobre **GitHub Actions** en `tema-24/inicio` y coinciden 1:1 con las del `docs/tema-24-devops.md`. Mismos prompts literales.
+- Los tres **ejercicios** son sobre **GitLab CI** (`.gitlab-ci.yml`) y entregan tres documentos distintos: `CI-AUDIT.md`, `RELEASE-NOTES.md`, `PIPELINE-TRIAGE.md`. No se confunden entre ramas.
+- Las previews 🧩 en docs/ repiten literalmente la rama, el tiempo (30 min) y el tipo (En clase), y describen el ejercicio sobre `.gitlab-ci.yml`.
+- Los fixtures de GitLab (`.gitlab-ci.yml` con olores, `scripts/release.sh` sin validaciones, `logs/pipeline-fail.log` en formato GitLab Runner) están plantados en cada rama `tema-24/ejercicio-0N`. La rama `tema-24/inicio` conserva los fixtures de GitHub Actions para las demos. Ningún ejercicio pide al alumno "crea el archivo X" — está ya en el repo.
+- El smoke test `test/ci-fixtures.test.ts` (en cada rama de ejercicio) valida que el fixture de GitLab sigue con la forma esperada entre cohortes.

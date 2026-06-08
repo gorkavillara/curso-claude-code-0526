@@ -98,11 +98,13 @@ Lo que el alumno ve:
 
 Los alumnos:
 
-1. Verifican `npm install && npm test`. Todo en verde (incluido el smoke test `ci-fixtures.test.ts` que valida que el workflow sigue con los olores plantados).
-2. Auditan el `.github/workflows/ci.yml` plantado con el primer prompt (tabla de olores).
+> **Nota de plataforma:** la Demo 1 se hace sobre `.github/workflows/ci.yml` en `tema-24/inicio` (GitHub Actions), pero **el ejercicio es sobre GitLab CI** — la rama `tema-24/ejercicio-01` trae un `.gitlab-ci.yml` plantado con los olores equivalentes. El tema cubre ambas plataformas (punto 1 del temario); el patrón de auditoría es el mismo, cambia la sintaxis. Encuadrarlo así: "lo habéis visto en Actions, lo practicáis en GitLab CI; el criterio no cambia".
+
+1. Verifican `npm install && npm test`. Todo en verde (incluido el smoke test `ci-fixtures.test.ts` que valida que el `.gitlab-ci.yml` sigue con los olores plantados).
+2. Auditan el `.gitlab-ci.yml` plantado con el primer prompt (tabla de olores).
 3. Priorizan los problemas (segundo prompt). Razonan por qué cada uno está donde está.
-4. Aplican **los 3 fixes más rentables**, uno a uno, viendo el diff antes de aceptar. Mínimo: separar jobs con `needs:`, añadir `permissions: contents: read`, añadir `concurrency:` con `cancel-in-progress`.
-5. Pinean al menos `actions/checkout` y `actions/setup-node` a SHA específico (no a `@v4`).
+4. Aplican **los 3 fixes más rentables**, uno a uno, viendo el diff antes de aceptar. Mínimo: separar `lint / typecheck / test` en stages (o jobs con `needs:`), sacar el secreto `NPM_TOKEN` de `variables:` global, añadir `interruptible: true`.
+5. Pinean la `image: node:latest` a una versión + digest `@sha256` inmutable (no al tag flotante).
 6. Rellenan `CI-AUDIT.md`:
    - Tabla de olores detectados (mínimo 5).
    - Los 3 fixes aplicados con diff antes/después.
@@ -110,10 +112,11 @@ Los alumnos:
 
 **Lo que el formador observa:**
 
-- ¿Detectan los olores estructurales (`permissions`, `concurrency`, jobs separados) o se quedan en cosmética (renombrar steps)?
+- ¿Detectan los olores estructurales (secreto global, sin `interruptible:`, jobs/stages separados) o se quedan en cosmética (renombrar el job)?
 - ¿La priorización tiene criterio o es alfabética? Empujar a "qué renta más en términos de seguridad + DX por minuto de trabajo".
 - ¿Aceptan el primer diff sin leerlo? Pedir que **antes de cada `aplica`** ya hayan dicho qué esperan ver.
-- ¿Algún alumno propone añadir un job de scan (gitleaks) o de coverage? Buena señal — anotarlo como ejercicio extra.
+- ¿Entienden que la mitigación del secreto vive en parte fuera del YAML (CI/CD Variables protegidas del proyecto)? Es la trampa conceptual de GitLab: el `.gitlab-ci.yml` no lo cuenta todo.
+- ¿Algún alumno propone añadir un job de scan (gitleaks/SAST de GitLab) o de coverage? Buena señal — anotarlo como ejercicio extra.
 
 > "Tres fixes hoy. Lo demás probablemente mañana. La regla del Tema 23 sigue vigente: un cambio, una verificación. Reescribir el workflow entero al primer error es la receta para introducir tres bugs nuevos."
 
@@ -263,14 +266,14 @@ Lo que el alumno ve:
 Los alumnos:
 
 1. Verifican `npm install && npm test`.
-2. Leen `logs/pipeline-fail.log` y **localizan el bloque del error real** (sin pegar las 3.000 líneas al agente).
+2. Leen `logs/pipeline-fail.log` (un job de GitLab Runner) y **localizan el bloque del error real** (sin pegar el log entero al agente).
 3. Piden las 3 hipótesis ordenadas por probabilidad.
-4. Verifican la hipótesis 1 cruzándola con `.github/workflows/ci.yml`, `package.json` y `package-lock.json`.
-5. Deciden el fix: ¿regenerar lockfile (`npm install --package-lock-only`), ajustar el workflow para usar `npm install` en vez de `npm ci`, o ambas cosas? Justificar.
+4. Verifican la hipótesis 1 cruzándola con `.gitlab-ci.yml`, `package.json` y `package-lock.json`.
+5. Deciden el fix: ¿regenerar lockfile (`npm install --package-lock-only`), ablandar el `.gitlab-ci.yml` para usar `npm install` en vez de `npm ci`, o ambas cosas? Justificar.
 6. Rellenan `PIPELINE-TRIAGE.md`:
    - Bloque del log relevante (citado literal — máximo 30 líneas).
    - Las 3 hipótesis, en orden, con verificación de cada una.
-   - Decisión del fix con diff propuesto (workflow vs lockfile vs ambos).
+   - Decisión del fix con diff propuesto (`.gitlab-ci.yml` vs lockfile vs ambos).
    - "Qué grep / filtro me habría llevado más rápido al error" — al menos 2 keywords útiles.
    - "Cómo evito que vuelva" — un check de pipeline o convención de equipo.
 
@@ -302,7 +305,9 @@ Resumen en pizarra:
 
 ## 7. Notas para el formador
 
-- **Requisito técnico:** Node 24+ para los tests. El pipeline real (runner de GitHub Actions) **no se ejecuta** en el ejercicio — el alumno entrega los `.md` y los diffs leyendo y editando los archivos. Si la mayoría de la clase tiene acceso a un fork con Actions activo, animar a pushear el workflow corregido y ver el run. Si no, el aprendizaje principal no depende del runner.
+- **Requisito técnico:** Node 24+ para los tests. El pipeline real (runner de GitLab CI) **no se ejecuta** en el ejercicio — el alumno entrega los `.md` y los diffs leyendo y editando los archivos. Si la mayoría de la clase tiene acceso a un proyecto GitLab con CI/CD activo, animar a pushear el `.gitlab-ci.yml` corregido y ver el pipeline. Si no, el aprendizaje principal no depende del runner.
+
+- **Sobre la mezcla de plataformas:** las **demos** del guion (Demo 1 y la verificación de la Demo 3) se hacen sobre `.github/workflows/ci.yml` en `tema-24/inicio` (GitHub Actions), mientras que **los ejercicios** son sobre `.gitlab-ci.yml` (GitLab CI). Es deliberado: el punto 1 del temario cubre ambas plataformas y el objetivo es que el alumno vea el patrón en una y lo aplique en la otra. Si genera confusión, recordar la tabla de equivalencias de la doc.
 
 - **Pregunta típica:** *"¿No es paranoia pinear a SHA en vez de `@v4`?"* → No. GitHub lo recomienda explícitamente en workflows que tocan secretos o producen artifacts. La mayoría de supply-chain attacks recientes con actions pasaron por el cambio silencioso del tag. Dependabot abre el PR cuando hay nueva SHA; no es trabajo extra a futuro.
 
@@ -312,7 +317,7 @@ Resumen en pizarra:
 
 - **Pregunta típica:** *"`set -euo pipefail` no es overkill?"* → No. `-e` corta al primer fallo, `-u` te avisa de variables tipográficas (`$VERISON` en lugar de `$VERSION`), `-o pipefail` no enmascara errores en pipes (`fallo | tee log` devolvía 0 sin `pipefail`). Tres flags, cero coste, mucho upside.
 
-- **Error común en el Ejercicio 1:** confunden olores estructurales (`permissions`, `concurrency`, jobs separados) con cosmética (renombrar steps, reordenar el `name:`). Empujar a "qué renta en seguridad + DX por minuto".
+- **Error común en el Ejercicio 1:** confunden olores estructurales (secreto en `variables:` global, sin `interruptible:`, stages/jobs separados) con cosmética (renombrar el job, reordenar el YAML). Empujar a "qué renta en seguridad + DX por minuto". Recordar que la mitigación del secreto se completa en las *CI/CD Variables* protegidas del proyecto, no solo en el YAML.
 
 - **Error común en el Ejercicio 2:** dejan el `rollback.sh` sin confirmación interactiva o sin `-f` en el `curl` del smoke test. Detectarlo en `RELEASE-NOTES.md`. Si está, discutir el riesgo.
 
@@ -322,6 +327,6 @@ Resumen en pizarra:
 
 - **Sobre `.claude/skills/`:** sigue valiendo el patrón de temas anteriores. Las skills DEL AUTOR (`curso-tema-doc`, etc.) NO se trackean — están en `.gitignore` del repo de código. Verificar antes de pushear.
 
-- **Sobre runners reales:** si la clase tiene un fork del repo con Actions activado y quiere ver el run, advertir que el primer run con el workflow corregido puede tardar más por el cache vacío. A partir del segundo, se ve la mejora del `cache:` en `setup-node`.
+- **Sobre runners reales:** si la clase tiene un proyecto GitLab con CI/CD activado y quiere ver el pipeline, advertir que el primer run con el `.gitlab-ci.yml` corregido puede tardar más por el cache vacío. A partir del segundo, se ve la mejora del bloque `cache:` de `~/.npm`.
 
-- **Sobre GitLab CI:** la doc del tema da equivalencias pero los ejercicios son sobre `.github/workflows/`. Si algún alumno trabaja exclusivamente en GitLab, animarle a traducir el workflow del Ejercicio 1 a `.gitlab-ci.yml` como práctica extra y compararlo. El patrón es el mismo (jobs separados, `interruptible:`, cache, permisos), cambia la sintaxis.
+- **Sobre GitHub Actions:** los ejercicios son sobre `.gitlab-ci.yml`, pero la Demo 1 y la doc dan el contraste con GitHub Actions. Si algún alumno trabaja exclusivamente en GitHub, animarle a traducir el `.gitlab-ci.yml` del Ejercicio 1 a `.github/workflows/ci.yml` como práctica extra y compararlo. El patrón es el mismo (jobs separados, cancelar runs viejos, cache, permisos/secretos mínimos), cambia la sintaxis: `stages`/`needs:` ↔ `jobs`/`needs:`, `interruptible:` ↔ `concurrency: cancel-in-progress`, `variables:` protegidas ↔ `permissions:` + `secrets:`.

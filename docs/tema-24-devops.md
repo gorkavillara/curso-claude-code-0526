@@ -91,11 +91,11 @@ Lo que se pide al agente cuando audita un workflow:
 * `permissions: contents: read` no rompe nada en un CI normal; reduce drásticamente lo que puede hacer un script comprometido. Si alguna step necesita `write` (subir release notes, comentar PR), se eleva **solo en ese job**.
 * Pinear a SHA no es paranoia: GitHub recomienda explícitamente hacerlo en workflows que tocan secretos o producen artifacts.
 
-### 🧩 Ejercicio 1 — Auditoría y endurecimiento del workflow de CI
+### 🧩 Ejercicio 1 — Auditoría y endurecimiento del pipeline de GitLab CI
 
 > **Rama:** `git checkout tema-24/ejercicio-01` · **Tiempo:** 30 min · **Tipo:** En clase
 
-Audita el `.github/workflows/ci.yml` plantado, prioriza los problemas en una tabla y aplica los 3 fixes más rentables, justificando cada uno. Entrega `CI-AUDIT.md` con la tabla de olores, los fixes aplicados (con diff antes/después), el bloque `permissions:` mínimo elegido y una sección "qué dejaría para una siguiente iteración".
+Audita el `.gitlab-ci.yml` plantado (imagen flotante, job único, sin cache, secreto en `variables:` global, sin `interruptible:`), prioriza los problemas en una tabla y aplica los 3 fixes más rentables, justificando cada uno. Entrega `CI-AUDIT.md` con la tabla de olores, los fixes aplicados (con diff antes/después), la mitigación del secreto global elegida y una sección "qué dejaría para una siguiente iteración".
 
 ***
 
@@ -334,7 +334,7 @@ Los logs de pipeline son el equivalente a los logs de contenedor del Tema 23, pe
 
 > **Rama:** `git checkout tema-24/ejercicio-03` · **Tiempo:** 30 min · **Tipo:** En clase
 
-Lee el `logs/pipeline-fail.log` plantado, identifica el bloque del error real (sin pegar las 3.000 líneas al agente), pide 3 hipótesis ordenadas y verifícalas contra `.github/workflows/ci.yml` y `package.json`/`package-lock.json`. Aplica el fix razonado y deja documentado el patrón. Entrega `PIPELINE-TRIAGE.md` con: bloque del log relevante (citado), 3 hipótesis con su verificación, decisión sobre el fix (workflow vs lockfile vs ambos) con diff, y "qué grep o filtro habría llevado más rápido al error".
+Lee el `logs/pipeline-fail.log` plantado (un job de GitLab Runner), identifica el bloque del error real (sin pegar el log entero al agente), pide 3 hipótesis ordenadas y verifícalas contra `.gitlab-ci.yml` y `package.json`/`package-lock.json`. Aplica el fix razonado y deja documentado el patrón. Entrega `PIPELINE-TRIAGE.md` con: bloque del log relevante (citado), 3 hipótesis con su verificación, decisión sobre el fix (`.gitlab-ci.yml` vs lockfile vs ambos) con diff, y "qué grep o filtro habría llevado más rápido al error".
 
 ***
 
